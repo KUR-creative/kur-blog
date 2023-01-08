@@ -1,0 +1,16 @@
+.nrepl-*
+.clj-kondo
+.cpcache
+.lsp
+.calva
+
+target/*
+
+# Empty directories for various testing
+out/*
+!out/.gitkeep
+
+test/fixture/tmp-md/*
+!test/fixture/tmp-md/.gitkeep
+test/fixture/tmp-html/*
+!test/fixture/tmp-html/.gitkeep
