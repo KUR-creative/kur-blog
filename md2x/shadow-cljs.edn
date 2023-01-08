@@ -1,0 +1,13 @@
+;; shadow-cljs configuration
+{:source-paths
+ ["src"]
+
+ :dependencies
+ []
+
+ :builds
+ {:md2x
+  {:target :node-library
+   :output-to "out/md2x-interim.js"
+   :exports-var kur.md2x.core/exports
+   :compiler-options {:infer-externs :auto}}}}
