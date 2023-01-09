@@ -19,10 +19,9 @@
 (comment
   (require '[clojure.spec.gen.alpha :as sg]
            '[com.gfredericks.test.chuck.generators :as ug])
-  (sg/sample (ug/string-from-regex alphanumeric ) 30)
+  (sg/sample (ug/string-from-regex alphanumeric) 30)
   (sg/sample (ug/string-from-regex alphanumeric*) 30)
   (sg/sample (ug/string-from-regex alphanumeric+) 30)
-  (sg/sample (ug/string-from-regex hangul ) 30)
+  (sg/sample (ug/string-from-regex hangul) 30)
   (sg/sample (ug/string-from-regex hangul*) 30)
-  (sg/sample (ug/string-from-regex hangul+) 30)
-  )
+  (sg/sample (ug/string-from-regex hangul+) 30))
