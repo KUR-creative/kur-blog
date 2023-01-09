@@ -7,6 +7,8 @@
   (-> path fs/file-name str fname->parts
       (assoc :last-modified-millis (uf/last-modified-millis path)
              :md-path path)))
+; :last-modified-millis를 체크해서 새 post가 기존과 같으면 기존 post를 반환,
+; 디스크 io를 줄일 수는 있다
 
 ;; policies
 (defn public? [post]
