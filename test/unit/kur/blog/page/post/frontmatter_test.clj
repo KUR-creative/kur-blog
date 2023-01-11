@@ -38,7 +38,11 @@
 (def foot "\n---")
 
 ;; shoe
-(def gen-shoe g/string-ascii)
+;(def gen-shoe g/string-ascii)
+(def gen-shoe
+  (g'/string-from-regex #"([ㄱ-ㅎ|ㅏ-ㅣ|가-힣]|[ -~]|[-\n])*"))
+(def gen-no-foot-shoe
+  (g/such-that #(not (.contains % "---")) gen-shoe))
 
 ;; Tests
 (defn nil-all-case
@@ -60,10 +64,10 @@
                          (s/gen #{foot ""}) gen-shoe)]
     (= (obsidian (:input m)) (dissoc m :input))))
 
-(defspec no-foot-then-no-fm 100
-  (defp [m (nil-all-case gen-ws-cap (g/return head)
+(defspec no-foot-then-fm-is-nil 100
+  (defp [m (nil-all-case gen-ws-cap (s/gen #{head ""})
                          (g/one-of [gen-yaml-io gen-non-yaml])
-                         (g/return "") gen-shoe)]
+                         (g/return "") gen-no-foot-shoe)]
     (= (obsidian (:input m)) (dissoc m :input))))
 
 (def head-foot-exists
@@ -92,5 +96,5 @@
   (do
     (cap-is-not-ws-then-fm-is-nil)
     (head-is-not-exists-then-fm-is-nil)
-    (no-foot-then-no-fm)
+    (no-foot-then-fm-is-nil)
     (head-foot-exists-case)))
