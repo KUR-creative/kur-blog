@@ -4,8 +4,8 @@
 (defn has-tags? [post]
   (-> post :frontmatter :tags seq))
 
-(defn tag:post-ids
-  "All posts should have tags((has-tags? %)!= nil).
+(defn tag:posts
+  "All posts should have tags ((has-tags? %)!= nil).
    Otherwise, The post does not appear in the return map."
   [posts]
   (let [id:post (zipmap (map :id posts) posts)
@@ -13,7 +13,8 @@
         all-tags (vec (apply union (vals id:tag-sets)))]
     (zipmap all-tags
             (map #(keep (fn [[id tag-set]]
-                          (when (contains? tag-set %) id))
+                          (when (contains? tag-set %)
+                            (id:post id)))
                         id:tag-sets)
                  all-tags))))
 
@@ -24,4 +25,4 @@
               {:id :x :frontmatter {:tags []}}
               {:id 0 :frontmatter {1 2}}])
   (filter has-tags? posts)
-  (tag:post-ids posts))
+  (tag:posts posts))
