@@ -5,14 +5,18 @@
             [kur.util.file-system :as uf]))
 
 (defn post [path]
-  (-> path fs/file-name str fname->parts
-      (assoc :last-modified-millis (uf/last-modified-millis path)
-             :md-path path)))
+  (let [md-str (slurp path)
+        {:keys [frontmatter body]} (frontmatter/obsidian md-str)]
+    (assoc (-> path fs/file-name str fname->parts)
+           :last-modified-millis (uf/last-modified-millis path)
+           :md-path path
+           :frontmatter frontmatter
+           :text (if frontmatter body md-str))))
 ; :last-modified-millis를 체크해서 새 post가 기존과 같으면 기존 post를 반환,
 ; 디스크 io를 줄일 수는 있다
 
-(defn content [post]
-  (frontmatter/obsidian (-> post :md-path slurp)))
+#_(defn content [post]
+    (frontmatter/obsidian (-> post :md-path slurp)))
 
 ;; policies
 (defn public? [post]
