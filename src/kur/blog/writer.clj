@@ -26,8 +26,4 @@
         (map vector post-html-paths post-htmls))
 
   ;; tags 출력
-  (tags/tag:posts posts)
-
-  ;(def p (post/post "test/fixture/blog-root/blog-md/kur2301092038.+.초등학교 덧셈 알고리즘을 함슬라믹하게 짜보자.md"))
-  ;(-> (post/content p) :frontmatter :tags type)
-  )
+  (tags/tag:post-ids posts))
