@@ -1,8 +1,7 @@
 (ns kur.blog.look.post
-  (:require
-   [hiccup.page :refer [html5]]
-   [kur.blog.page.post.md2x :refer [obsidian-html]]
-   [kur.blog.look.template :refer [head]]))
+  (:require [hiccup.page :refer [html5]]
+            [kur.blog.page.post.md2x :refer [obsidian-html]]
+            [kur.blog.look.template :refer [head]]))
 
 (defn html [css-paths md-text]
   (html5 (head :css-paths css-paths)
