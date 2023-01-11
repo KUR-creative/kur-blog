@@ -14,11 +14,14 @@
   (def md-dir "test/fixture/blog-root/blog-md/")
   (def html-dir "test/fixture/blog-root/tmp-html/")
 
-  ;; only post case.. 솔직히 대부분은 post에 있어야 하는 로직인 듯
-  (def site
-    (map #(assoc %
-                 :html-str (look-post/html nil (-> % :md-path slurp))
-                 :html-path (str (fs/path html-dir (post/html-file-name %))))
-         (post-set md-dir)))
+  ;; post 출력
+  (def post-htmls
+    (map #(look-post/html nil (:text %)) (post-set md-dir)))
+  (def post-html-paths
+    (map #(str (fs/path html-dir (post/html-file-name %))) post-htmls))
+  (run! (fn [[path html]] (spit path html))
+        (map vector post-html-paths post-htmls))
 
-  (run! #(spit (:html-path %) (:html-str %)) site))
+  ;(def p (post/post "test/fixture/blog-root/blog-md/kur2301092038.+.초등학교 덧셈 알고리즘을 함슬라믹하게 짜보자.md"))
+  ;(-> (post/content p) :frontmatter :tags type)
+  )

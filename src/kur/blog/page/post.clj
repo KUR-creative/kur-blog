@@ -1,5 +1,6 @@
 (ns kur.blog.page.post
   (:require [babashka.fs :as fs]
+            [kur.blog.page.post.frontmatter :as frontmatter]
             [kur.blog.page.post.name :refer [fname->parts]]
             [kur.util.file-system :as uf]))
 
@@ -9,6 +10,9 @@
              :md-path path)))
 ; :last-modified-millis를 체크해서 새 post가 기존과 같으면 기존 post를 반환,
 ; 디스크 io를 줄일 수는 있다
+
+(defn content [post]
+  (frontmatter/obsidian (-> post :md-path slurp)))
 
 ;; policies
 (defn public? [post]
