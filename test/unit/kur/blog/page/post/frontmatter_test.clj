@@ -1,12 +1,5 @@
 (ns kur.blog.page.post.frontmatter-test
-  "Markdown frontmatter parser test
-
-  the md doc shape:
-        <------------ cap
-  ---   <------------ head
-  tags: [aa, bb]  <-- frontmatter
-  ---   <------------ foot
-  txt.. <------------ shoe"
+  "Markdown frontmatter parser test"
   (:require
    [clojure.spec.alpha :as s]
    [clojure.test.check.clojure-test :refer [defspec]]
