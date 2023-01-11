@@ -15,8 +15,15 @@
 ; :last-modified-millis를 체크해서 새 post가 기존과 같으면 기존 post를 반환,
 ; 디스크 io를 줄일 수는 있다
 
-#_(defn content [post]
-    (frontmatter/obsidian (-> post :md-path slurp)))
+(defn url [id] ; TODO: refactor
+  (str "http://" "localhost"
+       ":" 3000
+       "/" id))
+
+(defn title-or-id [{:keys [id title]}]
+  (if title
+    title
+    id))
 
 ;; policies
 (defn public? [post]
