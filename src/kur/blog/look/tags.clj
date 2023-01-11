@@ -1,14 +1,11 @@
 (ns kur.blog.look.tags
-  (:require [hiccup.element :refer [link-to]]
-            [hiccup.page :refer [html5]]
+  (:require [hiccup.page :refer [html5]]
             [kur.blog.look.template :refer [head]]
+            [kur.blog.look.post :as look-post]
             [kur.blog.page.post :as post]))
 
-(defn post-link-li [post]
-  [:li (link-to (-> post :id post/url) (post/title-or-id post))])
-
 (defn tag-and-links-block [tag posts]
-  (list [:h3 tag] [:ul (map post-link-li posts)]))
+  (list [:h3 tag] [:ul (map look-post/post-link-li posts)]))
 
 (defn tags-summary [tag:posts no-tags-posts]
   (let [sort-by-title #(sort-by post/title-or-id %)
