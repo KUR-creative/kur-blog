@@ -13,21 +13,20 @@
     title
     id))
 
-(defn post-link-li
-  [post]
+(defn post-link-li [post]
   [:li (link-to (-> post :id post-url) (title-or-id post))])
 
-(get {1 1 2 2} 0 10)
+(defn tag-and-link-block [tag posts]
+  (list [:h3 tag] [:ul (map post-link-li posts)]))
+
 (defn tags-summary [tag:posts no-tags-posts]
   (let [sort-by-title #(sort-by title-or-id %)
         tag:posts (into (sorted-map) (update-vals tag:posts sort-by-title))
         no-tags-posts (sort-by-title no-tags-posts)]
-    (list (mapcat (fn [[tag posts]]
-                    (list [:h3 (str "#" tag)]
-                          [:ul (map post-link-li posts)]))
+    (cons (mapcat (fn [[tag posts]]
+                    (tag-and-link-block (str "#" tag) posts))
                   tag:posts)
-          [:h3 "No tag"]
-          [:ul (map post-link-li no-tags-posts)])))
+          (tag-and-link-block "No tag" no-tags-posts))))
 
 ; TODO: Add js to sort tags
 (defn html [tag:posts no-tags-posts
