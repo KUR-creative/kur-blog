@@ -1,5 +1,5 @@
-{:md-dir "test/fixture/blog-md"
- :html-dir "test/fixture/tmp-html"
+{:md-dir "test/fixture/blog-root/blog-md"
+ :html-dir "test/fixture/blog-root/tmp-html"
  :resource-roots ["test/fixture/resource/flat/"
                   "test/fixture/resource/nested/"]
  :fs-wait-ms 500}
