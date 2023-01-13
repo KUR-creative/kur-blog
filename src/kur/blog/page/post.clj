@@ -39,7 +39,7 @@
   (str (:id post) ".html"))
 
 (defn how-update-html [happened-post]
-  (if (or (not (public? happened-post))
+  (if (or (not (public? happened-post)) ; hap이 create라도 del! 가능함
           (= (:happened happened-post) ::post-diff/delete))
     ::delete! ; TODO: 없는 html 삭제 시 예외 주의
     ::write!))

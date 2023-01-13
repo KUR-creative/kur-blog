@@ -23,6 +23,9 @@
          (map (zipmap old-ids olds) ids)
          (map (zipmap new-ids news) ids))))
 
+(defn unchangeds [oldset newset]
+  (s/intersection oldset newset))
+
 (comment
   (def olds #{{:id 1}     {:id 3 :3 3} {:id 4}  {:id 2 :2  2} {:id 5}})
   (def news     #{{:id 6} {:id 3 :3 3} {:id 4}  {:id 2 :2 -2} {:id 5 :5 -5}})

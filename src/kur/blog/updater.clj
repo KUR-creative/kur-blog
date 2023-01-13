@@ -1,4 +1,4 @@
-(ns kur.blog.writer ;; TODO: Updater(delete also?)
+(ns kur.blog.updater ;; TODO: Updater(delete also?)
   (:require [babashka.fs :as fs]
             [kur.blog.look.post :as look-post]
             [kur.blog.page.post :as post]
@@ -12,31 +12,38 @@
   (->> md-dir uf/path-seq (map post/post) set))
 
 (defn site
-  "Return ([html-path page-html] ...). posts shuold be vector."
-  [posts html-dir]
-  (letfn [(html-path [fname] (str (fs/path html-dir fname)))]
-    (map vector
-         (conj (mapv #(html-path (post/html-file-name %)) posts)
-               (html-path "tags.html")
-               (html-path "home.html"))
-         (conj (mapv #(look-post/html nil (:text %)) posts)
-               (look-tags/html (tags/tag:posts posts)
-                               (filter #(not (tags/has-tags? %)) posts))
-               (look-home/html (sort-by :id ; id means creation time
-                                        posts))))))
+  "Return commands to maintain html files of site
+   commands are [[f & args]*]"
+  [old-posts new-posts html-dir]
+  (let [unchangeds (->> (post-diff/unchangeds old-posts new-posts)
+                        (filter post/public?)
+                        (keep post/load-text)) ; Remove non-existing post
+        {to-deletes ::post/delete!, to-writes ::post/write!}
+        (->> (post-diff/happened-assocds old-posts new-posts)
+             (keep post/load-text) ; Remove non-existing post
+             (group-by post/how-update-html))
+        unchangeds-and-writes (concat unchangeds to-writes)
+        html-path #(str (fs/path html-dir %))]
+    (concat
+     (map (fn [post] [spit (html-path (post/html-file-name post))
+                      (look-post/html nil (:text post))])
+          to-writes)
+     [[spit (html-path "tags.html")
+       (look-tags/html (tags/tag:posts unchangeds-and-writes)
+                       (filter #(not (tags/has-tags? %))
+                               unchangeds-and-writes))]
+      [spit (html-path "home.html")
+       (look-home/html (sort-by :id unchangeds-and-writes))]]
+     (map (fn [post] [fs/delete-if-exists (post/html-file-name post)])
+          to-deletes))))
 
-(defn write! [site]
-  (run! (fn [[path html]] (spit path html)) site))
+(defn update! [site]
+  (run! (fn [[f & args]] (apply f args)) site))
 
 ;;
 (comment
   (def md-dir "test/fixture/blog-root/blog-md/")
   (def html-dir "test/fixture/blog-root/tmp-html/")
-
-  (def a-site
-    (site (map #(-> % post/post post/load-text) (uf/path-seq md-dir))
-          html-dir))
-  (write! a-site)
 
   (def old-state
     #{{:id "kur2207281052",
@@ -49,6 +56,7 @@
        :md-path "test/fixture/blog-root/blog-md/kur2207161305.+.kill-current-sexp의 Emacs, VSCode 구현.md",
        :last-modified-millis 1673419762417}
       {:id "kur0000000000",
+       :meta-str "+",
        :md-path "test/fixture/blog-root/blog-md/kur0000000000.md",
        :last-modified-millis 1673419774387}
       {:id "kur2206082055",
@@ -100,7 +108,5 @@
        :md-path "test/fixture/blog-root/blog-md/kur2301092038.+.초등학교 덧셈 알고리즘을 함슬라믹하게 짜보자.md",
        :last-modified-millis 1673419781187}})
 
-  (post-diff/happened-assocds #{} old-state)
-  (def hap-assocds (vec (post-diff/happened-assocds old-state new-state)))
-
-  (def cmds (map post/how-update-html hap-assocds)))
+  (update! (site #{} old-state html-dir))
+  (update! (site old-state new-state html-dir)))
