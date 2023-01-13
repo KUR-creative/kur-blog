@@ -1,4 +1,5 @@
 (ns kur.blog.page.post.diff
+  "NOTE: state(post set) is created from file system directly."
   (:require [clojure.set :as s]))
 
 (defn happened-assocd

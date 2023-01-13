@@ -1,5 +1,6 @@
 (ns kur.blog.page.post
   (:require [babashka.fs :as fs]
+            [kur.blog.page.post.diff :as post-diff]
             [kur.blog.page.post.frontmatter :as frontmatter]
             [kur.blog.page.post.name :refer [fname->parts]]
             [kur.util.file-system :as uf]))
@@ -30,12 +31,18 @@
     title
     id))
 
-;; policies
+;; Policies
 (defn public? [post]
   (= "+" (:meta-str post)))
 
 (defn html-file-name [post]
   (str (:id post) ".html"))
+
+(defn how-update-html [happened-post]
+  (if (or (not (public? happened-post))
+          (= (:happened happened-post) ::post-diff/delete))
+    ::delete! ; TODO: 없는 html 삭제 시 예외 주의
+    ::write!))
 
 ;;
 (comment
