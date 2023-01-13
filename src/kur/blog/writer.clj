@@ -32,5 +32,7 @@
   (def md-dir "test/fixture/blog-root/blog-md/")
   (def html-dir "test/fixture/blog-root/tmp-html/")
 
-  (def a-site (site (->> md-dir uf/path-seq (map post/post)) html-dir))
+  (def a-site
+    (site (map #(-> % post/post post/load-text) (uf/path-seq md-dir))
+          html-dir))
   (write! a-site))

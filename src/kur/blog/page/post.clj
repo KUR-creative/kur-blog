@@ -5,15 +5,20 @@
             [kur.util.file-system :as uf]))
 
 (defn post [path]
-  (let [md-str (slurp path)
-        {:keys [frontmatter body]} (frontmatter/obsidian md-str)]
+  (if (fs/exists? path)
     (assoc (-> path fs/file-name str fname->parts)
-           :last-modified-millis (uf/last-modified-millis path)
            :md-path path
-           :frontmatter frontmatter
-           :text (if frontmatter body md-str))))
-; :last-modified-millis를 체크해서 새 post가 기존과 같으면 기존 post를 반환,
-; 디스크 io를 줄일 수는 있다
+           :last-modified-millis (uf/last-modified-millis path))
+    nil)) ; non-exist post should be removed in state
+
+(defn load-text [{path :md-path :as post}]
+  (if (fs/exists? path)
+    (let [md-str (slurp path)
+          {:keys [frontmatter body]} (frontmatter/obsidian md-str)]
+      (assoc post
+             :frontmatter frontmatter
+             :text (if frontmatter body md-str)))
+    nil)) ; non-exist post should be removed in state
 
 (defn url [id] ; TODO: refactor
   (str "http://" "localhost"
