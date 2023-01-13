@@ -1,4 +1,4 @@
-(ns kur.blog.writer
+(ns kur.blog.writer ;; TODO: Updater(delete also?)
   (:require [babashka.fs :as fs]
             [kur.blog.look.post :as look-post]
             [kur.blog.page.post :as post]
@@ -24,10 +24,13 @@
                (look-home/html (sort-by :id ; id means creation time
                                         posts))))))
 
+(defn write! [site]
+  (run! (fn [[path html]] (spit path html)) site))
+
 ;;
 (comment
   (def md-dir "test/fixture/blog-root/blog-md/")
   (def html-dir "test/fixture/blog-root/tmp-html/")
 
   (def a-site (site (->> md-dir uf/path-seq (map post/post)) html-dir))
-  (run! (fn [[path html]] (spit path html)) a-site))
+  (write! a-site))
