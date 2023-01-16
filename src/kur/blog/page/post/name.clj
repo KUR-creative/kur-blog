@@ -74,6 +74,11 @@
                                               (str meta "." title)
                                               meta)))))
 
+(defn valid? [fname-or-parts]
+  (s/valid? ::file-name-parts (if (string? fname-or-parts)
+                                (fname->parts fname-or-parts)
+                                fname-or-parts)))
+
 (comment
   (id-info "asd1234567890")
   (s/exercise ::author 20)
@@ -99,4 +104,8 @@
   (defspec fname-parts-roundtrip-test 1000
     (defp [parts (s/gen ::file-name-parts)]
       (= parts (fname->parts (parts->fname parts)))))
-  (fname-parts-roundtrip-test))
+  (fname-parts-roundtrip-test)
+
+  (assert (= (-> {:title "o뼐n춑튬꽑2쬞덈", :id "ng700"}
+                 parts->fname fname->parts valid?)
+             false)))
