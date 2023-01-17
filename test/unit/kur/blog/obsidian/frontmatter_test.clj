@@ -26,6 +26,11 @@
                                      (not (.endsWith % "-")))
                                g/string-ascii
                                100))
+(defn gen-tags-yaml [tags]
+  (g/fmap #(yaml/generate-string (if (map? %)
+                                   (assoc % :tags tags)
+                                   {:tags tags :xs %}))
+          g/any-printable-equatable))
 
 ;; foot
 (def foot "\n---")
