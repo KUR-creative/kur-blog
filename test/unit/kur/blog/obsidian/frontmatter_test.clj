@@ -19,7 +19,7 @@
 (def head "---\n")
 
 ;; frontmatter
-(def gen-yaml-io (g/fmap yaml/generate-string g/any-printable-equatable))
+(def gen-yaml (g/fmap yaml/generate-string g/any-printable-equatable))
 (def gen-non-yaml (g/such-that #(and (not (frontmatter/parse-yaml %))
                                      (not (.contains % "---"))
                                      (not (.endsWith % "--"))
@@ -47,25 +47,25 @@
 
 (defspec cap-is-not-ws-then-fm-is-nil 100
   (defp [m (nil-all-case gen-not-ws-cap (s/gen #{head ""})
-                         (g/one-of [gen-yaml-io gen-non-yaml])
+                         (g/one-of [gen-yaml gen-non-yaml])
                          (s/gen #{foot ""}) gen-shoe)]
     (= (frontmatter/obsidian (:input m)) (dissoc m :input))))
 
 (defspec head-is-not-exists-then-fm-is-nil 100
   (defp [m (nil-all-case gen-not-ws-cap (g/return "")
-                         (g/one-of [gen-yaml-io gen-non-yaml])
+                         (g/one-of [gen-yaml gen-non-yaml])
                          (s/gen #{foot ""}) gen-shoe)]
     (= (frontmatter/obsidian (:input m)) (dissoc m :input))))
 
 (defspec no-foot-then-fm-is-nil 100
   (defp [m (nil-all-case gen-ws-cap (s/gen #{head ""})
-                         (g/one-of [gen-yaml-io gen-non-yaml])
+                         (g/one-of [gen-yaml gen-non-yaml])
                          (g/return "") gen-no-foot-shoe)]
     (= (frontmatter/obsidian (:input m)) (dissoc m :input))))
 
 (def head-foot-exists
   (g/let [cap gen-ws-cap
-          fm (g/one-of [gen-yaml-io gen-non-yaml])
+          fm (g/one-of [gen-yaml gen-non-yaml])
           s gen-shoe]
     (let [inp (str cap "---\n" fm "\n---" s)]
       {:parts [cap "---\n" fm "\n---" s]
