@@ -4,7 +4,7 @@
    An md doc shape:
          <------------ cap
    ---   <------------ head
-   tags: [aa, bb]  <-- frontmatter
+   tags: [aa, bb]  <-- yaml
    ---   <------------ foot
    txt.. <------------ shoe"
   (:require [clj-yaml.core :as yaml]
@@ -20,7 +20,7 @@
 
 (defn parse [md]
   (let [[trimmed-cap rest] (str/split (str/triml md) #"---\n" 2)
-        [frontmatter-str shoe] (when rest (str/split rest #"\n---" 2))]
+        [yaml-str shoe] (when rest (str/split rest #"\n---" 2))]
     (if (or (not= trimmed-cap "") (nil? rest) (nil? shoe))
       {:frontmatter nil :body md}
-      {:frontmatter (parse-yaml frontmatter-str) :body shoe})))
+      {:frontmatter (parse-yaml yaml-str) :body shoe})))
