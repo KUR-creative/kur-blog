@@ -14,3 +14,8 @@ test/fixture/blog-root/tmp-md/*
 !test/fixture/blog-root/tmp-md/.gitkeep
 test/fixture/blog-root/tmp-html/*
 !test/fixture/blog-root/tmp-html/.gitkeep
+
+test/fixture/spbt/md/*
+test/fixture/spbt/html/*
+!test/fixture/spbt/md/.gitkeep
+!test/fixture/spbt/html/.gitkeep

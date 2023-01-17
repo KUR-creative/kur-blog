@@ -1,5 +1,6 @@
 (ns integration.kur.blog-test.spbt
   (:require
+   [babashka.fs :as fs]
    [clojure.spec.alpha :as s]
    [clojure.test.check.generators :as g]
    [kur.blog.page.post.name :as name]
@@ -28,9 +29,21 @@
                                   (fmt/gen-tags-yaml tags)]))]
     {:tags tags :frontmatter frontmatter}))
 
+(defn gen-md-file-info [dir]
+  (g/let [fname gen-post-name
+          {:keys [tags frontmatter]} gen-tags-and-frontmatter
+          md-text gen-md-text]
+    {:path (str (fs/path dir fname)) :text (str frontmatter md-text)}))
+
+
 (comment
   (g/sample gen-md-text)
   (g/sample gen-invalid-post-name)
   (g/sample gen-valid-post-name)
   (g/sample gen-post-name)
-  (g/sample gen-tags-and-frontmatter))
+  (g/sample gen-tags-and-frontmatter)
+
+  (g/sample (g/set (gen-md-file-info "test/fixture/spbt/md/")))
+  (run! (fn [{:keys [path text]}] (spit path text))
+        (-> "test/fixture/spbt/md/"
+            gen-md-file-info g/set g/sample last)))

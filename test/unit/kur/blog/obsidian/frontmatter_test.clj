@@ -39,7 +39,7 @@
 (defn gen-tags-yaml [tags]
   (g/fmap #(yaml/generate-string (if (map? %)
                                    (assoc % :tags tags)
-                                   {:tags tags :xs %}))
+                                   {:tags tags :xs %})) ;; NOTE: 야매!
           g/any-printable-equatable))
 
 ;; foot
