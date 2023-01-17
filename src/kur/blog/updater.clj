@@ -24,6 +24,7 @@
              (group-by post/how-update-html))
         unchangeds-and-writes (concat unchangeds to-writes)
         html-path #(str (fs/path html-dir %))]
+    ;; TODO: 위 let에서 unchanged/to-d/to-w fn으로 extract하기
     (concat
      (map (fn [post] [spit (html-path (post/html-file-name post))
                       (look-post/html nil (:text post))])

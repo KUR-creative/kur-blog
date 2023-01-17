@@ -1,4 +1,4 @@
-{:paths ["src" "test/unit"]
+{:paths ["src" "test/unit" "test/integration"]
  :deps
  {;; Fundamental
   medley/medley {:mvn/version "1.4.0"}

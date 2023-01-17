@@ -108,4 +108,6 @@
 
   (assert (= (-> {:title "o뼐n춑튬꽑2쬞덈", :id "ng700"}
                  parts->fname fname->parts valid?)
-             false)))
+             false))
+  (fname->parts "asdw1234567890.zxc.a") ;; TODO: Is it problem?
+  )

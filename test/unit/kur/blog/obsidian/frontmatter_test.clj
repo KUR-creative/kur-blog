@@ -33,6 +33,9 @@
                                      (not (.endsWith % "-")))
                                g/string-ascii
                                100))
+(def gen-no-tags-yaml
+  (g/fmap #(yaml/generate-string (if (map? %) (dissoc % :tags) %))
+          g/any-printable-equatable))
 (defn gen-tags-yaml [tags]
   (g/fmap #(yaml/generate-string (if (map? %)
                                    (assoc % :tags tags)
@@ -48,6 +51,13 @@
   (g'/string-from-regex #"([ㄱ-ㅎ|ㅏ-ㅣ|가-힣]|[ -~]|[-\n])*"))
 (def gen-no-foot-shoe
   (g/such-that #(not (.contains % "---")) gen-shoe))
+
+(defn gen-frontmatter-str [gen-yaml]
+  (g/let [cap (g/one-of [gen-ws-cap gen-not-ws-cap])
+          head (s/gen #{head ""})
+          yaml gen-yaml
+          foot (s/gen #{foot ""})]
+    (str cap head yaml foot)))
 
 ;; Tests
 (defn nil-all-case
