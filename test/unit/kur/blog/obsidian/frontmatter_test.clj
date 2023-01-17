@@ -71,19 +71,19 @@
   (defp [m (nil-all-case gen-not-ws-cap (s/gen #{head ""})
                          (g/one-of [gen-yaml gen-non-yaml])
                          (s/gen #{foot ""}) gen-shoe)]
-    (= (frontmatter/obsidian (:input m)) (dissoc m :input))))
+    (= (frontmatter/parse (:input m)) (dissoc m :input))))
 
 (defspec head-is-not-exists-then-yaml-is-nil 100
   (defp [m (nil-all-case gen-not-ws-cap (g/return "")
                          (g/one-of [gen-yaml gen-non-yaml])
                          (s/gen #{foot ""}) gen-shoe)]
-    (= (frontmatter/obsidian (:input m)) (dissoc m :input))))
+    (= (frontmatter/parse (:input m)) (dissoc m :input))))
 
 (defspec no-foot-then-yaml-is-nil 100
   (defp [m (nil-all-case gen-ws-cap (s/gen #{head ""})
                          (g/one-of [gen-yaml gen-non-yaml])
                          (g/return "") gen-no-foot-shoe)]
-    (= (frontmatter/obsidian (:input m)) (dissoc m :input))))
+    (= (frontmatter/parse (:input m)) (dissoc m :input))))
 
 (def head-foot-exists
   (g/let [cap gen-ws-cap
@@ -94,19 +94,19 @@
        :input inp, :frontmatter (frontmatter/parse-yaml y), :body s})))
 (defspec head-foot-exists-case 1000
   (defp [m head-foot-exists]
-    (= (frontmatter/obsidian (:input m)) (select-keys m [:frontmatter :body]))))
+    (= (frontmatter/parse (:input m)) (select-keys m [:frontmatter :body]))))
 
 ;;
 (comment
-  (frontmatter/obsidian "---\n@----") (println "---\n@----")
-  (frontmatter/obsidian "---\n0\n---asdf")
-  (frontmatter/obsidian "---\n12345 234\n---asdf")
-  (frontmatter/obsidian "---\n- {'---': 0}\n---") (println "---\n- {'---': 0}\n---")
-  (frontmatter/obsidian "---\ntags: [---]\n---")
-  (frontmatter/obsidian "---\ntags: [가나다, 라마]\n---테트\n테스트")
-  (frontmatter/obsidian "---\n---aaa")
-  (frontmatter/obsidian "---\n---")
-  (frontmatter/obsidian "---\n0\n\n---")
+  (frontmatter/parse "---\n@----") (println "---\n@----")
+  (frontmatter/parse "---\n0\n---asdf")
+  (frontmatter/parse "---\n12345 234\n---asdf")
+  (frontmatter/parse "---\n- {'---': 0}\n---") (println "---\n- {'---': 0}\n---")
+  (frontmatter/parse "---\ntags: [---]\n---")
+  (frontmatter/parse "---\ntags: [가나다, 라마]\n---테트\n테스트")
+  (frontmatter/parse "---\n---aaa")
+  (frontmatter/parse "---\n---")
+  (frontmatter/parse "---\n0\n\n---")
 
   (do
     (cap-is-not-ws-then-yaml-is-nil)

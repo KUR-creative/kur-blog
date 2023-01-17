@@ -12,7 +12,6 @@
 (def gen-md-text
   (string-from-regexes ascii* common-whitespace* hangul*))
 
-
 (def gen-invalid-post-name
   (g/such-that #(and (s/valid? ::uf/file-name %) (not (name/valid? %)))
                name/gen-post-title))
@@ -27,8 +26,7 @@
                        (g/one-of [fmt/gen-non-yaml
                                   fmt/gen-no-tags-yaml
                                   (fmt/gen-tags-yaml tags)]))]
-    {:tags tags
-     :frontmatter frontmatter}))
+    {:tags tags :frontmatter frontmatter}))
 
 (comment
   (g/sample gen-md-text)
