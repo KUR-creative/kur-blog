@@ -13,25 +13,33 @@
   (->> (uf/path-seq md-dir #(name/valid? (fs/file-name %)))
        (map post/post) set))
 
+(defn html-path
+  "fname is (fs/file-name path). It includes extension."
+  [html-dir fname])
+
+(defn classify-posts
+  [old-posts new-posts]
+  (let [unchangeds (->> (post-diff/unchangeds old-posts new-posts)
+                        (filter post/public?)
+                        (keep post/load-text)) ; TODO: Care side-effect!
+        {to-deletes ::post/delete!, to-writes ::post/write!}
+        (group-by post/how-update-html
+                  (post-diff/happened-assocds old-posts new-posts))]
+    {:unchangeds unchangeds
+     :to-deletes to-deletes :to-writes to-writes}))
+
 (defn site
   "Return commands to maintain html files of site
    commands are [[f & args]*]"
   [old-posts new-posts html-dir]
   (def old-posts old-posts)
   (def new-posts new-posts)
-  (let [unchangeds (->> (post-diff/unchangeds old-posts new-posts)
-                        (filter post/public?)
-                        (keep post/load-text)) ; Remove non-existing post
-
-        {to-deletes ::post/delete!, to-writes ::post/write!}
-        (group-by post/how-update-html
-                  (post-diff/happened-assocds old-posts new-posts))
+  (let [{:keys [unchangeds to-writes to-deletes]}
+        (classify-posts old-posts new-posts)
 
         to-writes (keep post/load-text to-writes) ; Remove non-existing post
         unchangeds-and-writes (concat unchangeds to-writes)
-
         html-path #(str (fs/path html-dir %))]
-    ;; TODO: 위 let에서 unchanged/to-d/to-w fn으로 extract하기
     (concat
      (map (fn [post] [spit (html-path (post/html-file-name post))
                       (look-post/html nil (:text post))])
