@@ -121,7 +121,10 @@
                         {:kind :upd-sys}])
            #_(g/return
               [{:path "test/fixture/spbt/md/A7001010900.+..md", :text "", :kind :create}
-               {:path "test/fixture/spbt/md/A7001010900.+..md", :text "", :kind :create}])]
+               {:path "test/fixture/spbt/md/A7001010900.+..md", :text "", :kind :create}])
+           #_(g/return [{:path "test/fixture/spbt/md/A7001010900.+.md",
+                         :text "---\ntags:\n- []\nxs: 0\n\n---", :kind :create}
+                        {:kind :upd-sys}])]
       (def ops ops)
       (teardown-and-return nil md-dir html-dir)
 
@@ -139,26 +142,28 @@
           (teardown-and-return true md-dir html-dir))) ;; pass test 
       )))
 
-(def m0 {})
-(def m1 (next-model {:path "test/fixture/spbt/md/A7001010900.+.md", :text "", :kind :create} m0))
-(def m2 (next-model {:path "test/fixture/spbt/md/|", :text "", :kind :create} m1))
-(def m3 (next-model {:kind :upd-sys} m2))
-#_(def m4 (next-model {:kind :upd-sys} m3))
-
-#_(def olds (updater/post-set md-dir))
-(next-actual {:path "test/fixture/spbt/md/A7001010900.+.md", :text "", :kind :create} nil)
-#_(def news (updater/post-set md-dir))
-#_(next-actual {:kind :upd-sys} [olds news html-dir])
-
-(def olds1 (updater/post-set md-dir))
-(next-actual {:path "test/fixture/spbt/md/|", :text "", :kind :create} nil)
-(def news1 (updater/post-set md-dir))
-
-(next-actual {:kind :upd-sys} [olds1 news1 html-dir])
-
 (comment
   (test-without-timing)
 
+  ;;
+  (def m0 {})
+  (def m1 (next-model {:path "test/fixture/spbt/md/A7001010900.+.md", :text "", :kind :create} m0))
+  (def m2 (next-model {:path "test/fixture/spbt/md/|", :text "", :kind :create} m1))
+  (def m3 (next-model {:kind :upd-sys} m2))
+  #_(def m4 (next-model {:kind :upd-sys} m3))
+
+  #_(def olds (updater/post-set md-dir))
+  (next-actual {:path "test/fixture/spbt/md/A7001010900.+.md", :text "", :kind :create} nil)
+  #_(def news (updater/post-set md-dir))
+  #_(next-actual {:kind :upd-sys} [olds news html-dir])
+
+  (def olds1 (updater/post-set md-dir))
+  (next-actual {:path "test/fixture/spbt/md/|", :text "", :kind :create} nil)
+  (def news1 (updater/post-set md-dir))
+
+  (next-actual {:kind :upd-sys} [olds1 news1 html-dir])
+
+  ;;
   (g/sample gen-md-text)
   (g/sample gen-invalid-post-fname)
   (g/sample gen-valid-post-fname)

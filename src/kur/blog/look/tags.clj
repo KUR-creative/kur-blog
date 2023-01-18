@@ -8,12 +8,16 @@
   (list [:h3 tag] [:ul (map look-post/post-link-li posts)]))
 
 (defn tags-summary [tag:posts no-tags-posts]
+  (def tag:posts tag:posts)
+  (def no-tags-posts no-tags-posts)
   (let [sort-by-title #(sort-by post/title-or-id %)
-        tag:posts (into (sorted-map) (update-vals tag:posts sort-by-title))
         no-tags-posts (sort-by-title no-tags-posts)]
     (cons (mapcat (fn [[tag posts]]
                     (tag-and-links-block (str "#" tag) posts))
-                  tag:posts)
+                  (into (sorted-map)
+                        (-> tag:posts
+                            (update-keys str)
+                            (update-vals sort-by-title))))
           (tag-and-links-block "No tag" no-tags-posts))))
 
 ; TODO: Add js to sort tags
