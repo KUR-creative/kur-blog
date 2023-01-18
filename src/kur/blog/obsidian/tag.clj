@@ -13,9 +13,7 @@
 
 (s/def ::tag
   (s/with-gen (s/and string? only-allowed-chars? #(nil? (parse-long %)))
-    #(g/such-that only-allowed-chars?
-                  (string-from-regexes ascii* hangul*)
-                  200)))
+    #(string-from-regexes tag-character-regex)))
 
 (comment
   (g/sample (s/gen ::tag))
