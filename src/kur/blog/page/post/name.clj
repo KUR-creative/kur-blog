@@ -77,6 +77,7 @@
 (defn valid? [fname-or-parts]
   (if (string? fname-or-parts)
     (and (= (fs/extension fname-or-parts) post-extension)
+         (not (.contains fname-or-parts ".sync-conflict-"))
          (s/valid? ::file-name-parts (fname->parts fname-or-parts)))
     (s/valid? ::file-name-parts fname-or-parts)))
 
@@ -111,4 +112,4 @@
                  parts->fname fname->parts valid?)
              false))
   (fname->parts "asdw1234567890.zxc.a") ;; TODO: Is it problem?
-  )
+  (assert (not (valid? "1235assddw.sync-conflict-"))))
