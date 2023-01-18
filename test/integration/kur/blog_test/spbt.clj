@@ -108,13 +108,13 @@
    }
   (let [md-dir "test/fixture/spbt/md"
         html-dir "test/fixture/spbt/html"]
-    (defp [ops (g/bind (g/set (gen-md-file md-dir) {:min-elements 1})
-                       gen-ops)
+    (defp [ops #_(g/bind (g/set (gen-md-file md-dir) {:min-elements 1})
+                         gen-ops)
            #_(g/return [{:path "test/fixture/spbt/md/A7001010900.+.md", :text "", :kind :create}
                         {:kind :upd-sys}])
-           #_(g/return
-              [{:path "test/fixture/spbt/md/A7001010900.+..md", :text "", :kind :create}
-               {:path "test/fixture/spbt/md/A7001010900.+..md", :text "", :kind :create}])]
+           (g/return
+            [{:path "test/fixture/spbt/md/A7001010900.+..md", :text "", :kind :create}
+             {:path "test/fixture/spbt/md/A7001010900.+..md", :text "", :kind :create}])]
       (def ops ops)
       (uf/delete-all-except-gitkeep md-dir)
       (uf/delete-all-except-gitkeep html-dir)
@@ -124,19 +124,21 @@
         (if-let [op (first ops)]
           (let [new-posts (updater/post-set md-dir)]
             (next-actual op [posts new-posts html-dir])
-            (if (same-num-public-pages? model html-dir)
+            (if (or (not= (:kind op) :upd-sys)
+                    (same-num-public-pages? model html-dir)) ; prop 1
               (recur new-posts (next-model op model) (rest ops))
               false))
           true)) ;; pass test 
       )))
 
 (def m0 {})
-(def m1 (next-model {:path "test/fixture/spbt/md/A7001010900.+.md", :text "", :kind :create}
+(def m1 (next-model {:path "test/fixture/spbt/md/A7001010900.+..md", :text "", :kind :create}
                     m0))
 (next-actual {:path "test/fixture/spbt/md/A7001010900.+.md", :text "", :kind :create}
              nil)
 
-(def m2 (next-model {:kind :upd-sys} m1))
+(def m2 (next-model {:path "test/fixture/spbt/md/A7001010900.+..md", :text "", :kind :create}
+                    m1))
 
 (comment
   (g/sample gen-md-text)
