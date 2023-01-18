@@ -14,12 +14,12 @@
    [kur.util.regex :refer [ascii* common-whitespace* hangul*]]))
 
 ;; md file
-(def gen-invalid-post-name
+(def gen-invalid-post-fname
   (g/such-that #(and (s/valid? ::uf/file-name %) (not (name/valid? %)))
                name/gen-post-title))
-(def gen-valid-post-name
+(def gen-valid-post-fname
   (g/fmap name/parts->fname (s/gen ::name/file-name-parts)))
-(def gen-post-name (g/one-of [gen-invalid-post-name gen-valid-post-name]))
+(def gen-post-name (g/one-of [gen-invalid-post-fname gen-valid-post-fname]))
 
 (def gen-md-text
   (string-from-regexes ascii* common-whitespace* hangul*))
@@ -87,8 +87,8 @@
 
 (comment
   (g/sample gen-md-text)
-  (g/sample gen-invalid-post-name)
-  (g/sample gen-valid-post-name)
+  (g/sample gen-invalid-post-fname)
+  (g/sample gen-valid-post-fname)
   (g/sample gen-post-name)
   (g/sample gen-tags-and-frontmatter)
   (g/sample (g/set (gen-md-file "test/fixture/spbt/md/")))
