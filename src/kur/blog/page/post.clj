@@ -1,7 +1,7 @@
 (ns kur.blog.page.post
   (:require [babashka.fs :as fs]
             [kur.blog.page.post.diff :as post-diff]
-            [kur.blog.page.post.frontmatter :as frontmatter]
+            [kur.blog.obsidian.frontmatter :as frontmatter]
             [kur.blog.page.post.name :refer [fname->parts]]
             [kur.util.file-system :as uf]))
 
@@ -15,7 +15,7 @@
 (defn load-text [{path :md-path :as post}]
   (if (fs/exists? path)
     (let [md-str (slurp path)
-          {:keys [frontmatter body]} (frontmatter/obsidian md-str)]
+          {:keys [frontmatter body]} (frontmatter/parse md-str)]
       (assoc post
              :frontmatter frontmatter
              :text (if frontmatter body md-str)))
