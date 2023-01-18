@@ -1,5 +1,5 @@
 (ns kur.blog.page.post.name
-  (:require [babashka.fs :refer [strip-ext]]
+  (:require [babashka.fs :as fs]
             [clojure.spec.alpha :as s]
             [clojure.spec.gen.alpha :as sg]
             [clojure.string :as str]
@@ -64,7 +64,7 @@
 (defn fname->parts
   "post-fname is (fs/file-name path). post-fname includes .extension."
   [post-fname]
-  (let [base-name (strip-ext post-fname)
+  (let [base-name (fs/strip-ext post-fname)
         [id meta title] (str/split base-name #"\." 3)]
     (cond-> {}
       (s/valid? ::id id) (assoc :id id)
@@ -75,9 +75,10 @@
                                               meta)))))
 
 (defn valid? [fname-or-parts]
-  (s/valid? ::file-name-parts (if (string? fname-or-parts)
-                                (fname->parts fname-or-parts)
-                                fname-or-parts)))
+  (if (string? fname-or-parts)
+    (and (= (fs/extension fname-or-parts) post-extension)
+         (s/valid? ::file-name-parts (fname->parts fname-or-parts)))
+    (s/valid? ::file-name-parts fname-or-parts)))
 
 (comment
   (id-info "asd1234567890")
