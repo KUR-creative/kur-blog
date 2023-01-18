@@ -86,21 +86,12 @@
 
 ;; Properties
 (defn same-num-public-pages? [model html-dir]
-  (when (not= (+ (count model))
-              (count (uf/path-seq html-dir
-                                  #(and (= (fs/extension %) "html")
-                                        (not= (fs/file-name %) "tags.html")
-                                        (not= (fs/file-name %) "home.html")))))
+  (when (not= (+ (count model) 2)
+              (count (uf/path-seq html-dir #(= (fs/extension %) "html"))))
     (def model model)
-    (def fseq (uf/path-seq html-dir
-                           #(and (= (fs/extension %) "html")
-                                 (not= (fs/file-name %) "tags.html")
-                                 (not= (fs/file-name %) "home.html")))))
-  (= (+ (count model))
-     (count (uf/path-seq html-dir
-                         #(and (= (fs/extension %) "html")
-                               (not= (fs/file-name %) "tags.html")
-                               (not= (fs/file-name %) "home.html"))))))
+    (def fseq (uf/path-seq html-dir #(= (fs/extension %) "html"))))
+  (= (+ (count model) 2) ; 2 = tags + home
+     (count (uf/path-seq html-dir #(= (fs/extension %) "html")))))
 
 ;; Test
 ;(def cnt (atom 0))

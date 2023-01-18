@@ -27,8 +27,8 @@
         (group-by post/how-update-html
                   (post-diff/happened-assocds old-posts new-posts))
 
-        to-writes (keep post/load-text to-writes)
-        unchangeds-and-writes (concat unchangeds to-writes); Remove non-existing post
+        to-writes (keep post/load-text to-writes) ; Remove non-existing post
+        unchangeds-and-writes (concat unchangeds to-writes)
 
         html-path #(str (fs/path html-dir %))]
     ;; TODO: 위 let에서 unchanged/to-d/to-w fn으로 extract하기
