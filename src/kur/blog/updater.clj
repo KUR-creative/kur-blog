@@ -42,7 +42,8 @@
                                unchangeds-and-writes))]
       [spit (html-path "home.html")
        (look-home/html (sort-by :id unchangeds-and-writes))]]
-     (map (fn [post] [fs/delete-if-exists (post/html-file-name post)])
+     (map (fn [post]
+            [fs/delete-if-exists (html-path (post/html-file-name post))])
           to-deletes))))
 
 (defn update! [site]

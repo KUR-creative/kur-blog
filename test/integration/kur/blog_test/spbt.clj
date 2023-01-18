@@ -87,16 +87,6 @@
 
 ;; Properties
 (defn same-num-public-pages? [model html-dir]
-  (def mcnt (count model)) ; 2 = tags, home
-  (def m model)
-  (def x (uf/path-seq html-dir
-                      #(and (= (fs/extension %) "html")
-                            (not= (fs/file-name %) "tags.html")
-                            (not= (fs/file-name %) "home.html"))))
-  (def acnt (count (uf/path-seq html-dir
-                                #(and (= (fs/extension %) "html")
-                                      (not= (fs/file-name %) "tags.html")
-                                      (not= (fs/file-name %) "home.html")))))
   (= (+ (count model))
      (count (uf/path-seq html-dir
                          #(and (= (fs/extension %) "html")
@@ -136,18 +126,18 @@
       )))
 
 (def m0 {})
-(def m1 (next-model {:path "test/fixture/spbt/md/A7001010900.+..md", :text "", :kind :create} m0))
+(def m1 (next-model {:path "test/fixture/spbt/md/B7001010859.+..md", :text "{tags: 0, xs: -9}\n", :kind :create} m0))
 (def m2 (next-model {:kind :upd-sys} m1))
-(def m3 (next-model {:path "test/fixture/spbt/md/A7001010900.+..md" :kind :delete} m2))
+(def m3 (next-model {:path "test/fixture/spbt/md/B7001010859.+..md" :kind :delete} m2))
 (def m4 (next-model {:kind :upd-sys} m3))
 
 (def olds (updater/post-set md-dir))
-(next-actual {:path "test/fixture/spbt/md/A7001010900.+..md", :text "", :kind :create} nil)
+(next-actual {:path "test/fixture/spbt/md/B7001010859.+..md", :text "{tags: 0, xs: -9}\n", :kind :create} nil)
 (def news (updater/post-set md-dir))
 (next-actual {:kind :upd-sys} [olds news html-dir])
 
 (def olds1 (updater/post-set md-dir))
-(next-actual {:path "test/fixture/spbt/md/A7001010900.+..md" :kind :delete} nil)
+(next-actual {:path "test/fixture/spbt/md/B7001010859.+..md" :kind :delete} nil)
 (def news1 (updater/post-set md-dir))
 
 (next-actual {:kind :upd-sys} [olds1 news1 html-dir])
