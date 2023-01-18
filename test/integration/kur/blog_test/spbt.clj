@@ -18,7 +18,8 @@
   (g/such-that #(and (s/valid? ::uf/file-name %) (not (name/valid? %)))
                name/gen-post-title))
 (def gen-valid-post-fname
-  (g/fmap name/parts->fname (s/gen ::name/file-name-parts)))
+  (g/such-that #(s/valid? ::uf/file-name %)
+               (g/fmap name/parts->fname (s/gen ::name/file-name-parts))))
 (def gen-post-name (g/one-of [gen-invalid-post-fname gen-valid-post-fname]))
 
 (def gen-md-text
