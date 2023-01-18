@@ -9,6 +9,8 @@
    [kur.blog.obsidian.frontmatter-test :as fmt]
    [kur.blog.obsidian.tag :as tag]
    [kur.blog.page.post.name :as name]
+   [kur.blog.page.post :as post]
+   [kur.blog.updater :as updater]
    [kur.util.file-system :as uf]
    [kur.util.generator :refer [string-from-regexes]]
    [kur.util.regex :refer [ascii* common-whitespace* hangul*]]))
@@ -54,37 +56,87 @@
 
 (defn gen-ops [md-files]
   (def md-files md-files)
-  (g/vector (g/one-of [(gen-create md-files) (gen-delete md-files)
+  (g/vector (g/one-of [(gen-create md-files)
+                       (gen-delete md-files)
                        gen-update-sys])))
 
 ;; Runners
-(defn next-model [op model]
-  (case (:kind op)
-    :create  (assoc model (:path op) (:text op))
-    :delete  (dissoc model (:path op))
+(defn next-model [{:keys [path text kind] :as op} model]
+  (case kind
+    :create  (let [parts (name/fname->parts (fs/file-name path))]
+               (if (and (name/valid? (fs/file-name path))
+                        (post/public? parts))
+                 (assoc model path text)
+                 model))
+    :delete  (dissoc model path)
     :upd-sys model))
 
 (defn next-actual
   "The actual state is a directory in file system!"
-  [op]
+  [op [old-posts new-posts html-dir]]
   (case (:kind op)
-    :create  (spit (:path op) (:text op))
-    :delete  (fs/delete-if-exists (:path op))
-    :upd-sys :upd-sys))
+    :create  (try (spit (:path op) (:text op))
+                  (catch Exception e (prn 'c) (def op op)))
+    :delete  (try (fs/delete-if-exists (:path op))
+                  (catch Exception e (prn 'd) (def op op)))
+    :upd-sys (updater/update! (updater/site old-posts new-posts html-dir))))
+
+;; Properties
+(defn same-num-public-pages? [model html-dir]
+  (def mcnt (count model)) ; 2 = tags, home
+  (def m model)
+  (def x (uf/path-seq html-dir
+                      #(and (= (fs/extension %) "html")
+                            (not= (fs/file-name %) "tags.html")
+                            (not= (fs/file-name %) "home.html"))))
+  (def acnt (count (uf/path-seq html-dir
+                                #(and (= (fs/extension %) "html")
+                                      (not= (fs/file-name %) "tags.html")
+                                      (not= (fs/file-name %) "home.html")))))
+  (= (+ (count model))
+     (count (uf/path-seq html-dir
+                         #(and (= (fs/extension %) "html")
+                               (not= (fs/file-name %) "tags.html")
+                               (not= (fs/file-name %) "home.html"))))))
 
 ;; Test
+;(def cnt (atom 0))
 (defspec test-without-timing
+  {:num-tests 100
+   ;:seed 1674007981491
+   ;:max-size 60
+   }
   (let [md-dir "test/fixture/spbt/md"
         html-dir "test/fixture/spbt/html"]
-    (uf/delete-all-except-gitkeep md-dir)
-    (uf/delete-all-except-gitkeep html-dir)
     (defp [ops (g/bind (g/set (gen-md-file md-dir) {:min-elements 1})
-                       gen-ops)]
-      (loop [model {} ops ops]
+                       gen-ops)
+           #_(g/return [{:path "test/fixture/spbt/md/A7001010900.+.md", :text "", :kind :create}
+                        {:kind :upd-sys}])
+           #_(g/return
+              [{:path "test/fixture/spbt/md/A7001010900.+..md", :text "", :kind :create}
+               {:path "test/fixture/spbt/md/A7001010900.+..md", :text "", :kind :create}])]
+      (def ops ops)
+      (uf/delete-all-except-gitkeep md-dir)
+      (uf/delete-all-except-gitkeep html-dir)
+
+      ;(reset! cnt 0) (println "") ;;;
+      (loop [posts (updater/post-set md-dir), model {}, ops ops]
         (if-let [op (first ops)]
-          (recur {} (rest ops))
+          (let [new-posts (updater/post-set md-dir)]
+            (next-actual op [posts new-posts html-dir])
+            (if (same-num-public-pages? model html-dir)
+              (recur new-posts (next-model op model) (rest ops))
+              false))
           true)) ;; pass test 
       )))
+
+(def m0 {})
+(def m1 (next-model {:path "test/fixture/spbt/md/A7001010900.+.md", :text "", :kind :create}
+                    m0))
+(next-actual {:path "test/fixture/spbt/md/A7001010900.+.md", :text "", :kind :create}
+             nil)
+
+(def m2 (next-model {:kind :upd-sys} m1))
 
 (comment
   (g/sample gen-md-text)
@@ -101,4 +153,9 @@
   (g/sample (gen-create md-files))
   (g/sample (gen-ops md-files))
 
-  (test-without-timing))
+  (def html-dir "test/fixture/spbt/html")
+  (def md-dir "test/fixture/spbt/md")
+  ops
+  (test-without-timing)
+  (spit (:path op) (:text op))
+  (fs/delete-if-exists (:path op)))
