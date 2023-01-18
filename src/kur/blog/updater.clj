@@ -3,26 +3,33 @@
             [kur.blog.look.post :as look-post]
             [kur.blog.page.post :as post]
             [kur.blog.page.post.diff :as post-diff]
+            [kur.blog.page.post.name :as name]
             [kur.blog.look.tags :as look-tags]
             [kur.blog.page.tags :as tags]
             [kur.blog.look.home :as look-home]
             [kur.util.file-system :as uf]))
 
 (defn post-set [md-dir]
-  (->> md-dir uf/path-seq (map post/post) set))
+  (->> (uf/path-seq md-dir #(name/valid? (fs/file-name %)))
+       (map post/post) set))
 
 (defn site
   "Return commands to maintain html files of site
    commands are [[f & args]*]"
   [old-posts new-posts html-dir]
+  (def old-posts old-posts)
+  (def new-posts new-posts)
   (let [unchangeds (->> (post-diff/unchangeds old-posts new-posts)
                         (filter post/public?)
                         (keep post/load-text)) ; Remove non-existing post
+
         {to-deletes ::post/delete!, to-writes ::post/write!}
-        (->> (post-diff/happened-assocds old-posts new-posts)
-             (keep post/load-text) ; Remove non-existing post
-             (group-by post/how-update-html))
-        unchangeds-and-writes (concat unchangeds to-writes)
+        (group-by post/how-update-html
+                  (post-diff/happened-assocds old-posts new-posts))
+
+        to-writes (keep post/load-text to-writes)
+        unchangeds-and-writes (concat unchangeds to-writes); Remove non-existing post
+
         html-path #(str (fs/path html-dir %))]
     ;; TODO: 위 let에서 unchanged/to-d/to-w fn으로 extract하기
     (concat

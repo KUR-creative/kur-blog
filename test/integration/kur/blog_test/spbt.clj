@@ -79,7 +79,11 @@
                   (catch Exception e (prn 'c) (def op op)))
     :delete  (try (fs/delete-if-exists (:path op))
                   (catch Exception e (prn 'd) (def op op)))
-    :upd-sys (updater/update! (updater/site old-posts new-posts html-dir))))
+    :upd-sys (do
+               (def old-posts old-posts)
+               (def new-posts new-posts)
+               (def s (updater/site old-posts new-posts html-dir))
+               (updater/update! (updater/site old-posts new-posts html-dir)))))
 
 ;; Properties
 (defn same-num-public-pages? [model html-dir]
@@ -108,13 +112,13 @@
    }
   (let [md-dir "test/fixture/spbt/md"
         html-dir "test/fixture/spbt/html"]
-    (defp [ops #_(g/bind (g/set (gen-md-file md-dir) {:min-elements 1})
-                         gen-ops)
+    (defp [ops (g/bind (g/set (gen-md-file md-dir) {:min-elements 1})
+                       gen-ops)
            #_(g/return [{:path "test/fixture/spbt/md/A7001010900.+.md", :text "", :kind :create}
                         {:kind :upd-sys}])
-           (g/return
-            [{:path "test/fixture/spbt/md/A7001010900.+..md", :text "", :kind :create}
-             {:path "test/fixture/spbt/md/A7001010900.+..md", :text "", :kind :create}])]
+           #_(g/return
+              [{:path "test/fixture/spbt/md/A7001010900.+..md", :text "", :kind :create}
+               {:path "test/fixture/spbt/md/A7001010900.+..md", :text "", :kind :create}])]
       (def ops ops)
       (uf/delete-all-except-gitkeep md-dir)
       (uf/delete-all-except-gitkeep html-dir)
@@ -132,13 +136,21 @@
       )))
 
 (def m0 {})
-(def m1 (next-model {:path "test/fixture/spbt/md/A7001010900.+..md", :text "", :kind :create}
-                    m0))
-(next-actual {:path "test/fixture/spbt/md/A7001010900.+.md", :text "", :kind :create}
-             nil)
+(def m1 (next-model {:path "test/fixture/spbt/md/A7001010900.+..md", :text "", :kind :create} m0))
+(def m2 (next-model {:kind :upd-sys} m1))
+(def m3 (next-model {:path "test/fixture/spbt/md/A7001010900.+..md" :kind :delete} m2))
+(def m4 (next-model {:kind :upd-sys} m3))
 
-(def m2 (next-model {:path "test/fixture/spbt/md/A7001010900.+..md", :text "", :kind :create}
-                    m1))
+(def olds (updater/post-set md-dir))
+(next-actual {:path "test/fixture/spbt/md/A7001010900.+..md", :text "", :kind :create} nil)
+(def news (updater/post-set md-dir))
+(next-actual {:kind :upd-sys} [olds news html-dir])
+
+(def olds1 (updater/post-set md-dir))
+(next-actual {:path "test/fixture/spbt/md/A7001010900.+..md" :kind :delete} nil)
+(def news1 (updater/post-set md-dir))
+
+(next-actual {:kind :upd-sys} [olds1 news1 html-dir])
 
 (comment
   (g/sample gen-md-text)
