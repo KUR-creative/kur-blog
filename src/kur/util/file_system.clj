@@ -6,7 +6,9 @@
 ;;;
 (s/def ::file-name ;; not a root
   (s/and #(not (#{"" "." ".."} (str %)))
-         #(not (.contains (str %) "/"))))
+         #(not (.contains (str %) "/"))
+         #(< (count (.getBytes %)) 256) ;; linux limit
+         ))
 
 (s/def ::path #(not= (str %) ""))
 ;; NOTE: Valid unix path are way too robust.
