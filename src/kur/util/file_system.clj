@@ -10,7 +10,7 @@
          #(< (count (.getBytes %)) 256) ;; linux limit
          ))
 
-(s/def ::path #(not= (str %) ""))
+(s/def ::path (s/and string? #(not= (str %) "")))
 ;; NOTE: Valid unix path are way too robust.
 ;; See https://unix.stackexchange.com/questions/125522/path-syntax-rules
 ;; Maybe . .. / /// ~ etc.. are need to be supported. But not now!
