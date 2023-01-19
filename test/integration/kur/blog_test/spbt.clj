@@ -27,19 +27,16 @@
 
 (def gen-md-text
   (string-from-regexes ascii* common-whitespace* hangul*))
-(def gen-tags-and-frontmatter
-  (g/let [tags (g/vector (s/gen ::tag/tag))
-          #_(g/one-of [g/any-printable-equatable
-                       (g/vector (s/gen ::tag/tag))])
-          frontmatter (fmt/gen-frontmatter-str
-                       (g/frequency [[1 fmt/gen-non-yaml]
-                                     [1 fmt/gen-no-tags-yaml]
-                                     [8 (fmt/gen-tags-yaml tags)]]))]
-    {:tags tags :frontmatter frontmatter}))
+(defn gen-frontmatter [tag-set]
+  (g/let [tags (g/vector (g/elements tag-set))]
+    (fmt/gen-frontmatter-str
+     (g/frequency [[1 fmt/gen-non-yaml]
+                   [1 fmt/gen-no-tags-yaml]
+                   [8 (fmt/gen-tags-yaml tags)]]))))
 
-(defn gen-md-file [dir]
+(defn gen-md-file [dir tag-set]
   (g/let [fname gen-post-name
-          {:keys [tags frontmatter]} gen-tags-and-frontmatter
+          frontmatter (gen-frontmatter tag-set)
           md-text gen-md-text]
     {:path (str (fs/path dir fname)) :text (str frontmatter md-text)}))
 
@@ -95,22 +92,11 @@
   (= (+ (count model) 2) ; 2 = tags + home
      (count (uf/path-seq html-dir #(= (fs/extension %) "html")))))
 
-(defn correct-tags-page? [md-dir html-dir]
+(defn correct-tags-page? [md-dir tags-html-str]
   (def md-dir md-dir)
-  (def html-dir html-dir)
-  (let [posts (updater/post-set md-dir)]
-    (count posts)
-    (->> posts
-         (map post/load-text)
-         (keep tags/tags)
-         count))
-  true)
-(do
-  (uf/delete-all-except-gitkeep md-dir)
-  (uf/delete-all-except-gitkeep html-dir)
-  (run! #(spit (:path %) (:text %))
-        (last (g/sample (g/set (gen-md-file md-dir) {:min-elements 1})
-                        90))))
+  (def tags-html-str tags-html-str)
+  (every? #(.contains tags-html-str %)
+          (keep :id (updater/post-set md-dir))))
 
 ;; Test
 ;(def cnt (atom 0))
@@ -124,10 +110,14 @@
    ;:max-size 60
    }
   (let [md-dir "test/fixture/spbt/md"
-        html-dir "test/fixture/spbt/html"]
-    (defp [[md-files ops]
-           (g/bind (g/set (gen-md-file md-dir) {:min-elements 1})
-                   #(g/tuple (g/return %) (gen-ops %)))
+        html-dir "test/fixture/spbt/html"
+        tags-html-path (str (fs/path html-dir "tags.html"))]
+    (defp [[tag-set md-files ops]
+           (g/let [tag-set (g/set (s/gen ::tag/tag) {:min-elements 1})
+                   md-files (g/set (gen-md-file md-dir tag-set)
+                                   {:min-elements 1})
+                   ops (gen-ops md-files)]
+             [tag-set md-files ops])
            #_(g/return [{:path "test/fixture/spbt/md/A7001010900.+.md", :text "", :kind :create}
                         {:kind :upd-sys}])
            #_(g/return
@@ -149,7 +139,8 @@
             (if (or (not= (:kind op) :upd-sys)
                     ;; Properties
                     (and (same-num-public-pages? new-model html-dir)
-                         (correct-tags-page? md-dir html-dir)))
+                         (correct-tags-page? md-dir
+                                             (slurp tags-html-path))))
               (recur new-posts new-model (rest ops))
               (teardown-and-return false md-dir html-dir)))
           (teardown-and-return true md-dir html-dir))) ;; pass test 
@@ -181,13 +172,16 @@
   (g/sample gen-invalid-post-fname)
   (g/sample gen-valid-post-fname)
   (g/sample gen-post-name)
-  (g/sample gen-tags-and-frontmatter)
-  (g/sample (g/set (gen-md-file "test/fixture/spbt/md/")))
+  (def tags #{"a" "b" "c" "d"})
+  (g/sample (gen-frontmatter tags))
+  (g/sample (g/set (gen-md-file "test/fixture/spbt/md/"
+                                #{"a" "b" "c/c" "d/e/f"})))
   (run! (fn [{:keys [path text]}] (spit path text))
         (-> "test/fixture/spbt/md/"
-            gen-md-file g/set g/sample last))
+            (gen-md-file #{"a" "b" "c/c" "d/e/f"}) g/set g/sample last))
 
-  (def md-files (last (g/sample (g/set (gen-md-file "test/fixture/spbt/md/")))))
+  (def md-files (last (g/sample (g/set (gen-md-file "test/fixture/spbt/md/"
+                                                    #{"a" "b" "c/c" "d/e/f"})))))
   (g/sample (gen-create md-files))
   (g/sample (gen-ops md-files))
 
