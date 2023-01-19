@@ -1,8 +1,11 @@
 (ns kur.blog.page.tags
   (:require [clojure.set :refer [union]]))
 
+(defn tags [post]
+  (-> post :frontmatter :tags))
+
 (defn has-tags? [post]
-  (-> post :frontmatter :tags seq))
+  (seq (tags post)))
 
 (defn tag:posts
   "All posts should have tags ((has-tags? %)!= nil).
