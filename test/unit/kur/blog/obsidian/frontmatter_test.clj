@@ -25,8 +25,9 @@
 ;; head
 (def head "---\n")
 
-;; yaml
-(def gen-yaml (g/fmap yaml/generate-string g/any-printable-equatable))
+;; yaml 
+(def gen-yaml ; TODO: if g/any-printable-equatable is problem, see https://github.com/clojure/test.check/blob/master/doc/intro.md#recursive-generators
+  (g/fmap yaml/generate-string g/any-printable-equatable))
 (def gen-non-yaml (g/such-that #(and (not (frontmatter/parse-yaml %))
                                      (not (.contains % "---"))
                                      (not (.endsWith % "--"))
@@ -53,10 +54,10 @@
   (g/such-that #(not (.contains % "---")) gen-shoe))
 
 (defn gen-frontmatter-str [gen-yaml]
-  (g/let [cap (g/one-of [gen-ws-cap gen-not-ws-cap])
-          head (s/gen #{head ""})
+  (g/let [cap  (g/frequency [[1 gen-not-ws-cap] [9 gen-ws-cap]])
+          head (g/frequency [[1 (g/return "")] [9 (g/return head)]])
           yaml gen-yaml
-          foot (s/gen #{foot ""})]
+          foot (g/frequency [[1 (g/return "")] [9 (g/return foot)]])]
     (str cap head yaml foot)))
 
 ;; Tests

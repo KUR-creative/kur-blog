@@ -10,6 +10,7 @@
    [kur.blog.obsidian.tag :as tag]
    [kur.blog.page.post.name :as name]
    [kur.blog.page.post :as post]
+   [kur.blog.page.tags :as tags]
    [kur.blog.updater :as updater]
    [kur.util.file-system :as uf]
    [kur.util.generator :refer [string-from-regexes]]
@@ -27,12 +28,13 @@
 (def gen-md-text
   (string-from-regexes ascii* common-whitespace* hangul*))
 (def gen-tags-and-frontmatter
-  (g/let [tags (g/one-of [g/any-printable-equatable
-                          (g/vector (s/gen ::tag/tag))])
+  (g/let [tags (g/vector (s/gen ::tag/tag))
+          #_(g/one-of [g/any-printable-equatable
+                       (g/vector (s/gen ::tag/tag))])
           frontmatter (fmt/gen-frontmatter-str
-                       (g/one-of [fmt/gen-non-yaml
-                                  fmt/gen-no-tags-yaml
-                                  (fmt/gen-tags-yaml tags)]))]
+                       (g/frequency [[1 fmt/gen-non-yaml]
+                                     [1 fmt/gen-no-tags-yaml]
+                                     [8 (fmt/gen-tags-yaml tags)]]))]
     {:tags tags :frontmatter frontmatter}))
 
 (defn gen-md-file [dir]
@@ -96,8 +98,19 @@
 (defn correct-tags-page? [md-dir html-dir]
   (def md-dir md-dir)
   (def html-dir html-dir)
+  (let [posts (updater/post-set md-dir)]
+    (count posts)
+    (->> posts
+         (map post/load-text)
+         (keep tags/tags)
+         count))
   true)
-#_(run! #(spit (:path %) (:text %)) md-files)
+(do
+  (uf/delete-all-except-gitkeep md-dir)
+  (uf/delete-all-except-gitkeep html-dir)
+  (run! #(spit (:path %) (:text %))
+        (last (g/sample (g/set (gen-md-file md-dir) {:min-elements 1})
+                        90))))
 
 ;; Test
 ;(def cnt (atom 0))
