@@ -10,8 +10,10 @@
             [kur.util.file-system :as uf]))
 
 (defn post-set [md-dir]
-  (->> (uf/path-seq md-dir #(name/valid? (fs/file-name %)))
-       (map post/post) set))
+  (->> (uf/path-seq md-dir)
+       (keep #(vector % (name/valid-parts %)))
+       (map (fn [[path parts]] (post/post path parts)))
+       set))
 
 (defn html-path
   "fname is (fs/file-name path). It includes extension."

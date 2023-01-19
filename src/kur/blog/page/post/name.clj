@@ -3,6 +3,7 @@
             [clojure.spec.alpha :as s]
             [clojure.spec.gen.alpha :as sg]
             [clojure.string :as str]
+            [kur.util.file-system :as uf]
             [kur.util.generator :refer [string-from-regexes]]
             [kur.util.regex :refer [hangul* alphanumeric*]]
             [kur.util.string :refer [digit?]]
@@ -74,12 +75,30 @@
                                               (str meta "." title)
                                               meta)))))
 
-(defn valid? [fname-or-parts]
+(defn ^:deprecated valid? [fname-or-parts]
   (if (string? fname-or-parts)
     (and (= (fs/extension fname-or-parts) post-extension)
          (not (.contains fname-or-parts ".sync-conflict-"))
          (s/valid? ::file-name-parts (fname->parts fname-or-parts)))
     (s/valid? ::file-name-parts fname-or-parts)))
+
+(defn valid-parts
+  "Return valid file name parts or nil if invalid"
+  [path-or-parts]
+  (cond (s/valid? ::uf/path path-or-parts) ; arg = path
+        (let [fname (fs/file-name path-or-parts)
+              parts (fname->parts fname)]
+          (if (and (= (fs/extension fname) post-extension) ; policy
+                   (not (.contains fname ".sync-conflict-"))
+                   (s/valid? ::file-name-parts parts))
+            parts
+            nil))
+
+        (s/valid? ::file-name-parts path-or-parts) ; arg = parts
+        path-or-parts
+
+        :else
+        nil))
 
 (comment
   (id-info "asd1234567890")

@@ -5,12 +5,14 @@
             [kur.blog.page.post.name :refer [fname->parts]]
             [kur.util.file-system :as uf]))
 
-(defn post [path]
-  (if (fs/exists? path)
-    (assoc (-> path fs/file-name str fname->parts)
-           :md-path path
-           :last-modified-millis (uf/last-modified-millis path))
-    nil)) ; non-exist post should be removed in state
+(defn post
+  ([path] (post path (-> path fs/file-name str fname->parts)))
+  ([path parts] ; parts should be parsed from path
+   (if (fs/exists? path)
+     (assoc parts
+            :md-path path
+            :last-modified-millis (uf/last-modified-millis path))
+     nil))) ; non-exist post should be removed in state
 
 (defn load-text [{path :md-path :as post}]
   (if (fs/exists? path)
