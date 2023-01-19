@@ -6,102 +6,14 @@
    [clojure.test.check.generators :as g]
    [clojure.test.check.properties
     :refer [for-all] :rename {for-all defp}]
-   [kur.blog.obsidian.frontmatter-test :as fmt]
+   [kur.blog-test.spbt.data-generator :as dgen]
+   [kur.blog-test.spbt.operation-generator :as ogen]
+   [kur.blog-test.spbt.property :as prop]
+   [kur.blog-test.spbt.runner :as run]
    [kur.blog.obsidian.tag :as tag]
-   [kur.blog.page.post.name :as name]
-   [kur.blog.page.post :as post]
-   [kur.blog.page.tags :as tags]
    [kur.blog.updater :as updater]
-   [kur.util.file-system :as uf]
-   [kur.util.generator :refer [string-from-regexes]]
-   [kur.util.regex :refer [ascii* common-whitespace* hangul*]]))
+   [kur.util.file-system :as uf]))
 
-;; md file
-(def gen-invalid-post-fname
-  (g/such-that #(and (s/valid? ::uf/file-name %) (not (name/valid? %)))
-               name/gen-post-title))
-(def gen-valid-post-fname
-  (g/such-that #(s/valid? ::uf/file-name %)
-               (g/fmap name/parts->fname (s/gen ::name/file-name-parts))))
-(def gen-post-name (g/one-of [gen-invalid-post-fname gen-valid-post-fname]))
-
-(def gen-md-text
-  (string-from-regexes ascii* common-whitespace* hangul*))
-(defn gen-frontmatter [tag-set]
-  (g/let [tags (g/vector (g/elements tag-set))]
-    (fmt/gen-frontmatter-str
-     (g/frequency [[1 fmt/gen-non-yaml]
-                   [1 fmt/gen-no-tags-yaml]
-                   [8 (fmt/gen-tags-yaml tags)]]))))
-
-(defn gen-md-file [dir tag-set]
-  (g/let [fname gen-post-name
-          frontmatter (gen-frontmatter tag-set)
-          md-text gen-md-text]
-    {:path (str (fs/path dir fname)) :text (str frontmatter md-text)}))
-
-;; ops
-(defn gen-create [md-files]
-  (g/fmap #(assoc % :kind :create) (g/elements md-files)))
-(defn gen-delete [md-files]
-  (g/fmap #(hash-map :kind :delete :path (:path %))
-          (g/elements md-files)))
-#_(defn gen-update [md-files] ;; TODO: update file
-    (g/fmap #(assoc % :kind :delete) (g/elements md-files)))
-#_(defn gen-test [md-files] ;; test props
-    (g/fmap #(assoc % :kind read) (g/elements md-files)))
-(def gen-update-sys ;; NOTE: with timing에서는 제거해야..
-  (g/return {:kind :upd-sys}))
-
-(defn gen-ops [md-files]
-  (def md-files md-files)
-  (g/vector (g/one-of [(gen-create md-files)
-                       (gen-delete md-files)
-                       gen-update-sys])))
-
-;; Runners
-(defn next-model [{:keys [path text kind] :as op} model]
-  (case kind
-    :create  (let [parts (name/fname->parts (fs/file-name path))]
-               (if (and (name/valid? (fs/file-name path))
-                        (post/public? parts))
-                 (assoc model path text)
-                 model))
-    :delete  (dissoc model path)
-    :upd-sys model))
-
-(defn next-actual
-  "The actual state is a directory in file system!"
-  [op [old-posts md-dir html-dir]]
-  (case (:kind op)
-    :create  (do (spit (:path op) (:text op)) old-posts)
-    :delete  (do (fs/delete-if-exists (:path op)) old-posts)
-    :upd-sys (let [new-posts (updater/post-set md-dir)]
-               (def old-posts old-posts)
-               (def new-posts new-posts)
-               (def s (updater/site old-posts new-posts html-dir))
-               (updater/update! (updater/site old-posts new-posts html-dir))
-               new-posts)))
-
-;; Properties
-(defn same-num-public-pages? [model html-dir]
-  (when (not= (+ (count model) 2)
-              (count (uf/path-seq html-dir #(= (fs/extension %) "html"))))
-    (def model model)
-    (def fseq (uf/path-seq html-dir #(= (fs/extension %) "html"))))
-  (= (+ (count model) 2) ; 2 = tags + home
-     (count (uf/path-seq html-dir #(= (fs/extension %) "html")))))
-
-(defn correct-tags-page? [md-dir tags-html-str]
-  (def md-dir md-dir)
-  (def tags-html-str tags-html-str)
-  (every? #(.contains tags-html-str %)
-          (->> (updater/post-set md-dir)
-               (filter post/public?)
-               (keep :id))))
-
-;; Test
-;(def cnt (atom 0))
 (defn teardown-and-return [ret & dirs]
   (run! uf/delete-all-except-gitkeep dirs)
   ret)
@@ -116,9 +28,9 @@
         tags-html-path (str (fs/path html-dir "tags.html"))]
     (defp [[tag-set md-files ops]
            (g/let [tag-set (g/set (s/gen ::tag/tag) {:min-elements 1})
-                   md-files (g/set (gen-md-file md-dir tag-set)
+                   md-files (g/set (dgen/gen-md-file md-dir tag-set)
                                    {:min-elements 1})
-                   ops (gen-ops md-files)]
+                   ops (ogen/gen-ops md-files)]
              [tag-set md-files ops])
            #_(g/return [{:path "test/fixture/spbt/md/A7001010900.+.md", :text "", :kind :create}
                         {:kind :upd-sys}])
@@ -135,17 +47,17 @@
       (loop [posts (updater/post-set md-dir), model {}, ops ops]
         (if-let [op (first ops)]
           (let [;; Update model & actual
-                new-model (next-model op model)
-                new-posts (next-actual op [posts md-dir html-dir])]
+                new-model (run/next-model op model)
+                new-posts (run/next-actual op [posts md-dir html-dir])]
             ;; Check property
             (if (or (not= (:kind op) :upd-sys)
                     ;; Properties
-                    (and (same-num-public-pages? new-model html-dir)
-                         (correct-tags-page? md-dir
-                                             (slurp tags-html-path))))
+                    (and (prop/same-num-public-pages? new-model html-dir)
+                         (prop/correct-tags-page? md-dir
+                                                  (slurp tags-html-path))))
               (recur new-posts new-model (rest ops))
-              (teardown-and-return false md-dir html-dir)))
-          (teardown-and-return true md-dir html-dir))) ;; pass test 
+              (teardown-and-return false md-dir html-dir))) ; fail
+          (teardown-and-return true md-dir html-dir))) ; pass test 
       )))
 
 (comment
@@ -169,25 +81,5 @@
   #_(next-actual {:kind :upd-sys} [olds1 md-dir html-dir])
 
   ;;
-  (g/sample gen-md-text)
-  (g/sample gen-invalid-post-fname)
-  (g/sample gen-valid-post-fname)
-  (g/sample gen-post-name)
-  (def tags #{"a" "b" "c" "d"})
-  (g/sample (gen-frontmatter tags))
-  (g/sample (g/set (gen-md-file "test/fixture/spbt/md/"
-                                #{"a" "b" "c/c" "d/e/f"})))
-  (run! (fn [{:keys [path text]}] (spit path text))
-        (-> "test/fixture/spbt/md/"
-            (gen-md-file #{"a" "b" "c/c" "d/e/f"}) g/set g/sample last))
-
-  (def md-files (last (g/sample (g/set (gen-md-file "test/fixture/spbt/md/"
-                                                    #{"a" "b" "c/c" "d/e/f"})))))
-  (g/sample (gen-create md-files))
-  (g/sample (gen-ops md-files))
-
   (def html-dir "test/fixture/spbt/html")
-  (def md-dir "test/fixture/spbt/md")
-  ops
-  (spit (:path op) (:text op))
-  (fs/delete-if-exists (:path op)))
+  (def md-dir "test/fixture/spbt/md"))
