@@ -93,6 +93,12 @@
   (= (+ (count model) 2) ; 2 = tags + home
      (count (uf/path-seq html-dir #(= (fs/extension %) "html")))))
 
+(defn correct-tags-page? [md-dir html-dir]
+  (def md-dir md-dir)
+  (def html-dir html-dir)
+  true)
+#_(run! #(spit (:path %) (:text %)) md-files)
+
 ;; Test
 ;(def cnt (atom 0))
 (defn teardown-and-return [ret & dirs]
@@ -106,8 +112,9 @@
    }
   (let [md-dir "test/fixture/spbt/md"
         html-dir "test/fixture/spbt/html"]
-    (defp [ops (g/bind (g/set (gen-md-file md-dir) {:min-elements 1})
-                       gen-ops)
+    (defp [[md-files ops]
+           (g/bind (g/set (gen-md-file md-dir) {:min-elements 1})
+                   #(g/tuple (g/return %) (gen-ops %)))
            #_(g/return [{:path "test/fixture/spbt/md/A7001010900.+.md", :text "", :kind :create}
                         {:kind :upd-sys}])
            #_(g/return
@@ -127,7 +134,9 @@
                 new-posts (next-actual op [posts md-dir html-dir])]
             ;; Check property
             (if (or (not= (:kind op) :upd-sys)
-                    (same-num-public-pages? new-model html-dir)) ; prop 1
+                    ;; Properties
+                    (and (same-num-public-pages? new-model html-dir)
+                         (correct-tags-page? md-dir html-dir)))
               (recur new-posts new-model (rest ops))
               (teardown-and-return false md-dir html-dir)))
           (teardown-and-return true md-dir html-dir))) ;; pass test 
