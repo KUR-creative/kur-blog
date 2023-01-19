@@ -10,14 +10,12 @@
             [kur.util.file-system :as uf]))
 
 (defn post-set [md-dir]
+  (def md-dir md-dir)
   (->> (uf/path-seq md-dir)
-       (keep #(vector % (name/valid-parts %)))
+       (keep #(when-let [parts (name/valid-parts %)]
+                [% parts]))
        (map (fn [[path parts]] (post/post path parts)))
        set))
-
-(defn html-path
-  "fname is (fs/file-name path). It includes extension."
-  [html-dir fname])
 
 (defn classify-posts
   [old-posts new-posts]

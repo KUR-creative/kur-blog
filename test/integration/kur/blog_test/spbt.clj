@@ -156,16 +156,15 @@
   (def m3 (next-model {:kind :upd-sys} m2))
   #_(def m4 (next-model {:kind :upd-sys} m3))
 
-  #_(def olds (updater/post-set md-dir))
-  (next-actual {:path "test/fixture/spbt/md/A7001010900.+.md", :text "", :kind :create} nil)
-  #_(def news (updater/post-set md-dir))
-  #_(next-actual {:kind :upd-sys} [olds news html-dir])
+  (def olds (updater/post-set md-dir))
+  (next-actual {:path "test/fixture/spbt/md/A7001010900.md", :text " ", :kind :create} nil)
+  (def news (updater/post-set md-dir))
+  (next-actual {:kind :upd-sys} [olds news html-dir])
 
-  (def olds1 (updater/post-set md-dir))
-  (next-actual {:path "test/fixture/spbt/md/|", :text "", :kind :create} nil)
-  (def news1 (updater/post-set md-dir))
-
-  (next-actual {:kind :upd-sys} [olds1 news1 html-dir])
+  #_(def olds1 (updater/post-set md-dir))
+  #_(next-actual {:path "test/fixture/spbt/md/|", :text "", :kind :create} nil)
+  #_(def news1 (updater/post-set md-dir))
+  #_(next-actual {:kind :upd-sys} [olds1 news1 html-dir])
 
   ;;
   (g/sample gen-md-text)
