@@ -10,7 +10,6 @@
             [kur.util.file-system :as uf]))
 
 (defn post-set [md-dir]
-  (def md-dir md-dir)
   (->> (uf/path-seq md-dir)
        (keep #(when-let [parts (name/valid-parts %)]
                 [% parts]))

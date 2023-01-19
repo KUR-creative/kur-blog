@@ -96,7 +96,9 @@
   (def md-dir md-dir)
   (def tags-html-str tags-html-str)
   (every? #(.contains tags-html-str %)
-          (keep :id (updater/post-set md-dir))))
+          (->> (updater/post-set md-dir)
+               (filter post/public?)
+               (keep :id))))
 
 ;; Test
 ;(def cnt (atom 0))
@@ -159,12 +161,12 @@
   (def olds (updater/post-set md-dir))
   (next-actual {:path "test/fixture/spbt/md/A7001010900.md", :text " ", :kind :create} nil)
   (def news (updater/post-set md-dir))
-  (next-actual {:kind :upd-sys} [olds news html-dir])
+  (next-actual {:kind :upd-sys} [olds md-dir html-dir])
 
   #_(def olds1 (updater/post-set md-dir))
   #_(next-actual {:path "test/fixture/spbt/md/|", :text "", :kind :create} nil)
   #_(def news1 (updater/post-set md-dir))
-  #_(next-actual {:kind :upd-sys} [olds1 news1 html-dir])
+  #_(next-actual {:kind :upd-sys} [olds1 md-dir html-dir])
 
   ;;
   (g/sample gen-md-text)
