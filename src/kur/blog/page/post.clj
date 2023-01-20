@@ -40,7 +40,11 @@
 (defn html-file-name [post]
   (str (:id post) ".html"))
 
-(defn how-update-html [happened-post]
+(defn how-update-html
+  "(:happened happened-post) is ::post-diff/{delete, create, update}
+   do not input post that (:happened post) = ::post-diff/as-is. 
+   Because as-is post don't have to update."
+  [happened-post]
   (if (or (not (public? happened-post)) ; hap이 create라도 del! 가능함
           (= (:happened happened-post) ::post-diff/delete))
     ::delete! ; TODO: 없는 html 삭제 시 예외 주의

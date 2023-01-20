@@ -17,32 +17,33 @@
        set))
 
 (defn classify-posts
-  [old-posts new-posts]
-  (let [unchangeds (->> (post-diff/unchangeds old-posts new-posts)
-                        (filter post/public?)
-                        (keep post/load-text)) ; TODO: Care side-effect!
+  "Return post groups classified by file system change(delete, write, as-is)
+   NOTE: unchanged(post)s inherit loaded text from old-posts."
+  [old-posts now-posts]
+  (let [mergeds
+        (vec (post-diff/merge-and-assoc-happened old-posts now-posts))
+
+        unchangeds
+        (filter #(= ::post-diff/as-is (:happened %)) mergeds)
+
         {to-deletes ::post/delete!, to-writes ::post/write!}
-        (group-by post/how-update-html
-                  (post-diff/happened-assocds old-posts new-posts))]
-    {:unchangeds unchangeds
-     :to-deletes to-deletes :to-writes to-writes}))
+        (group-by post/how-update-html mergeds)
+
+        map-rm-hap (fn [posts] (map #(dissoc % :happened) posts))]
+    {:unchangeds (map-rm-hap unchangeds)
+     :to-deletes (map-rm-hap to-deletes)
+     :to-writes (map-rm-hap to-writes)}))
 
 (defn site
   "Return commands to maintain html files of site
    commands are [[f & args]*]"
-  [old-posts new-posts html-dir]
-  (def old-posts old-posts)
-  (def new-posts new-posts)
-  (let [{:keys [unchangeds to-writes to-deletes]}
-        (classify-posts old-posts new-posts)
-
-        to-writes (keep post/load-text to-writes) ; Remove non-existing post
-        unchangeds-and-writes (concat unchangeds to-writes)
+  [unchanged-posts post-to-delete loaded-posts-to-write html-dir]
+  (let [unchangeds-and-writes (concat unchanged-posts loaded-posts-to-write)
         html-path #(str (fs/path html-dir %))]
     (concat
      (map (fn [post] [spit (html-path (post/html-file-name post))
                       (look-post/html nil (:text post))])
-          to-writes)
+          loaded-posts-to-write)
      [[spit (html-path "tags.html")
        (look-tags/html (tags/tag:posts unchangeds-and-writes)
                        (filter #(not (tags/has-tags? %))
@@ -51,7 +52,7 @@
        (look-home/html (sort-by :id unchangeds-and-writes))]]
      (map (fn [post]
             [fs/delete-if-exists (html-path (post/html-file-name post))])
-          to-deletes))))
+          post-to-delete))))
 
 (defn update! [site]
   (run! (fn [[f & args]] (apply f args)) site))

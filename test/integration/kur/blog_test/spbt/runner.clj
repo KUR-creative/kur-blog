@@ -20,9 +20,15 @@
   (case (:kind op)
     :create  (do (spit (:path op) (:text op)) old-posts)
     :delete  (do (fs/delete-if-exists (:path op)) old-posts)
-    :upd-sys (let [new-posts (updater/post-set md-dir)]
-               (def old-posts old-posts)
-               (def new-posts new-posts)
-               (def s (updater/site old-posts new-posts html-dir))
-               (updater/update! (updater/site old-posts new-posts html-dir))
-               new-posts)))
+    :upd-sys
+    (let [new-posts (updater/post-set md-dir)
+
+          {:keys [unchangeds to-deletes to-writes]}
+          (updater/classify-posts old-posts new-posts)
+
+          loaded-to-writes (map post/load-text to-writes)
+
+          site (updater/site unchangeds to-deletes loaded-to-writes
+                             html-dir)]
+      (updater/update! site)
+      (into (set unchangeds) loaded-to-writes))))
