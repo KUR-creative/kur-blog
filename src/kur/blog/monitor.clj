@@ -16,13 +16,12 @@
     (let [t (async/timeout wait-ms)]
       (async/alt!
         chan ([x] (when x ; when chan is closed, loop ends.
-                    ;(println "Read" x "from chan")
+                    (println "Read" x "from chan")
                     (recur true)))
         t (do (when got-event?
-                ;(println "Timed out. Act upon events!")
+                (println "Timed out. Act upon events!")
                 (f)
-                ;(println "events are resolved.")
-                )
+                (println "events are resolved."))
               (recur false))))))
 
 ;;
