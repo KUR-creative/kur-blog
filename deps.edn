@@ -19,4 +19,9 @@
 
   ;; etc
   clj-commons/clj-yaml {:mvn/version "1.0.26"}
-  cprop/cprop {:mvn/version "0.1.19"}}}
+  cprop/cprop {:mvn/version "0.1.19"}}
+
+ :aliases
+ {;; Run with clj -T:build clean|uber
+  :build {:deps {org.clojure/tools.build {:mvn/version "0.9.2"}}
+          :ns-default build}}}

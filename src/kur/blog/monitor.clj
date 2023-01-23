@@ -1,8 +1,7 @@
 (ns kur.blog.monitor
   "Monitor directory and call update-fn by sending message to channel"
   (:require [clojure.core.async :as async]
-            [hawk.core :as hawk]
-            [kur.blog.monitor :as monitor]))
+            [hawk.core :as hawk]))
 
 (defn watch-spec [paths chan]
   {:paths paths
