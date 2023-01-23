@@ -23,11 +23,11 @@
   (let [mergeds
         (vec (post-diff/merge-and-assoc-happened old-posts now-posts))
 
-        unchangeds
-        (filter #(= ::post-diff/as-is (:happened %)) mergeds)
+        {unchangeds true changeds false}
+        (group-by #(= ::post-diff/as-is (:happened %)) mergeds)
 
         {to-deletes ::post/delete!, to-writes ::post/write!}
-        (group-by post/how-update-html mergeds)
+        (group-by post/how-update-html changeds)
 
         map-rm-hap (fn [posts] (map #(dissoc % :happened) posts))]
     {:unchangeds (map-rm-hap unchangeds)
