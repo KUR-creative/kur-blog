@@ -10,8 +10,8 @@ target/*
 out/*
 !out/.gitkeep
 
-test/fixture/blog-root/tmp-md/*
-!test/fixture/blog-root/tmp-md/.gitkeep
+test/fixture/blog-root/blog-md/*
+!test/fixture/blog-root/blog-md/.gitkeep
 test/fixture/blog-root/tmp-html/*
 !test/fixture/blog-root/tmp-html/.gitkeep
 
