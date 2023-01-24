@@ -20,6 +20,8 @@
   "Return post groups classified by file system change(delete, write, as-is)
    NOTE: unchanged(post)s inherit loaded text from old-posts."
   [old-posts now-posts]
+  (def old-posts old-posts)
+  (def now-posts now-posts)
   (let [mergeds
         (vec (post-diff/merge-and-assoc-happened old-posts now-posts))
 

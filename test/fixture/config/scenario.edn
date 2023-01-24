@@ -1,0 +1,10 @@
+{:md-dir "test/fixture/scenario/md"
+ :html-dir "test/fixture/scenario/html"
+ :fs-wait-ms 1000}
+
+; md-dir          An directory to MONITOR post markdown
+; html-dir        An directory to UPDATE post html
+; resource-roots  Root directories to save resources
+; fs-wait-ms      MONITOR waits fs-wait-ms milliseconds
+;                 after consecutive file events in md-dir and then
+;                 requests UPDATER to write/update/delete posts

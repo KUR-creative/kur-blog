@@ -36,16 +36,16 @@
               (sg/tuple (s/gen ::author) (s/gen ::create-time)))))
 
 (s/def ::meta-str ; + means public, else private.
-  #{"+" "-"})
+  #{"+" "-" nil})
 
 (def obsidian-title-symbol* #"[\!\,\ \.\+\=\-\_\(\)]*")
 (def gen-post-title
   "<id>[.<meta>].<title>.md  NOTE: title can be empty string"
   (string-from-regexes obsidian-title-symbol* alphanumeric* hangul*))
 (s/def ::title
-  (s/with-gen (s/and string?
-                     #(not (s/valid? ::meta-str
-                                     (first (str/split % #"\." 2)))))
+  (s/with-gen (s/nilable (s/and string?
+                                #(not (s/valid? ::meta-str
+                                                (first (str/split % #"\." 2))))))
     (fn [] gen-post-title)))
 
 ;;; Post file name <-> parts round trip
@@ -67,7 +67,7 @@
   [post-fname]
   (let [base-name (fs/strip-ext post-fname)
         [id meta title] (str/split base-name #"\." 3)]
-    (cond-> {}
+    (cond-> {:meta-str nil :title nil}
       (s/valid? ::id id) (assoc :id id)
       (s/valid? ::meta-str meta) (assoc-some :meta-str meta
                                              :title title)
@@ -125,7 +125,10 @@
            '[clojure.test.check.clojure-test :refer [defspec]])
   (defspec fname-parts-roundtrip-test 1000
     (defp [parts (s/gen ::file-name-parts)]
-      (= parts (fname->parts (parts->fname parts)))))
+      (let [ks (keys parts)]
+        (= (select-keys parts ks)
+           (select-keys (fname->parts (parts->fname parts))
+                        ks)))))
   (fname-parts-roundtrip-test)
 
   (assert (= (-> {:title "o뼐n춑튬꽑2쬞덈", :id "ng700"}

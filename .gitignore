@@ -19,3 +19,8 @@ test/fixture/spbt/md/*
 test/fixture/spbt/html/*
 !test/fixture/spbt/md/.gitkeep
 !test/fixture/spbt/html/.gitkeep
+
+test/fixture/scenario/md/*
+test/fixture/scenario/html/*
+!test/fixture/scenario/md/.gitkeep
+!test/fixture/scenario/html/.gitkeep
