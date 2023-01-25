@@ -64,22 +64,21 @@
   (test-without-timing)
 
   ;;
+  (def html-dir "test/fixture/spbt/html")
+  (def md-dir "test/fixture/spbt/md")
+
   (def m0 {})
-  (def m1 (next-model {:path "test/fixture/spbt/md/A7001010900.+.md", :text "", :kind :create} m0))
-  (def m2 (next-model {:path "test/fixture/spbt/md/|", :text "", :kind :create} m1))
-  (def m3 (next-model {:kind :upd-sys} m2))
+  (def m1 (run/next-model {:path "test/fixture/spbt/md/A7001010900.+.md", :text "", :kind :create} m0))
+  (def m2 (run/next-model {:path "test/fixture/spbt/md/|", :text "", :kind :create} m1))
+  (def m3 (run/next-model {:kind :upd-sys} m2))
   #_(def m4 (next-model {:kind :upd-sys} m3))
 
   (def olds (updater/post-set md-dir))
-  (next-actual {:path "test/fixture/spbt/md/A7001010900.md", :text " ", :kind :create} nil)
+  (run/next-actual {:path "test/fixture/spbt/md/A7001010900.md", :text " ", :kind :create} nil)
   (def news (updater/post-set md-dir))
-  (next-actual {:kind :upd-sys} [olds md-dir html-dir])
+  (run/next-actual {:kind :upd-sys} [olds md-dir html-dir])
 
   #_(def olds1 (updater/post-set md-dir))
   #_(next-actual {:path "test/fixture/spbt/md/|", :text "", :kind :create} nil)
   #_(def news1 (updater/post-set md-dir))
-  #_(next-actual {:kind :upd-sys} [olds1 md-dir html-dir])
-
-  ;;
-  (def html-dir "test/fixture/spbt/html")
-  (def md-dir "test/fixture/spbt/md"))
+  #_(next-actual {:kind :upd-sys} [olds1 md-dir html-dir]))

@@ -85,7 +85,7 @@
 (defn valid-parts
   "Return valid file name parts or nil if invalid"
   [path-or-parts]
-  (def path-or-parts path-or-parts)
+  ;(def path-or-parts path-or-parts)
   (cond (s/valid? ::uf/path path-or-parts) ; arg = path
         (let [fname (fs/file-name path-or-parts)
               parts (fname->parts fname)]

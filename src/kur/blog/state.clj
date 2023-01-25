@@ -22,7 +22,7 @@
 (defn current
   "Current state and site"
   [old-state {:keys [md-dir html-dir] :as config}]
-  (let [new-state (state md-dir) ; TODO: Move post-set
+  (let [new-state (state md-dir)
 
         {:keys [to-deletes to-writes unchangeds]}
         (updater/classify-posts old-state new-state)
@@ -34,7 +34,7 @@
 
 (defn update!
   [atom-old-state current]
-  (def current-s current)
+  ;(def current-s current)
   (updater/update! (:site current))
   (reset! atom-old-state (:state current)))
 

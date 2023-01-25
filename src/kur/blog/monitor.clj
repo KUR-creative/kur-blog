@@ -10,7 +10,7 @@
 (defn loop!
   "Pop events from the chan until no more events occur for wait-ms, 
    then execute f"
-  [f wait-ms chan] ;; TODO: timeout-ms event-chan
+  [f wait-ms chan] ;; TODO? timeout-ms event-chan
   (async/go-loop [got-event? false]
     (let [t (async/timeout wait-ms)]
       (async/alt!

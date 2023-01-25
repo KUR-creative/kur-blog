@@ -45,9 +45,9 @@
    do not input post that (:happened post) = ::post-diff/as-is. 
    Because as-is post don't have to update."
   [happened-post]
-  (if (or (not (public? happened-post)) ; hap이 create라도 del! 가능함
+  (if (or (not (public? happened-post)) ; NOTE: hap이 create라도 del! 가능함
           (= (:happened happened-post) ::post-diff/delete))
-    ::delete! ; TODO: 없는 html 삭제 시 예외 주의
+    ::delete!
     ::write!))
 
 ;;

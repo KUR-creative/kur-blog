@@ -8,8 +8,8 @@
   (list [:h3 tag] [:ul (map look-post/post-link-li posts)]))
 
 (defn tags-summary [tag:posts no-tags-posts]
-  (def tag:posts tag:posts)
-  (def no-tags-posts no-tags-posts)
+  ;(def tag:posts tag:posts)
+  ;(def no-tags-posts no-tags-posts)
   (let [sort-by-title #(sort-by post/title-or-id %)
         no-tags-posts (sort-by-title no-tags-posts)]
     (cons (mapcat (fn [[tag posts]]
