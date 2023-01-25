@@ -1,7 +1,7 @@
 (ns kur.blog.page.post.md2x
   "Convert markdown to someting(x)"
-  (:require [clojure.java.io :as io]
-            [clojure.core.async :as async])
+  (:require [clojure.core.async :as async]
+            [clojure.java.io :as io])
   (:import (com.eclipsesource.v8 NodeJS)))
 
 (def md2x-path "./md2x/out/md2x.js")

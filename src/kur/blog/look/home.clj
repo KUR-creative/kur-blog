@@ -1,8 +1,8 @@
 (ns kur.blog.look.home
   (:require [hiccup.element :refer [link-to]]
             [hiccup.page :refer [html5]]
-            [kur.blog.look.template :refer [head]]
-            [kur.blog.look.post :as look-post]))
+            [kur.blog.look.post :as look-post]
+            [kur.blog.look.template :refer [head]]))
 
 (defn post-list
   [posts]

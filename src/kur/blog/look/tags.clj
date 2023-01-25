@@ -1,7 +1,7 @@
 (ns kur.blog.look.tags
   (:require [hiccup.page :refer [html5]]
-            [kur.blog.look.template :refer [head]]
             [kur.blog.look.post :as look-post]
+            [kur.blog.look.template :refer [head]]
             [kur.blog.page.post :as post]))
 
 (defn tag-and-links-block [tag posts]

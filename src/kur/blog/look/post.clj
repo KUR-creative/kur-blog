@@ -1,9 +1,9 @@
 (ns kur.blog.look.post
   (:require [hiccup.element :refer [link-to]]
             [hiccup.page :refer [html5]]
-            [kur.blog.page.post.md2x :refer [obsidian-html]]
+            [kur.blog.look.template :refer [head]]
             [kur.blog.page.post :as post]
-            [kur.blog.look.template :refer [head]]))
+            [kur.blog.page.post.md2x :refer [obsidian-html]]))
 
 (defn post-link-li [post]
   [:li (link-to (-> post :id post/url) (post/title-or-id post))])

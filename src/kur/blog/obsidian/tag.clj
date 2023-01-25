@@ -1,9 +1,7 @@
 (ns kur.blog.obsidian.tag
-  (:require
-   [clojure.test.check.generators :as g]
-   [clojure.spec.alpha :as s]
-   [kur.util.generator :refer [string-from-regexes]]
-   [kur.util.regex :refer [ascii* hangul*]]))
+  (:require [clojure.spec.alpha :as s]
+            [clojure.test.check.generators :as g]
+            [kur.util.generator :refer [string-from-regexes]]))
 
 (def tag-character-regex
   "See https://help.obsidian.md/How+to/Working+with+tags#Allowed+characters"

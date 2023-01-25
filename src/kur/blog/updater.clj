@@ -1,12 +1,12 @@
 (ns kur.blog.updater ;; TODO: Updater(delete also?)
   (:require [babashka.fs :as fs]
+            [kur.blog.look.home :as look-home]
             [kur.blog.look.post :as look-post]
+            [kur.blog.look.tags :as look-tags]
             [kur.blog.page.post :as post]
             [kur.blog.page.post.diff :as post-diff]
             [kur.blog.page.post.name :as name]
-            [kur.blog.look.tags :as look-tags]
             [kur.blog.page.tags :as tags]
-            [kur.blog.look.home :as look-home]
             [kur.util.file-system :as uf]))
 
 (defn post-set [md-dir]

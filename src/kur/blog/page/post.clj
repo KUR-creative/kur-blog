@@ -1,7 +1,7 @@
 (ns kur.blog.page.post
   (:require [babashka.fs :as fs]
-            [kur.blog.page.post.diff :as post-diff]
             [kur.blog.obsidian.frontmatter :as frontmatter]
+            [kur.blog.page.post.diff :as post-diff]
             [kur.blog.page.post.name :refer [fname->parts]]
             [kur.util.file-system :as uf]))
 
