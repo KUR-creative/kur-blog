@@ -120,17 +120,6 @@
   (sg/sample (s/gen ::file-name-parts) 20)
 
   ;; roundtrip test
-  (require '[clojure.test.check.properties
-             :refer [for-all] :rename {for-all defp}]
-           '[clojure.test.check.clojure-test :refer [defspec]])
-  (defspec fname-parts-roundtrip-test 1000
-    (defp [parts (s/gen ::file-name-parts)]
-      (let [ks (keys parts)]
-        (= (select-keys parts ks)
-           (select-keys (fname->parts (parts->fname parts))
-                        ks)))))
-  (fname-parts-roundtrip-test)
-
   (assert (= (-> {:title "o뼐n춑튬꽑2쬞덈", :id "ng700"}
                  parts->fname fname->parts valid?)
              false))
