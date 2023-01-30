@@ -1,0 +1,13 @@
+[Unit]
+Description=kur blog updater
+
+[Service]
+WorkingDirectory=/home/dev/my-blog/deploy/blog-base
+ExecStart=java -jar kur-blog-0.1.0-standalone.jar lightsail.edn
+Restart=on-failure
+RestartSec=30
+StandardOutput=journal
+StandardError=inherit
+
+[Install]
+WantedBy=default.target

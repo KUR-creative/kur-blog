@@ -4,7 +4,7 @@
 .lsp
 .calva
 
-target/*
+release/updater/target/*
 
 # Empty directories for various testing
 out/*
