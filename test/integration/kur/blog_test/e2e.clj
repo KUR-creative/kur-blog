@@ -1,0 +1,1 @@
+(ns kur.blog-test.e2e)

@@ -11,10 +11,11 @@
 (def uber-file (format (str target-dir "/" "%s-%s-standalone.jar")
                        prog-name version))
 
-;;
+;; clj -T:build clean
 (defn clean [_]
   (b/delete {:path target-dir}))
 
+;; clj -T:build uber
 (defn uber [_]
   (clean nil)
   (b/compile-clj {:basis basis
