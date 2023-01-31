@@ -2,7 +2,8 @@
   (:require [clojure.pprint :refer [pprint]]
             [clojure.tools.build.api :as b]))
 
-(def target-dir "release/updater/target")
+(def release-dir "release")
+(def target-dir (str release-dir "/" "updater/target"))
 (def class-dir (str target-dir "/" "classes"))
 (def src-dir (str target-dir "/" "src"))
 
@@ -16,7 +17,7 @@
                :target-dir (str src-dir "/" lang)}))
 
 (defn version [_]
-  {:tag        (b/git-process {:git-args ["describe" "--tags"]})
+  {:latest-tag (b/git-process {:git-args ["describe" "--tags"]})
    :hash       (b/git-process {:git-args ["rev-parse" "HEAD"]})
    :short-hash (b/git-process {:git-args ["rev-parse" "--short" "HEAD"]})})
 
@@ -33,7 +34,7 @@
   #_(copy-lang-dir "css")
   (println "Copying File(s) success")
 
-  (spit (str target-dir "/" "version.edn")
+  (spit (str release-dir "/" "version.edn")
         (with-out-str (pprint (version nil))))
   (println "Writing metadata success")
 
