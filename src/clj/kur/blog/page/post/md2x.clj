@@ -4,7 +4,7 @@
             [clojure.java.io :as io])
   (:import (com.eclipsesource.v8 NodeJS)))
 
-(def md2x-path "./md2x/out/md2x.js")
+(def md2x-path "src/js/md2x.js")
 
 ;;
 (def ^:private inp-chan (async/chan))
