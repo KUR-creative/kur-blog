@@ -16,10 +16,10 @@
   (b/copy-dir {:src-dirs [(str "src" "/" lang)]
                :target-dir (str src-dir "/" lang)}))
 
-(defn version [_]
-  {:latest-tag (b/git-process {:git-args ["describe" "--tags"]})
-   :hash       (b/git-process {:git-args ["rev-parse" "HEAD"]})
-   :short-hash (b/git-process {:git-args ["rev-parse" "--short" "HEAD"]})})
+#_(defn version [_]
+    {:latest-tag (b/git-process {:git-args ["describe" "--tags"]})
+     :hash       (b/git-process {:git-args ["rev-parse" "HEAD"]})
+     :short-hash (b/git-process {:git-args ["rev-parse" "--short" "HEAD"]})})
 
 ;; clj -T:build clean
 (defn clean [_]
@@ -34,9 +34,9 @@
   #_(copy-lang-dir "html")
   #_(copy-lang-dir "css")
 
-  (println "Writing metadata..")
-  (spit (str release-dir "/" "version.edn")
-        (with-out-str (pprint (version nil))))
+  #_(println "Writing metadata..")
+  #_(spit (str release-dir "/" "version.edn")
+          (with-out-str (pprint (version nil))))
 
   (println "Compiling..")
   (b/compile-clj {:basis basis
