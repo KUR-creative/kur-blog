@@ -3,6 +3,8 @@ Description=kur blog updater
 
 [Service]
 WorkingDirectory=/www/blog-base
+User=ec2-user
+Group=ec2-user
 ExecStart=java -jar updater.jar config/default.edn
 Restart=on-failure
 RestartSec=30
@@ -10,4 +12,4 @@ StandardOutput=journal
 StandardError=inherit
 
 [Install]
-WantedBy=default.target
+WantedBy=mutli-user.target

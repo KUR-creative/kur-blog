@@ -18,11 +18,10 @@ sudo chown -R $USER:$USER /www
 cp -r updater/target/* /www/blog-base
 cp -r updater/config /www/blog-base/
 
-sudo mkdir /etc/systemd/user
-sudo cp updater/blog-updater.service /etc/systemd/user/
-systemctl --user daemon-reload 
-systemctl --user enable blog-updater.service
-systemctl --user start blog-updater.service
+sudo cp updater/blog-updater.service /etc/systemd/system
+sudo systemctl daemon-reload 
+sudo systemctl enable blog-updater.service
+sudo systemctl start blog-updater.service
 
 # Deploy publisher
 sudo cp -r publisher/conf.d /etc/nginx/conf.d
