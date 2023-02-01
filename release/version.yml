@@ -6,3 +6,7 @@ tag: 0.1.3
 summary: updater as a system service
 hash: 498491eaf188416d82081baeaf3b54fed869b55d
 short_hash: 498491e
+tag: 0.1.4
+summary: Fix bug in blog updater unit file
+hash: 4dcf2a434968c642416f633c0521054e759672c5
+short_hash: 4dcf2a4
