@@ -31,8 +31,11 @@ jobs:
           known_hosts: ${{ secrets.AWS_LS_KEYSCAN_RESULT }}
           if_key_exists: ignore
 
+      - name: Clean up old release
+        run: ssh -i ~/.ssh/id_rsa ec2-user@blog.kurcreative.com 'rm -rf release'
+
       - name: Rsync release directory to remote
         run: rsync -avzr -e 'ssh -i ~/.ssh/id_rsa' release ec2-user@blog.kurcreative.com:/home/ec2-user/
 
       - name: Run deploy.sh
-        run: ssh -i ~/.ssh/id_rsa 'cd release; ./deploy.sh'
+        run: ssh -i ~/.ssh/id_rsa ec2-user@blog.kurcreative.com 'cd release; ./deploy.sh'
