@@ -29,27 +29,27 @@
 (defn uber [_]
   (clean nil)
 
+  (println "Copying File(s)..")
   (copy-lang-dir "js")
   #_(copy-lang-dir "html")
   #_(copy-lang-dir "css")
-  (println "Copying File(s) success")
 
+  (println "Writing metadata..")
   (spit (str release-dir "/" "version.edn")
         (with-out-str (pprint (version nil))))
-  (println "Writing metadata success")
 
+  (println "Compiling..")
   (b/compile-clj {:basis basis
                   :src-dirs ["src"]
                   :class-dir class-dir})
-  (println "Compilation success")
 
+  (println "Building uberjar..")
   (b/uber {:class-dir class-dir
            :uber-file uber-file
            :basis basis
            :main 'kur.blog.main})
-  (println "Building uberjar success")
 
-  (b/delete {:path class-dir})
   (println "Cleaning up..")
+  (b/delete {:path class-dir})
 
   (comment))
