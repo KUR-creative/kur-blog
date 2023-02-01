@@ -1,8 +1,6 @@
-{:md-dir "test/fixture/blog-root/blog-md"
- :html-dir "test/fixture/blog-root/tmp-html"
- :resource-roots ["test/fixture/resource/flat/"
-                  "test/fixture/resource/nested/"]
- :fs-wait-ms 500}
+{:md-dir "/www/blog-base/md"
+ :html-dir "/www/blog/html"
+ :fs-wait-ms 1000}
 
 ; md-dir          An directory to MONITOR post markdown
 ; html-dir        An directory to UPDATE post html
