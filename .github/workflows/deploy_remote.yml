@@ -1,0 +1,37 @@
+name: Deploy to Lightsail instance
+
+on:
+  push:
+    tags: ["*"]
+
+jobs:
+  delivery:
+    runs-on: ubuntu-latest
+    steps:
+      - run: sudo apt-get update
+
+      - name: Install java and rlwrap # TODO: Use cache later..
+        run: sudo apt-get install openjdk-11-jdk rlwrap
+
+      - name: Install clj
+        run: curl -O https://download.clojure.org/install/linux-install-1.11.1.1208.sh
+      - run: chmod +x linux-install-1.11.1.1208.sh
+      - run: sudo ./linux-install-1.11.1.1208.sh
+
+      - uses: actions/checkout@v3
+      - name: Build target
+        run: clj -T:build uber
+
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.AWS_LS_SEOUL }}
+          name: id_rsa
+          known_hosts: ${{ secrets.AWS_LS_KEYSCAN_RESULT }}
+          if_key_exists: ignore
+
+      - name: Rsync release directory to remote
+        run: rsync -avzr -e 'ssh -i ~/.ssh/id_rsa' release ec2-user@blog.kurcreative.com:/home/ec2-user/
+
+      - name: Run deploy.sh
+        run: ssh -i ~/.ssh/id_rsa 'cd release; ./deploy.sh'
