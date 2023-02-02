@@ -17,6 +17,5 @@
                :title "home")
          [:body
           [:h1 "HOME"]
-          ;; TODO: Add tags. how?
           (link-to "tags" [:p "tags"])
           (post-list posts)]))
