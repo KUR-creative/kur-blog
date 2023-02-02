@@ -11,10 +11,12 @@
                 (policy/normalize-title (post/title-or-id post)))])
 
 (defn html [css-paths title md-text]
-  (html5 (head :css-paths css-paths)
-         [:body
-          [:h1 (policy/normalize-title title)]
-          (obsidian-html md-text)]))
+  (let [norm-title (policy/normalize-title title)]
+    (html5 (head :css-paths css-paths
+                 :title norm-title)
+           [:body
+            [:h1 norm-title]
+            (obsidian-html md-text)])))
 
 ;;
 (comment

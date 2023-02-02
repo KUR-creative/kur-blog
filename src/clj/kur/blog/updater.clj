@@ -43,8 +43,9 @@
   (let [unchangeds-and-writes (concat unchanged-posts loaded-posts-to-write)
         html-path #(str (fs/path html-dir %))]
     (concat
-     (map (fn [post] [spit (html-path (post/html-file-name post))
-                      (look-post/html nil (:title post) (:text post))])
+     (map (fn [post]
+            [spit (html-path (post/html-file-name post))
+             (look-post/html nil (post/title-or-id post) (:text post))])
           loaded-posts-to-write)
      [[spit (html-path "tags.html")
        (look-tags/html (tags/tag:posts unchangeds-and-writes)

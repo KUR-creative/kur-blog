@@ -13,7 +13,8 @@
 (defn html
   "posts is seq of Post Publishable"
   [posts & {:keys [css-paths]}]
-  (html5 (head :css-paths css-paths)
+  (html5 (head :css-paths css-paths
+               :title "home")
          [:body
           [:h1 "HOME"]
           ;; TODO: Add tags. how?

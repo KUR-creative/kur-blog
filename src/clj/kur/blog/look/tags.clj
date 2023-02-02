@@ -23,5 +23,6 @@
 ; TODO: Add js to sort tags
 (defn html [tag:posts no-tags-posts
             & {:keys [css-paths js-paths] :as opts}]
-  (html5 (head :css-paths css-paths)
+  (html5 (head :css-paths css-paths
+               :title "tags")
          [:body [:h1 "tags" (tags-summary tag:posts no-tags-posts)]]))
