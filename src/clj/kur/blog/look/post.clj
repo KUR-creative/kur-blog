@@ -3,10 +3,12 @@
             [hiccup.page :refer [html5]]
             [kur.blog.look.template :refer [head]]
             [kur.blog.page.post :as post]
-            [kur.blog.page.post.md2x :refer [obsidian-html]]))
+            [kur.blog.page.post.md2x :refer [obsidian-html]]
+            [kur.blog.policy :as policy]))
 
 (defn post-link-li [post]
-  [:li (link-to (:id post) (post/title-or-id post))])
+  [:li (link-to (:id post)
+                (policy/normalize-title (post/title-or-id post)))])
 
 (defn html [css-paths md-text]
   (html5 (head :css-paths css-paths)
