@@ -6,7 +6,7 @@
             [kur.blog.page.post.md2x :refer [obsidian-html]]))
 
 (defn post-link-li [post]
-  [:li (link-to (-> post :id post/url) (post/title-or-id post))])
+  [:li (link-to (:id post) (post/title-or-id post))])
 
 (defn html [css-paths md-text]
   (html5 (head :css-paths css-paths)

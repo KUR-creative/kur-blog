@@ -23,11 +23,6 @@
              :text (if frontmatter body md-str)))
     nil)) ; non-exist post should be removed in state
 
-(defn url [id] ; TODO: refactor
-  (str "http://" "localhost"
-       ":" 3000
-       "/" id))
-
 (defn title-or-id [{:keys [id title]}]
   (if title
     title

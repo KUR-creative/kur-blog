@@ -17,5 +17,5 @@
          [:body
           [:h1 "HOME"]
           ;; TODO: Add tags. how?
-          (link-to "http://localhost:3000/tags" [:p "tags"])
+          (link-to "tags" [:p "tags"])
           (post-list posts)]))
