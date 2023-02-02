@@ -1,19 +1,20 @@
 # KUR BLOG
-## Run REPL
+## Run things
+### Run REPL
 Just run `Calva: Start a Project REPL and Connect (aka Jack-In)`. \
 If you wnat CLJS REPL, see `md2x/README.md`
 
-## Local test
+### Local test
 REPL: `(clojure.test/run-tests)` \
 End to End: `setup-dev-local.sh`, `teardown-dev-local.sh` 
 
-## Release process
+### Release process
 1. Run `release.sh` to create `release` directory with new version tag
 2. Push `master` branch and new tag to Github repository (then Github action do the follow-ups)
 3. Copy `release` directory to remote(Lightsail Instance) 
 4. run `deploy.sh`. It setups configs, start and enable publisher(nginx), updater services.
 
-## Scripts (`./script/`)
+### Scripts (`./script/`)
 `compile-md2x.sh` \
 Compile md2x cljs src to generate md2x.js, then save it into `src/js`
 
@@ -33,5 +34,24 @@ Differences between dev vs release:
 `teardown-dev-local.sh` \
 Stop and Disable publisher/updater services
 
-## Rules and Conventions
+## Development
+### Code structure and namespace explanation
+Check `$ tree src`.
+
+```
+kur.util           project agnostic utility functions
+
+kur.blog.main      Entry point
+kur.blog.state     The only state of entire app
+kur.blog.updater   State update logic
+kur.blog.monitor   Monitor directory(md, ..) and call update-fn
+                   to change state when an event occurs
+
+kur.blog.policy    My own rules
+kur.blog.obsidian  Imitation implementation of Obsidian features
+kur.blog.page      Data entity and logics for each page
+kur.blog.look      View of each page. It use src/js and src/css
+```
+
+### Rules and Conventions
 Use singular (directory) names rather than plural ones
