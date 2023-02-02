@@ -22,7 +22,7 @@ fi
 clj -T:build uber
 
 # Save version metadata
-echo "tag: $1"                                  >> "$release_dir/version.yml"
+echo "tag: $1"                                  > "$release_dir/version.yml"
 echo "summary: $2"                              >> "$release_dir/version.yml"
 echo "hash: `git rev-parse HEAD`"               >> "$release_dir/version.yml"
 echo "short_hash: `git rev-parse --short HEAD`" >> "$release_dir/version.yml"
