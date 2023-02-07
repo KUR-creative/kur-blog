@@ -52,20 +52,7 @@
                   (if (and (<= 0 beg-1) (= (get s beg-1) \!))
                     [beg-1 end]
                     [beg end])))))))
-#_(defn parse-wiki-content [content]
-    (let [len (count content)
-          ranges (wikilink-subs-ranges content)
-          concated (reduce into
-                           (if (= (ffirst ranges) 0) [] [0])
-                           ranges)
-          cut-idxes (if (= (peek concated) len)
-                      concated
-                      (conj concated len))]
-      cut-idxes))
 
-#_(vec (if (= (ffirst ranges) 0)
-         (cons [nil nil] ranges)
-         (cons [nil 0] ranges)))
 (defn parse-wiki-content
   "Cut content string into normal text parts and wiki link parts.
 
