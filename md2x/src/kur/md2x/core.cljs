@@ -39,19 +39,20 @@
    2) check embedding: ![[  "
   [s]
   (let [last-beg (- (count s) 2) ;; 2 = size of sliding window
-        s01  (fn [i] (subs s i (+ i 2)))]
-    (->> (loop [i 0, beg nil, ret []] ;; Scanning
-            ;(prn [i beg ret])
-           (cond (> i last-beg)    ret
-                 (= (s01 i) "[[")  (recur (inc i) i ret)
+        s01  (fn [i] (subs s i (+ i 2)))
+        embedding?  (fn [beg-1] (and (<= 0 beg-1)
+                                     (= (get s beg-1) \!)))]
+    (->> (loop [i 0, beg nil, ranges []] ;; Scanning
+           (cond (> i last-beg)   ranges
+                 (= (s01 i) "[[") (recur (inc i) i ranges)
                  (and beg (= (s01 i) "]]"))
-                 (recur (inc i) nil (conj ret [beg (+ i 2)]))
-                 :else             (recur (inc i) beg ret)))
-         (map (fn [[beg end]] ;; Check embeding -> ![[*]]
-                (let [beg-1 (dec beg)]
-                  (if (and (<= 0 beg-1) (= (get s beg-1) \!))
-                    [beg-1 end]
-                    [beg end])))))))
+                 (recur (inc i) nil (conj ranges {:beg beg
+                                                  :end (+ i 2)
+                                                  :wikilink? true}))
+                 :else            (recur (inc i) beg ranges)))
+         ;; Check embeding -> ![[*]]
+         (map #(let [beg (:beg %), beg-1 (dec beg)]
+                 (assoc % :beg (if (embedding? beg-1) beg-1 beg)))))))
 
 (defn parse-wiki-content
   "Cut content string into normal text parts and wiki link parts.
@@ -62,23 +63,24 @@
    ranges    =          ([8     15]  [21      29])     |
    headed    = [[nil 0]  [8     15]  [21      29]]     |
    tailed    = ([nil 0]  [8     15]  [21      29]    [37 nil]) 
-   cut-idxes =       [0 8] [8 15] [15 21] [21 29] [29 37]
+   cut-ranges=       [0 8] [8 15] [15 21] [21 29] [29 37]
                  0        8      15     21       29      37 
    ret       = ( 012[[567 [[012]] 567]]0 ![[456]] 90123456 )"
   [content]
   (let [len (count content)
         ranges (wikilink-subs-ranges content)
-        headed (vec (cons [nil (if (= (ffirst ranges) 0) nil 0)]
-                          ranges))
-        tailed (conj headed
-                     [(if (= (-> headed peek peek) len) nil len)
-                      nil])
-        cut-idxes (filter #(every? some? %)
-                          (mapcat (fn [[a b] [x y]]
-                                    [[a b] [b x]])
-                                  tailed (rest tailed)))]
-    (map (fn [[beg end]]
-           (subs content beg end)) cut-idxes)))
+
+        head {:end (if (= (:beg (first ranges)) 0) nil 0)}
+        headed (vec (cons head ranges))
+
+        tail {:beg (if (= (-> headed peek :beg) len) nil len)}
+        tailed (conj headed tail)]
+    (->> (mapcat (fn [{a :beg b :end :as ab} {x :beg}] ; merge
+                   (if (= b x) [ab] [ab {:beg b :end x}]))
+                 tailed (rest tailed))
+         (filter #(and (:beg %) (:end %))) ; cut-ranges
+         (map (fn [{:keys [beg end] :as info}]
+                (assoc info :s (subs content beg end)))))))
 
 (defn parse-wiki-token
   "Return wikilink parsing result(token seq) of 'text' token"
@@ -159,19 +161,27 @@
 
 (def ws ["012[[567[[012]]567]]0![[456]]90"
          "[[234]]"   "[[234]]78"  "01[[456]]"  "01[[456]]90"
-         "![[345]]" "![[345]]89" "01![[567]]" "01![[567]]01"])
-(run! println
-      (map (fn [{w :w pairs :pairs c :c}]
-             (str w
-                  #_"\t->\t" #_(map (fn [[beg end]]
-                                      (if beg (subs w beg end) w))
-                                    pairs)
-                  "\t->\t" c))
-           (map #(hash-map :w %1 :pairs %2 :c %3)
-                ws
-                (map wikilink-subs-ranges ws)
-                (map parse-wiki-content ws))))
+         "![[345]]" "![[345]]89" "01![[567]]" "01![[567]]01"
+         "[[23]][[89]]![[56]]"
+         "not a wlink"])
+(try
+  (def results (map #(hash-map :w %1 :pairs %2 :c %3)
+                    ws
+                    (map wikilink-subs-ranges ws)
+                    (map parse-wiki-content ws)))
+  #_(def old-results results)
+  (run! println
+        (map (fn [{w :w pairs :pairs c :c}]
+               (str w
+                    #_"\t->\t" #_(map (fn [[beg end]]
+                                        (if beg (subs w beg end) w))
+                                      pairs)
+                    "\t->\t" c))
+             results))
+  (catch :default e
+    (js/console.log e)))
 
+(println "same? :" (= old-results results))
 
 (def exports
   #js{:obsidian (fn [md] ^js (.render mdit md))})
