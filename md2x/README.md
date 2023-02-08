@@ -3,7 +3,7 @@ Markdown to X(something).
 
 ### Run REPL
 In bash(another terminal)
-1. run: `npx shadow-cljs watch md2x`
+1. run: `npx shadow-cljs watch dev`
 
 In vscode
 1. Run `Calva: Connect to a Running REPL Server in the Project`
