@@ -88,14 +88,14 @@
   {:pre [(some? token)]}
   #js[(Token state "link_open" "a" 1 ;; TODO: remove #js
              #js{:attrs #js[#js["href" "TODO-URL"]]
-                 :level (inc (.-level token))
+                 :level (.-level token)
                  :markup "wikilink"
                  :info "auto"})
       (Token state "text" "" 0
              #js{:content "TODO-text"
-                 :level (.-level token)})
+                 :level (inc (.-level token))})
       (Token state "link_open" "a" 1
-             #js{:level (dec (.-level token))
+             #js{:level (.-level token)
                  :markup "wikilink"
                  :info "auto"})])
 
@@ -110,17 +110,17 @@
 
 (defn wikilink-rule [state]
   (def state state) (def ts (.-tokens state)) (def inlines (map #(when (= (.-type %) "inline") %) (.-tokens state)))
-  (let [tokens (.-tokens state)
-        _ (def tokens tokens)
-        changes (->> tokens
-                     (map #(when (wikilink-inline? %) %))
-                     (map #(when % (change state %)))
-                     clj->js)]
-    (run! (fn [[token change]]
+  #_(let [tokens (.-tokens state)
+          _ (def tokens tokens)
+          changes (->> tokens
+                       (map #(when (wikilink-inline? %) %))
+                       (map #(when % (change state %)))
+                       clj->js)]
+      (run! (fn [[token change]]
             ;(js/console.log token) (prn change) (prn "----")
-            (when change
-              (js/Object.assign token change)))
-          (map vector tokens changes))))
+              (when change
+                (js/Object.assign token change)))
+            (map vector tokens changes))))
 
 (do
   (def mdit ((js/require "markdown-it")
@@ -135,6 +135,8 @@
 ^js (.render mdit "http://test.com")
 ^js (.render mdit "- http://test.com")
 ^js (.render mdit "- http://test.com\n  - http://a.b")
+^js (.render mdit "abc http://a.b def http://a.b xx")
+^js (.render mdit "abc http://a.b def \n - aa \n\n http://a.b xx")
 ; TODO: Add inline html too
 
 (comment
