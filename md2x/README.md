@@ -12,16 +12,5 @@ In vscode
 3. Input nREPL IP, Port (If already presented, just presss Enter)
 4. Select `:dev`
 
-갑자기 `zc`를 해도 중간 print 결과가 안 나온다. 컴퓨터를 껐다 켰지만 여전하다. 이유를 모르겠다..
-
-### Run REPL(Not work! why??)
-In bash(another terminal)
-1. run: `npx shadow-cljs watch dev`
-
-In vscode
-1. Run `Calva: Connect to a Running REPL Server in the Project`
-2. Select `shadow-cljs` 
-3. Input nREPL IP, Port (If already presented, just presss Enter)
-4. Select `node-repl`
-
-얘는 그냥 안 된다. 잘 되다가 안 되는데 도무지 이유를 모르겠다.
+### Caution
+최상위 위치에 잘못된 표현식이 있을 경우(예: `undeclared-var`) 파일의 모든 표현식이 eval되지 않는다(calva.loadFile이 실패한다) - 이는 오류가 있는 표현식 이전까지의 식들은 모두 정상적으로 eval되는 clj와의 차이점이다.
