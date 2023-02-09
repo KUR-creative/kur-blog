@@ -1,4 +1,5 @@
-(ns kur.md2x.core)
+(ns kur.md2x.core
+  (:require [clojure.string :as s]))
 
 (defn token? [token type]
   (and (.hasOwnProperty token "type")
@@ -22,10 +23,11 @@
    (new (.-Token ^js state) type tag nesting))
   ([state type tag nesting js-obj]
    (.assign js/Object
-            (new (.-Token ^js state) type tag nesting) js-obj)))
+            (new (.-Token state) type tag nesting)
+            js-obj)))
 
 (defn wikilink-subs-ranges
-  "Return [[start end]*] from s (the content of token).
+  "Return [info*] from s (the content of token). 
    start is start index, end is exclusive index as (subs start end).
 
    1) scan and get [[*]]. example:
@@ -39,9 +41,7 @@
    2) check embedding: ![[  "
   [s]
   (let [last-beg (- (count s) 2) ;; 2 = size of sliding window
-        s01  (fn [i] (subs s i (+ i 2)))
-        embedding?  (fn [beg-1] (and (<= 0 beg-1)
-                                     (= (get s beg-1) \!)))]
+        s01 (fn [i] (subs s i (+ i 2)))]
     (->> (loop [i 0, beg nil, ranges []] ;; Scanning
            (cond (> i last-beg)   ranges
                  (= (s01 i) "[[") (recur (inc i) i ranges)
@@ -51,11 +51,14 @@
                                                   :wikilink? true}))
                  :else            (recur (inc i) beg ranges)))
          ;; Check embeding -> ![[*]]
-         (map #(let [beg (:beg %), beg-1 (dec beg)]
-                 (assoc % :beg (if (embedding? beg-1) beg-1 beg)))))))
+         (map #(let [beg (:beg %), beg-1 (dec beg)
+                     embed? (and (<= 0 beg-1) (= (get s beg-1) \!))]
+                 (assoc %
+                        :beg (if embed? beg-1 beg)
+                        :embed? embed?))))))
 
-(defn parse-wiki-content
-  "Cut content string into normal text parts and wiki link parts.
+(defn cut-wikilink-content
+  "Cut token.content str into normal text parts and wiki link parts.
 
    (example)
    content   =    012[[567[[012]]567]]0![[456]]90123456
@@ -65,7 +68,7 @@
    tailed    = ([nil 0]  [8     15]  [21      29]    [37 nil]) 
    cut-ranges=       [0 8] [8 15] [15 21] [21 29] [29 37]
                  0        8      15     21       29      37 
-   ret       = ( 012[[567 [[012]] 567]]0 ![[456]] 90123456 )"
+   (:s info)s= ( 012[[567 [[012]] 567]]0 ![[456]] 90123456 )"
   [content]
   (let [len (count content)
         ranges (wikilink-subs-ranges content)
@@ -76,28 +79,73 @@
         tail {:beg (if (= (-> headed peek :beg) len) nil len)}
         tailed (conj headed tail)]
     (->> (mapcat (fn [{a :beg b :end :as ab} {x :beg}] ; merge
-                   (if (= b x) [ab] [ab {:beg b :end x}]))
+                   (if (= b x)
+                     [ab]
+                     [ab {:beg b :end x :wikilink? false}]))
                  tailed (rest tailed))
          (filter #(and (:beg %) (:end %))) ; cut-ranges
-         (map (fn [{:keys [beg end] :as info}]
-                (assoc info :s (subs content beg end)))))))
+         (map #(-> %
+                   (assoc :s (subs content (:beg %) (:end %)))
+                   (dissoc :beg :end))))))
 
+(defn digest-wikilink-info
+  "Return digested wikilink information map"
+  [{:keys [s wikilink? embed?] :as info}]
+  (def info info)
+  (let [[path text] (s/split (subs s (if embed? 3 2) (- (count s) 2)) ; 3=![[ 2=[[ or ]]
+                             #"\|" 2)
+        [path text] [(s/trim path) (when text (s/trim text))] ;NOTE: obsidian feature
+        [_ & rest-path] (s/split path #"\.")
+        extension (when rest-path (last rest-path))]
+    (prn (cond-> info
+           wikilink? (assoc :path path)
+           text (assoc :text text)
+           extension (assoc :extension extension)))
+    (cond-> info
+      wikilink? (assoc :path path)
+      text (assoc :text text) ; text=nil: no | in link. ex) [[no-pipe]]
+      extension (assoc :extension extension))))
+
+(defmulti parsed-tokens
+  (fn [_ _ digested-info]
+    (def digested-info digested-info)
+    (select-keys digested-info [:wikilink?])))
+
+(defmethod parsed-tokens {:wikilink? false}
+  [state token digested-info]
+  #js[(Token state "text" "" 0 #js{:content (:s digested-info)})])
+
+(defmethod parsed-tokens {:wikilink? true}
+  [state token digested-info]
+  [(Token state "link_open" "a" 1 ;; TODO: remove #js
+          #js{:attrs #js[#js["href" "TODO-URL"]]
+              :level (.-level token)
+              :markup "wikilink"
+              :info "auto"})
+   (Token state "text" "" 0
+          #js{:content (:s digested-info)
+              :level (inc (.-level token))})
+   (Token state "link_open" "a" 1
+          #js{:level (.-level token)
+              :markup "wikilink"
+              :info "auto"})])
+
+;(parsed-tokens (first parts))
+#_(js/console.log (new (.-Token state)))
 (defn parse-wiki-token
   "Return wikilink parsing result(token seq) of 'text' token"
   [state token]
   {:pre [(some? token)]}
-  #js[(Token state "link_open" "a" 1 ;; TODO: remove #js
-             #js{:attrs #js[#js["href" "TODO-URL"]]
-                 :level (.-level token)
-                 :markup "wikilink"
-                 :info "auto"})
-      (Token state "text" "" 0
-             #js{:content "TODO-text"
-                 :level (inc (.-level token))})
-      (Token state "link_open" "a" 1
-             #js{:level (.-level token)
-                 :markup "wikilink"
-                 :info "auto"})])
+  (def token token)
+  (let [parts (cut-wikilink-content (.-content token))
+        digesteds (map digest-wikilink-info parts)
+        xs (mapcat #(parsed-tokens state token %) digesteds)]
+    (def parts parts)
+    (def xs xs)
+    (def digesteds digesteds)
+    xs))
+;(js/console.log (nth xs 0))
+#_(js/console.log (clj->js xs))
 
 (defn change
   "Token change: split children by wiki-link rule."
@@ -110,17 +158,18 @@
 
 (defn wikilink-rule [state]
   (def state state) (def ts (.-tokens state)) (def inlines (map #(when (= (.-type %) "inline") %) (.-tokens state)))
-  #_(let [tokens (.-tokens state)
-          _ (def tokens tokens)
-          changes (->> tokens
-                       (map #(when (wikilink-inline? %) %))
-                       (map #(when % (change state %)))
-                       clj->js)]
-      (run! (fn [[token change]]
+  (let [tokens (.-tokens state)
+        _ (def tokens tokens)
+        changes (->> tokens
+                     (map #(when (wikilink-inline? %) %))
+                     (map #(when % (change state %)))
+                     clj->js)]
+    (def changes changes)
+    (run! (fn [[token change]]
             ;(js/console.log token) (prn change) (prn "----")
-              (when change
-                (js/Object.assign token change)))
-            (map vector tokens changes))))
+            (when change
+              (js/Object.assign token change)))
+          (map vector tokens changes))))
 
 (do
   (def mdit ((js/require "markdown-it")
@@ -129,23 +178,34 @@
       (.-ruler)
       (.after "linkify" "mine" wikilink-rule)))
 
-^js (.render mdit "[[abc.png]]")
-^js (.render mdit "aa [[abc.png]] bb")
-^js (.render mdit "- [[abc.png]] [t](a)\n  - x [[bb.asd]] y")
-^js (.render mdit "http://test.com")
-^js (.render mdit "- http://test.com")
-^js (.render mdit "- http://test.com\n  - http://a.b")
-^js (.render mdit "abc http://a.b def http://a.b xx")
-^js (.render mdit "abc http://a.b def \n - aa \n\n http://a.b xx")
+(comment
+  ^js (.render mdit "[[]]")
+  ^js (.render mdit "png]]")
+  ^js (.render mdit "[[png]]")
+  ^js (.render mdit "[[abc.png]]")
+  ^js (.render mdit "![[abc.png|aaasss]]")
+  ^js (.render mdit "![[abc|aaas|ss]]")
+  ^js (.render mdit "![[abc.p.ng|aaas|ss]]")
+  ^js (.render mdit "![[abc.p.s.xng|aaas|s|s]]")
+  ^js (.render mdit "![[abc.png]]")
+  (js/console.log "---------------------")
+  (js/console.log ts)
+  (js/console.log (get (.-tokens state) 1))
+  (js/console.log (get (.-tokens state) 6))
+  ^js (.render mdit "aa [[abc.png  ]] bb")
+  ^js (.render mdit "[[aa ]]![[abc.png]] bb")
+  ^js (.render mdit "- [[abc.png]] [t](a)\n  - x [[bb.asd]] y")
+  ^js (.render mdit "http://test.com")
+  ^js (.render mdit "- http://test.com")
+  ^js (.render mdit "- http://test.com\n  - http://a.b")
+  ^js (.render mdit "abc http://a.b def http://a.b xx")
+  ^js (.render mdit "abc http://a.b def \n - aa \n\n http://a.b xx")
 ; TODO: Add inline html too
 
-(comment
   (js/console.log state)
-  (js/console.log ts)
   (js/console.log tokens)
   (js/console.log (clj->js inlines))
 
-  (js/console.log (get (.-tokens state) 1))
   (js/console.log (get (.-tokens state) 3))
   (js/console.log (get (.-tokens state) 8))
 
@@ -170,8 +230,8 @@
   (def results (map #(hash-map :w %1 :pairs %2 :c %3)
                     ws
                     (map wikilink-subs-ranges ws)
-                    (map parse-wiki-content ws)))
-  #_(def old-results results)
+                    (map cut-wikilink-content ws)))
+  (def old-results results)
   (run! println
         (map (fn [{w :w pairs :pairs c :c}]
                (str w
