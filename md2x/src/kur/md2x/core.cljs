@@ -33,6 +33,7 @@
             (new (.-Token state) type tag nesting)
             js-obj)))
 
+;;
 (defn wikilink-subs-ranges
   "Return [info*] from s (the content of token). 
    start is start index, end is exclusive index as (subs start end).
@@ -57,7 +58,7 @@
                                                   :end (+ i 2)
                                                   :wikilink? true}))
                  :else            (recur (inc i) beg ranges)))
-         ;; Check embeding -> ![[*]]
+         ;; Check embeding: ![[*]]
          (map #(let [beg (:beg %), beg-1 (dec beg)
                      embed? (and (<= 0 beg-1) (= (get s beg-1) \!))]
                  (assoc %
@@ -98,16 +99,15 @@
 (defn digest-wikilink-info
   "Return digested wikilink information map"
   [{:keys [s wikilink? embed?] :as info}]
-  (def info info)
   (let [[path text] (s/split (subs s (if embed? 3 2) (- (count s) 2)) ; 3=![[ 2=[[ or ]]
                              #"\|" 2)
         [path text] [(s/trim path) (when text (s/trim text))] ;NOTE: obsidian feature
         [_ & rest-path] (s/split path #"\.")
         extension (when rest-path (last rest-path))]
-    (prn (cond-> info
-           wikilink? (assoc :path path)
-           text (assoc :text text)
-           extension (assoc :extension extension)))
+    #_(prn (cond-> info
+             wikilink? (assoc :path path)
+             text (assoc :text text)
+             extension (assoc :extension extension)))
     (cond-> info
       wikilink? (assoc :path path)
       text (assoc :text text) ; text=nil: no | in link. ex) [[no-pipe]]
@@ -153,6 +153,7 @@
 (defmethod embed-tokens :default [state token digested-info]
   (just-text-tokens state token digested-info))
 
+;;
 (defn parsed-tokens
   [state token {:keys [wikilink? embed?] :as digested-info}]
   (cond
@@ -160,22 +161,13 @@
     (not embed?) (link-tokens state token digested-info)
     :else (embed-tokens state token digested-info)))
 
-
-;(parsed-tokens (first parts))
 (defn parse-wiki-token
   "Return wikilink parsing result(token seq) of 'text' token"
   [state token]
   {:pre [(some? token)]}
-  (def token token)
-  (let [parts (cut-wikilink-content (.-content token))
-        digesteds (map digest-wikilink-info parts)
-        xs (mapcat #(parsed-tokens state token %) digesteds)]
-    (def parts parts)
-    (def xs xs)
-    (def digesteds digesteds)
-    xs))
-;(js/console.log (nth xs 0))
-#_(js/console.log (clj->js xs))
+  (->> (cut-wikilink-content (.-content token))
+       (map digest-wikilink-info)
+       (mapcat #(parsed-tokens state token %))))
 
 (defn change
   "Token change: split children by wiki-link rule."
@@ -187,6 +179,7 @@
                          [child]))
                      (.-children token))})
 
+;;
 (defn wikilink-rule [state]
   (def state state) (def ts (.-tokens state)) (def inlines (map #(when (= (.-type %) "inline") %) (.-tokens state)))
   (let [tokens (.-tokens state)
@@ -195,9 +188,7 @@
                      (map #(when (wikilink-inline? %) %))
                      (map #(when % (change state %)))
                      clj->js)]
-    (def changes changes)
     (run! (fn [[token change]]
-            ;(js/console.log token) (prn change) (prn "----")
             (when change
               (js/Object.assign token change)))
           (map vector tokens changes))))
