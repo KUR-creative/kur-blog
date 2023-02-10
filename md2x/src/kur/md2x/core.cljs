@@ -1,6 +1,13 @@
 (ns kur.md2x.core
   (:require [clojure.string :as s]))
 
+(def config ; later, it can be loaded from other file
+  {:resource-dir "resource"})
+
+(defn resource-path [path]
+  (str (:resource-dir config) "/" path))
+
+;;
 (defn token? [token type]
   (and (.hasOwnProperty token "type")
        (= (.-type token) type)))
@@ -106,44 +113,55 @@
       text (assoc :text text) ; text=nil: no | in link. ex) [[no-pipe]]
       extension (assoc :extension extension))))
 
-(defmulti parsed-tokens
+;;
+(defn just-text-tokens [state token digested-info]
+  #js[(Token state "text" "" 0
+             #js{:content (:s digested-info)})])
+
+(defn link-tokens [state token {:keys [path text]}]
+  (let [level (.-level token)]
+    [(Token state "link_open" "a" 1
+            #js{:attrs #js[#js["href" path]]
+                :level level :markup "wikilink" :info "auto"})
+     (Token state "text" "" 0
+            #js{:content (if text text path)
+                :level (inc level)})
+     (Token state "link_open" "a" 1
+            #js{:level level :markup "wikilink" :info "auto"})]))
+
+(defmulti embed-tokens
   (fn [_ _ digested-info]
-    (def digested-info digested-info)
-    (select-keys digested-info
-                 [:wikilink? :embed?])))
+    (:extension digested-info)))
 
-(defmethod parsed-tokens {:wikilink? false}
-  [state token digested-info]
-  #js[(Token state "text" "" 0 #js{:content (:s digested-info)})])
+(defn img-tokens [state token {:keys [path text]}]
+  (let [res-path (resource-path path)
+        some-text (if text text res-path)] ; some means 'not nil'
+    [(Token state "image" "img" 0
+            #js{:attrs #js[#js["src" res-path]
+                           #js["alt" some-text]]
+                :content some-text
+                :children #js[(Token state "text" "" 0
+                                     #js{:content some-text})]
+                :markup "wikilink"})]))
 
-(defmethod parsed-tokens {:wikilink? true :embed? false}
-  [state token {:keys [path text extension]}]
-  [(Token state "link_open" "a" 1 ;; TODO: remove #js
-          #js{:attrs #js[#js["href" path]]
-              :level (.-level token) :markup "wikilink" :info "auto"})
-   (Token state "text" "" 0
-          #js{:content (if text text path)
-              :level (inc (.-level token))})
-   (Token state "link_open" "a" 1
-          #js{:level (.-level token) :markup "wikilink" :info "auto"})])
+(defmethod embed-tokens "png" [state token digested-info]
+  (img-tokens state token digested-info))
+(defmethod embed-tokens "jpg" [state token digested-info]
+  (img-tokens state token digested-info))
+(defmethod embed-tokens "jpeg" [state token digested-info]
+  (img-tokens state token digested-info))
+(defmethod embed-tokens :default [state token digested-info]
+  (just-text-tokens state token digested-info))
 
-(defmethod parsed-tokens {:wikilink? true :embed? true}
-  [state token digested-info]
-  [(Token state "link_open" "a" 1 ;; TODO: remove #js
-          #js{:attrs #js[#js["href" "TODO-URL"]]
-              :level (.-level token)
-              :markup "wikilink"
-              :info "auto"})
-   (Token state "text" "" 0
-          #js{:content (:s digested-info)
-              :level (inc (.-level token))})
-   (Token state "link_open" "a" 1
-          #js{:level (.-level token)
-              :markup "wikilink"
-              :info "auto"})])
+(defn parsed-tokens
+  [state token {:keys [wikilink? embed?] :as digested-info}]
+  (cond
+    (not wikilink?) (just-text-tokens state token digested-info)
+    (not embed?) (link-tokens state token digested-info)
+    :else (embed-tokens state token digested-info)))
+
 
 ;(parsed-tokens (first parts))
-#_(js/console.log (new (.-Token state)))
 (defn parse-wiki-token
   "Return wikilink parsing result(token seq) of 'text' token"
   [state token]
@@ -163,9 +181,10 @@
   "Token change: split children by wiki-link rule."
   [state token]
   {:pre [(some? token)]}
-  {:children (mapcat #(if (wiki-token? %)
-                        (parse-wiki-token state %)
-                        [%])
+  {:children (mapcat (fn [child]
+                       (if (wiki-token? child)
+                         (parse-wiki-token state child)
+                         [child]))
                      (.-children token))})
 
 (defn wikilink-rule [state]
@@ -201,6 +220,8 @@
   (.render mdit "![[abc.p.ng|aaas|ss]]")
   (.render mdit "![[abc.p.s.xng|aaas|s|s]]")
   (.render mdit "![[abc.png]]")
+  (.render mdit "![[abc.jpg]]")
+  (.render mdit "![[abc.jpeg]]")
 
   (mapcat #(vector % (.render mdit %) '-)
           ["[[]]"
@@ -213,6 +234,8 @@
            "![[abc.p.ng|aaas|ss]]"
            "![[abc.p.s.xng|aaas|s|s]]"
            "![[abc.png]]"
+           "![[abc.jpg]]"
+           "![[abc.jpeg]]"
            "aa [[abc.png  ]] bb"
            "[[aa ]]![[abc.png]] bb"
            "- [[abc.png]] [t](a)\n  - x [[bb.asd]] y"])
@@ -221,10 +244,20 @@
   "- http://test.com\n  - http://a.b"
   "abc http://a.b def http://a.b xx"
   "abc http://a.b def \n - aa \n\n http://a.b xx"
+
+  (.render mdit "![embed](abc.png)")
+  (.render mdit "- asdf\n- ![embed](abc.png)")
   (js/console.log "---------------------")
-  (js/console.log ts)
-  (js/console.log (get (.-tokens state) 1))
+  (js/console.log (.-tokens state))
+  (js/console.log (second (.-tokens state)))
+  (js/console.log (.-children (get (.-tokens state) 1)))
+  (js/console.log (first (.-children (get (.-tokens state) 1))))
+  (js/console.log (first (.-children (first (.-children (get (.-tokens state) 1))))))
+  (js/console.log (.-children (get (.-children (get (.-tokens state) 1)) 0)))
   (js/console.log (get (.-tokens state) 6))
+
+  (js/console.log (nth (.-tokens state) 8))
+  (js/console.log (first (.-children (nth (.-tokens state) 8))))
 ; TODO: Add inline html too
 
   (js/console.log state)
