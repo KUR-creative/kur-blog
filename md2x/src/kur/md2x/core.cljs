@@ -109,13 +109,25 @@
 (defmulti parsed-tokens
   (fn [_ _ digested-info]
     (def digested-info digested-info)
-    (select-keys digested-info [:wikilink?])))
+    (select-keys digested-info
+                 [:wikilink? :embed?])))
 
 (defmethod parsed-tokens {:wikilink? false}
   [state token digested-info]
   #js[(Token state "text" "" 0 #js{:content (:s digested-info)})])
 
-(defmethod parsed-tokens {:wikilink? true}
+(defmethod parsed-tokens {:wikilink? true :embed? false}
+  [state token {:keys [path text extension]}]
+  [(Token state "link_open" "a" 1 ;; TODO: remove #js
+          #js{:attrs #js[#js["href" path]]
+              :level (.-level token) :markup "wikilink" :info "auto"})
+   (Token state "text" "" 0
+          #js{:content (if text text path)
+              :level (inc (.-level token))})
+   (Token state "link_open" "a" 1
+          #js{:level (.-level token) :markup "wikilink" :info "auto"})])
+
+(defmethod parsed-tokens {:wikilink? true :embed? true}
   [state token digested-info]
   [(Token state "link_open" "a" 1 ;; TODO: remove #js
           #js{:attrs #js[#js["href" "TODO-URL"]]
@@ -179,27 +191,40 @@
       (.after "linkify" "mine" wikilink-rule)))
 
 (comment
-  ^js (.render mdit "[[]]")
-  ^js (.render mdit "png]]")
-  ^js (.render mdit "[[png]]")
-  ^js (.render mdit "[[abc.png]]")
-  ^js (.render mdit "![[abc.png|aaasss]]")
-  ^js (.render mdit "![[abc|aaas|ss]]")
-  ^js (.render mdit "![[abc.p.ng|aaas|ss]]")
-  ^js (.render mdit "![[abc.p.s.xng|aaas|s|s]]")
-  ^js (.render mdit "![[abc.png]]")
+  (.render mdit "[[]]")
+  (.render mdit "png]]")
+  (.render mdit "[[png]]")
+  (.render mdit "[[abc.png]]")
+  (.render mdit "[[abc.png|aaasss]]")
+  (.render mdit "![[abc.png|aaasss]]")
+  (.render mdit "![[abc|aaas|ss]]")
+  (.render mdit "![[abc.p.ng|aaas|ss]]")
+  (.render mdit "![[abc.p.s.xng|aaas|s|s]]")
+  (.render mdit "![[abc.png]]")
+
+  (mapcat #(vector % (.render mdit %) '-)
+          ["[[]]"
+           "png]]"
+           "[[png]]"
+           "[[abc.png]]"
+           "[[abc.png|aaasss]]"
+           "![[abc.png|aaasss]]"
+           "![[abc|aaas|ss]]"
+           "![[abc.p.ng|aaas|ss]]"
+           "![[abc.p.s.xng|aaas|s|s]]"
+           "![[abc.png]]"
+           "aa [[abc.png  ]] bb"
+           "[[aa ]]![[abc.png]] bb"
+           "- [[abc.png]] [t](a)\n  - x [[bb.asd]] y"])
+  "http://test.com"
+  "- http://test.com"
+  "- http://test.com\n  - http://a.b"
+  "abc http://a.b def http://a.b xx"
+  "abc http://a.b def \n - aa \n\n http://a.b xx"
   (js/console.log "---------------------")
   (js/console.log ts)
   (js/console.log (get (.-tokens state) 1))
   (js/console.log (get (.-tokens state) 6))
-  ^js (.render mdit "aa [[abc.png  ]] bb")
-  ^js (.render mdit "[[aa ]]![[abc.png]] bb")
-  ^js (.render mdit "- [[abc.png]] [t](a)\n  - x [[bb.asd]] y")
-  ^js (.render mdit "http://test.com")
-  ^js (.render mdit "- http://test.com")
-  ^js (.render mdit "- http://test.com\n  - http://a.b")
-  ^js (.render mdit "abc http://a.b def http://a.b xx")
-  ^js (.render mdit "abc http://a.b def \n - aa \n\n http://a.b xx")
 ; TODO: Add inline html too
 
   (js/console.log state)
