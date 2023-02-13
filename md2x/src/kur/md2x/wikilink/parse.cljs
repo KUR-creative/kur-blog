@@ -1,7 +1,7 @@
 (ns kur.md2x.wikilink.parse
   (:require [clojure.string :as s]))
 
-(defn wikilink-subs-ranges
+(defn subs-ranges
   "Return [info*] from s (the content of token). 
    start is start index, end is exclusive index as (subs start end).
 
@@ -32,21 +32,22 @@
                         :beg (if embed? beg-1 beg)
                         :embed? embed?))))))
 
-(defn cut-wikilink-content
+(defn cut-content
   "Cut token.content str into normal text parts and wiki link parts.
+  Return seq of wikilink information map  
 
-   (example)
-   content   =    012[[567[[012]]567]]0![[456]]90123456
-                          ^      ^     ^       ^       ^
-   ranges    =          ([8     15]  [21      29])     |
-   headed    = [[nil 0]  [8     15]  [21      29]]     |
-   tailed    = ([nil 0]  [8     15]  [21      29]    [37 nil]) 
-   cut-ranges=       [0 8] [8 15] [15 21] [21 29] [29 37]
-                 0        8      15     21       29      37 
-   (:s info)s= ( 012[[567 [[012]] 567]]0 ![[456]] 90123456 )"
+  (example)
+  content   =    012[[567[[012]]567]]0![[456]]90123456
+                         ^      ^     ^       ^       ^
+  ranges    =          ([8     15]  [21      29])     |
+  headed    = [[nil 0]  [8     15]  [21      29]]     |
+  tailed    = ([nil 0]  [8     15]  [21      29]    [37 nil]) 
+  cut-ranges=       [0 8] [8 15] [15 21] [21 29] [29 37]
+                0        8      15     21       29      37 
+  (:s info)s= ( 012[[567 [[012]] 567]]0 ![[456]] 90123456 )"
   [content]
   (let [len (count content)
-        ranges (wikilink-subs-ranges content)
+        ranges (subs-ranges content)
 
         head {:end (if (= (:beg (first ranges)) 0) nil 0)}
         headed (vec (cons head ranges))
@@ -89,8 +90,8 @@
              "not a wlink"])
     (def results (map #(hash-map :w %1 :pairs %2 :c %3)
                       ws
-                      (map wikilink-subs-ranges ws)
-                      (map cut-wikilink-content ws)))
+                      (map subs-ranges ws)
+                      (map cut-content ws)))
     ;(def old-results results)
 
     (run! println

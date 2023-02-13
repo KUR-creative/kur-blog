@@ -1,6 +1,6 @@
 (ns kur.md2x.wikilink.plugin
-  (:require [kur.md2x.wikilink.token :as token]
-            [kur.md2x.wikilink.parse :as parse]))
+  (:require [kur.md2x.wikilink.parse :as parse]
+            [kur.md2x.wikilink.token :as token]))
 
 ;; predicates
 (defn token? [token type]
@@ -24,15 +24,15 @@
 (defn parsed-tokens
   [state token {:keys [wikilink? embed?] :as digested-info}]
   (cond
-    (not wikilink?) (token/just-text-tokens state token digested-info)
-    (not embed?) (token/link-tokens state token digested-info)
-    :else (token/embed-tokens state token digested-info)))
+    (not wikilink?) (token/text state token digested-info)
+    (not embed?) (token/link state token digested-info)
+    :else (token/embed state token digested-info)))
 
-(defn parse-wiki-token
+(defn parse
   "Return wikilink parsing result(token seq) of 'text' token"
   [state token]
   {:pre [(some? token)]}
-  (->> (parse/cut-wikilink-content (.-content token))
+  (->> (parse/cut-content (.-content token))
        (map parse/digest-wikilink-info)
        (mapcat #(parsed-tokens state token %))))
 
@@ -40,14 +40,13 @@
   "Token change: split children by wiki-link rule."
   [state token]
   {:pre [(some? token)]}
-  {:children (mapcat (fn [child]
-                       (if (wiki-token? child)
-                         (parse-wiki-token state child)
-                         [child]))
+  {:children (mapcat #(if (wiki-token? %) (parse state %) [%])
                      (.-children token))})
 
 ;; rule and plugin
-(defn wikilink-rule [state]
+(defn rule!
+  "markdown-it rule changes compiler state"
+  [state]
   ;(def state state) (def ts (.-tokens state)) (def inlines (map #(when (= (.-type %) "inline") %) (.-tokens state)))
   (let [tokens (.-tokens ^js state)
         changes (->> tokens
@@ -63,7 +62,7 @@
   "An markdown-it plugin is procedure that changes MarkdownIt object."
   [mdit]
   (let [ruler (.-ruler (.-core ^js mdit))]
-    (.after ruler "linkify" "mine" wikilink-rule)))
+    (.after ruler "linkify" "mine" rule!)))
 
 #_(do
     (def mdit ((js/require "markdown-it")
