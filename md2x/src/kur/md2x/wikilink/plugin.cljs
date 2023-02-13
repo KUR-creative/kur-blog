@@ -48,9 +48,8 @@
 
 ;; rule and plugin
 (defn wikilink-rule [state]
-  (def state state) (def ts (.-tokens state)) (def inlines (map #(when (= (.-type %) "inline") %) (.-tokens state)))
-  (let [tokens (.-tokens state)
-        _ (def tokens tokens)
+  ;(def state state) (def ts (.-tokens state)) (def inlines (map #(when (= (.-type %) "inline") %) (.-tokens state)))
+  (let [tokens (.-tokens ^js state)
         changes (->> tokens
                      (map #(when (wikilink-inline? %) %))
                      (map #(when % (change state %)))
@@ -63,7 +62,7 @@
 (defn enable-wikilink!
   "An markdown-it plugin is procedure that changes MarkdownIt object."
   [mdit]
-  (let [ruler (.-ruler (.-core mdit))]
+  (let [ruler (.-ruler (.-core ^js mdit))]
     (.after ruler "linkify" "mine" wikilink-rule)))
 
 #_(do

@@ -9,7 +9,7 @@
    (new (.-Token ^js state) type tag nesting))
   ([state type tag nesting js-obj]
    (.assign js/Object
-            (new (.-Token state) type tag nesting)
+            (new (.-Token ^js state) type tag nesting)
             js-obj)))
 
 (defn just-text-tokens [state token digested-info]

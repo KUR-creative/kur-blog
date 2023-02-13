@@ -3,7 +3,9 @@
 
 (def mdit
   (doto ((js/require "markdown-it")
-         #js{:linkify true})
+         #js{:linkify true
+             :html true
+             :breaks true})
     (.use (js/require "markdown-it-mark"))
     (.use enable-wikilink!)))
 
