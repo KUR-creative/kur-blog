@@ -293,6 +293,3 @@
     (js/console.log e)))
 
 (println "same? :" (= old-results results))
-
-(def exports
-  #js{:obsidian (fn [md] ^js (.render mdit md))})
