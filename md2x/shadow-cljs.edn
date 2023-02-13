@@ -9,13 +9,13 @@
  {:md2x
   {:target :node-library
    :output-to "out/md2x-interim.js"
-   :exports-var kur.md2x.core/exports
+   :exports-var kur.md2x.main/exports
    :compiler-options {:infer-externs :auto}}
 
   :dev
   {:target :node-library
    :output-to "out/md2x-interim.js"
-   :exports-var kur.md2x.core/exports
+   :exports-var kur.md2x.main/exports
    :compiler-options {:infer-externs :auto
                       :optimization :none
                       :source-map true
