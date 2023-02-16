@@ -16,24 +16,21 @@
   (b/copy-dir {:src-dirs [(str "src" "/" lang)]
                :target-dir (str src-dir "/" lang)}))
 
-#_(defn version [_]
-    {:latest-tag (b/git-process {:git-args ["describe" "--tags"]})
-     :hash       (b/git-process {:git-args ["rev-parse" "HEAD"]})
-     :short-hash (b/git-process {:git-args ["rev-parse" "--short" "HEAD"]})})
-
 ;; clj -T:build clean
 (defn clean [_]
+  (println "Cleaning up previous target..")
   (b/delete {:path target-dir}))
 
-;; clj -T:build uber
-(defn uber [_]
-  (clean nil)
-
-  (println "Copying File(s)..")
+;; clj -T:build copy-dirs
+(defn copy-dirs [_]
+  (println "Copying directories..")
   (copy-lang-dir "js")
   #_(copy-lang-dir "html")
   #_(copy-lang-dir "css")
+  )
 
+;; clj -T:build uber
+(defn uber [_]
   #_(println "Writing metadata..")
   #_(spit (str release-dir "/" "version.edn")
           (with-out-str (pprint (version nil))))
