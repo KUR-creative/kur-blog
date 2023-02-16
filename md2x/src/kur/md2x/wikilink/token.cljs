@@ -24,7 +24,7 @@
      (Token state "text" "" 0
             #js{:content (if text text path)
                 :level (inc level)})
-     (Token state "link_open" "a" 1
+     (Token state "link_close" "a" -1
             #js{:level level :markup "wikilink" :info "auto"})]))
 
 (defmulti embed

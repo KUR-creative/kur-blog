@@ -19,9 +19,9 @@
        "[[]]"         "<p>[[]]</p>\n"
        "png]]"        "<p>png]]</p>\n"
      ;; Normal wikilink
-       "[[png]]"              "<p><a href=\"png\">png<a></p>\n"
-       "[[abc.png]]"          "<p><a href=\"abc.png\">abc.png<a></p>\n"
-       "[[abc.png|aaasss]]"   "<p><a href=\"abc.png\">aaasss<a></p>\n"
+       "[[png]]"              "<p><a href=\"png\">png</a></p>\n"
+       "[[abc.png]]"          "<p><a href=\"abc.png\">abc.png</a></p>\n"
+       "[[abc.png|aaasss]]"   "<p><a href=\"abc.png\">aaasss</a></p>\n"
      ;; Embedded wikilink with correct/incorrect/no extension
        "![[abc.png|aaasss]]"        "<p><img src=\"resource/abc.png\" alt=\"aaasss\"></p>\n"
        "![[abc|aaas|ss]]"           "<p>![[abc|aaas|ss]]</p>\n"
@@ -36,12 +36,12 @@
        "<p><img src=\"resource/abc.jpeg\" alt=\"resource/abc.jpeg\"></p>\n"
      ;; Trimming white space
        "aa [[abc.png  ]] bb"
-       "<p>aa <a href=\"abc.png\">abc.png<a> bb</p>\n"
+       "<p>aa <a href=\"abc.png\">abc.png</a> bb</p>\n"
        "[[aa ]]![[abc.png]] bb"
-       "<p><a href=\"aa\">aa<a><img src=\"resource/abc.png\" alt=\"resource/abc.png\"> bb</p>\n"
+       "<p><a href=\"aa\">aa</a><img src=\"resource/abc.png\" alt=\"resource/abc.png\"> bb</p>\n"
      ;; Nested list
        "- [[abc.png]] [t](a)\n  - x [[bb.asd]] y"
-       "<ul>\n<li><a href=\"abc.png\">abc.png<a> <a href=\"a\">t</a>\n<ul>\n<li>x <a href=\"bb.asd\">bb.asd<a> y</li>\n</ul>\n</li>\n</ul>\n"
+       "<ul>\n<li><a href=\"abc.png\">abc.png</a> <a href=\"a\">t</a>\n<ul>\n<li>x <a href=\"bb.asd\">bb.asd</a> y</li>\n</ul>\n</li>\n</ul>\n"
      ;; mark
        "==test==" "<p><mark>test</mark></p>\n"
      ;; linkify
@@ -55,4 +55,6 @@
                 {:md md
                  :expected html
                  :actual out})))
-          (partition 2 cases))))
+          (partition 2 cases)))
+  (md->html "asd [[test]]")
+  (md->html "asd [[test]] aa"))
