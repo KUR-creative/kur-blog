@@ -41,12 +41,29 @@
                 :children #js[(Token state "text" "" 0
                                      #js{:content some-text})]
                 :markup "wikilink"})]))
-
 (defmethod embed "png" [state token digested-info]
   (img state token digested-info))
 (defmethod embed "jpg" [state token digested-info]
   (img state token digested-info))
 (defmethod embed "jpeg" [state token digested-info]
   (img state token digested-info))
+
+(defn video [state token {:keys [path text]}]
+  (let [level (.-level token)
+        res-path (resource-path path)]
+    [(Token state "video_open" "video" 1
+            #js{:attrs #js[#js["src" res-path]
+                           #js["autoplay" ""]; turns autoplay=""
+                           #js["muted" ""]
+                           #js["loop" ""]]
+                :level level :markup "wikilink" :info "auto"})
+     (Token state "text" "" 0
+            #js{:content (if text text path)
+                :level (inc level)})
+     (Token state "video_close" "video" -1
+            #js{:level level :markup "wikilink" :info "auto"})]))
+(defmethod embed "mp4" [state token digested-info]
+  (video state token digested-info))
+
 (defmethod embed :default [state token digested-info]
   (text state token digested-info))

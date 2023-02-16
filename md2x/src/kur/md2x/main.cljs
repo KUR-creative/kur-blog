@@ -34,6 +34,9 @@
        "<p><img src=\"resource/abc.jpg\" alt=\"resource/abc.jpg\"></p>\n"
        "![[abc.jpeg]]"
        "<p><img src=\"resource/abc.jpeg\" alt=\"resource/abc.jpeg\"></p>\n"
+     ;; Embedding video
+       "![[abc.mp4]]"
+       "<p><video src=\"resource/abc.mp4\" autoplay=\"\" muted=\"\" loop=\"\">abc.mp4</video></p>\n"
      ;; Trimming white space
        "aa [[abc.png  ]] bb"
        "<p>aa <a href=\"abc.png\">abc.png</a> bb</p>\n"
@@ -56,5 +59,6 @@
                  :expected html
                  :actual out})))
           (partition 2 cases)))
-  (md->html "asd [[test]]")
+  (md->html "![[abc.mp4]]")
+  (md->html "[[글댓비full.png]]")
   (md->html "asd [[test]] aa"))
