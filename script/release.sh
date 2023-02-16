@@ -19,6 +19,8 @@ then
 fi
 
 # Build target
+clj -T:build clean
+clj -T:build copy-dirs
 clj -T:build uber
 
 # Save version metadata
