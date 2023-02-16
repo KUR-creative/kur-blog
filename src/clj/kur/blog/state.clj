@@ -1,9 +1,7 @@
 (ns kur.blog.state
   "Currently, the state is set of post"
   (:require [kur.blog.page.post :as post]
-            [kur.blog.page.post.name :as name]
-            [kur.blog.updater :as updater]
-            [kur.util.file-system :as uf]))
+            [kur.blog.updater :as updater]))
 
 (defn initial
   "Create initial state of application"
@@ -13,11 +11,7 @@
 (defn state
   "Current state calculated from markdown directory"
   [md-dir]
-  (->> (uf/path-seq md-dir)
-       (keep #(when-let [parts (name/valid-parts %)]
-                [% parts]))
-       (map (fn [[path parts]] (post/post path parts)))
-       set))
+  (updater/post-set md-dir))
 
 (defn current
   "Current state and site"

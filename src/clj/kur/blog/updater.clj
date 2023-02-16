@@ -9,8 +9,13 @@
             [kur.blog.page.tags :as tags]
             [kur.util.file-system :as uf]))
 
-(defn post-set [md-dir]
-  (->> (uf/path-seq md-dir)
+(defn post-set
+  "Policy: Get post files in md-dir, not recursively!"
+  [md-dir]
+  ;(def md-dir md-dir)
+  (->> (fs/list-dir md-dir)
+       (remove fs/hidden?) ;; Remove .stfolder .stversion
+       (map str)
        (keep #(when-let [parts (name/valid-parts %)]
                 [% parts]))
        (map (fn [[path parts]] (post/post path parts)))
@@ -62,5 +67,8 @@
 
 ;;
 (comment
+  (map fs/hidden? (uf/path-seq "/www/blog-base/md"))
+
+  (post-set "/www/blog-base/md")
   (def md-dir "test/fixture/blog-root/blog-md/")
   (def html-dir "test/fixture/blog-root/tmp-html/"))
