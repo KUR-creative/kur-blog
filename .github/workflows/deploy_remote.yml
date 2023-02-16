@@ -20,7 +20,7 @@ jobs:
 
       - uses: actions/checkout@v3
       - name: Build target
-        run: clj -T:build uber
+        run: clj -T:build release
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2

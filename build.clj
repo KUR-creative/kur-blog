@@ -47,6 +47,10 @@
            :main 'kur.blog.main})
 
   (println "Cleaning up..")
-  (b/delete {:path class-dir})
+  (b/delete {:path class-dir}))
 
-  (comment))
+;; clj -T:build release # The one command
+(defn release [_]
+  (clean nil)
+  (copy-dirs nil)
+  (uber nil))

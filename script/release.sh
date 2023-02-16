@@ -19,9 +19,7 @@ then
 fi
 
 # Build target
-clj -T:build clean
-clj -T:build copy-dirs
-clj -T:build uber
+clj -T:build release
 
 # Save version metadata
 echo "tag: $1"                                  > "$release_dir/version.yml"
