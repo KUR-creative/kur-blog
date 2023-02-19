@@ -25,16 +25,11 @@
 (defn copy-dirs [_]
   (println "Copying directories..")
   (copy-lang-dir "js")
-  #_(copy-lang-dir "html")
-  #_(copy-lang-dir "css")
-  )
+  (copy-lang-dir "html")
+  #_(copy-lang-dir "css"))
 
 ;; clj -T:build uber
 (defn uber [_]
-  #_(println "Writing metadata..")
-  #_(spit (str release-dir "/" "version.edn")
-          (with-out-str (pprint (version nil))))
-
   (println "Compiling..")
   (b/compile-clj {:basis basis
                   :src-dirs ["src"]
