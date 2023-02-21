@@ -46,21 +46,22 @@
   "Return commands to maintain html files of site
    commands are [[f & args]*]"
   [unchanged-posts post-to-delete loaded-posts-to-write html-dir]
-  (let [public-posts (concat unchanged-posts loaded-posts-to-write)
+  (let [public-posts (sort-by :id #(compare %2 %1)
+                              (concat unchanged-posts
+                                      loaded-posts-to-write))
         html-path #(str (fs/path html-dir %))]
     (concat
      (map (fn [post]
             [spit (html-path (post/html-file-name post))
              (look-post/html nil (post/title-or-id post) (:text post))])
           loaded-posts-to-write)
-     [[spit (html-path "tags.html")
+     [[spit (html-path "home.html") (look-home/html public-posts)]
+      [spit (html-path "archive.html") (look-archive/html public-posts)]
+      [spit (html-path "series.html") "FIXME"]
+      [spit (html-path "tags.html")
        (look-tags/html (tags/tag:posts public-posts)
-                       (filter #(not (tags/has-tags? %))
-                               public-posts))]
-      #_[spit (html-path "home.html")
-         (look-home/html (sort-by :id public-posts))]
-      [spit (html-path "archive.html")
-       (look-archive/html (sort-by :id #(compare %2 %1) public-posts))]]
+                       (filter #(not (tags/has-tags? %)) public-posts))]
+      [spit (html-path "guests.html") "FIXME"]]
      (map (fn [post]
             [fs/delete-if-exists (html-path (post/html-file-name post))])
           post-to-delete))))
