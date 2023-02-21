@@ -124,4 +124,6 @@
                  parts->fname fname->parts valid?)
              false))
   (fname->parts "asdw1234567890.zxc.a") ;; TODO: Is it problem?
-  (assert (not (valid? "1235assddw.sync-conflict-"))))
+  (assert (not (valid? "1235assddw.sync-conflict-")))
+
+  (id-info "admin0000000000"))

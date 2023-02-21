@@ -14,7 +14,7 @@
   "posts is seq of Post Publishable"
   [posts & {:keys [css-paths]}]
   (html5 (head :css-paths css-paths
-               :title "home")
+               :title "KUR Creative Blog - Home")
          [:body
           [:h1 "HOME"]
           (link-to "tags" [:p "tags"])

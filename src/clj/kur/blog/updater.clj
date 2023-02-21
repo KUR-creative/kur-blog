@@ -1,5 +1,6 @@
 (ns kur.blog.updater ;; TODO: Updater(delete also?)
   (:require [babashka.fs :as fs]
+            [kur.blog.look.archive :as look-archive]
             [kur.blog.look.home :as look-home]
             [kur.blog.look.post :as look-post]
             [kur.blog.look.tags :as look-tags]
@@ -45,7 +46,7 @@
   "Return commands to maintain html files of site
    commands are [[f & args]*]"
   [unchanged-posts post-to-delete loaded-posts-to-write html-dir]
-  (let [unchangeds-and-writes (concat unchanged-posts loaded-posts-to-write)
+  (let [public-posts (concat unchanged-posts loaded-posts-to-write)
         html-path #(str (fs/path html-dir %))]
     (concat
      (map (fn [post]
@@ -53,11 +54,13 @@
              (look-post/html nil (post/title-or-id post) (:text post))])
           loaded-posts-to-write)
      [[spit (html-path "tags.html")
-       (look-tags/html (tags/tag:posts unchangeds-and-writes)
+       (look-tags/html (tags/tag:posts public-posts)
                        (filter #(not (tags/has-tags? %))
-                               unchangeds-and-writes))]
-      [spit (html-path "home.html")
-       (look-home/html (sort-by :id unchangeds-and-writes))]]
+                               public-posts))]
+      #_[spit (html-path "home.html")
+         (look-home/html (sort-by :id public-posts))]
+      [spit (html-path "archive.html")
+       (look-archive/html (sort-by :id #(compare %2 %1) public-posts))]]
      (map (fn [post]
             [fs/delete-if-exists (html-path (post/html-file-name post))])
           post-to-delete))))
