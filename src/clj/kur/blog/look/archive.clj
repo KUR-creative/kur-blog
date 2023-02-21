@@ -11,7 +11,7 @@
     (into [:ul] lis)))
 
 (defn html
-  "posts is seq of Post Publishable"
+  "posts is seq of Post"
   [posts & {:keys [css-paths]}]
   ;(def posts posts)
   (html5 (head :css-paths css-paths

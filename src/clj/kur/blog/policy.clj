@@ -16,11 +16,26 @@
             (str/replace title file-str title-str))
           title file-s:title-s))
 
+;;
 (def authors #{"kur"})
 (def admin "admin")
 (defn admin-post? [post]
   (= admin (-> post :id name/id-info :author)))
 
+(def introduction-id "admin0000000000")
+(defn introduction-post? [post]
+  (= introduction-id (:id post)))
+
+;;
+(def site-resource-dir "resource/site")
+(defn site-resource
+  "fname is (fs/file-name path): including extension."
+  [fname]
+  (str site-resource-dir "/" fname))
+(def kur-logo (site-resource "kur120.png"))
+(def search-logo (site-resource "search.svg"))
+
+;;
 (comment
   (normalize-title "=q=eifjsldf=q= =star=asdw =star=")
   ;(str/replace "=q==q==q=" "=q=" "?")

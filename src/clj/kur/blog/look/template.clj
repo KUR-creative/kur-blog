@@ -1,5 +1,7 @@
 (ns kur.blog.look.template
-  (:require [hiccup.page :refer [include-css include-js]]))
+  (:require [hiccup.element :refer [link-to]]
+            [hiccup.page :refer [include-css include-js]]
+            [kur.blog.policy :as policy]))
 
 (def scale1-viewport
   [:meta {:name "viewport"
@@ -16,3 +18,17 @@
    (apply include-css css-paths)
    (apply include-js js-paths)
    [:title title]])
+
+(def navigation
+  [:nav
+   (link-to "archive.html" "archive")
+   (link-to "series.html" "series")
+   (link-to "tags.html" "tags")
+   (link-to "guests.html" "guests")])
+
+(def header
+  [:header
+   [:img {:src policy/kur-logo :height "60px" :width "60px"}]
+   [:div "KUR Creative"]
+   [:img {:src policy/search-logo :height "60px" :width "60px"}]
+   navigation])
