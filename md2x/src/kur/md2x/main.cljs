@@ -7,6 +7,7 @@
              :html true
              :breaks true})
     (.use (js/require "markdown-it-mark"))
+    (.use (js/require "markdown-it-collapsible"))
     (.use enable-wikilink!)))
 
 (def exports
@@ -49,7 +50,10 @@
        "==test==" "<p><mark>test</mark></p>\n"
      ;; linkify
        "http://test.com"
-       "<p><a href=\"http://test.com\">http://test.com</a></p>\n"])
+       "<p><a href=\"http://test.com\">http://test.com</a></p>\n"
+     ;; Collapsible
+       "+++ summary \n hidden \n+++"
+       "<details>\n<summary><span class=\"details-marker\">&nbsp;</span>summary</summary><p>hidden</p>\n</details>\n"])
 
     (def md->html (.-obsidian exports))
     (keep (fn [[md html]]

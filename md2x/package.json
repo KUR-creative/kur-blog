@@ -8,6 +8,7 @@
   "dependencies": {
     "@vercel/ncc": "^0.34.0",
     "markdown-it": "^13.0.1",
+    "markdown-it-collapsible": "^1.0.0",
     "markdown-it-mark": "^3.0.1"
   }
 }
