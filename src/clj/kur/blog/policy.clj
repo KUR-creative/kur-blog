@@ -37,6 +37,9 @@
 (def search-logo (site-resource "search.svg"))
 
 (def layout-css (site-resource "css/layout.css"))
+(def header-css (site-resource "css/header.css"))
+(def article-css (site-resource "css/article.css"))
+(def common-css-paths [layout-css header-css article-css])
 
 ;;
 (comment

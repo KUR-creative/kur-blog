@@ -15,7 +15,7 @@
   [posts]
   (let [{:keys [text title]}
         (some #(when (policy/introduction-post? %) %) posts)]
-    (html5 (head :css-paths [policy/layout-css];css-paths
+    (html5 (head :css-paths policy/common-css-paths
                  :title "KUR Creative Blog - Home")
            [:body
             header

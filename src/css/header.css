@@ -1,0 +1,24 @@
+.site-title {
+    display: block;
+    text-align: center;
+    font-size: 2.6rem;
+    margin-block-start: 0.6rem;
+    margin-block-end: 0.6rem;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+}
+
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+header a:link,
+header a:visited {
+    text-decoration: inherit;
+    color: inherit;
+    cursor: pointer;
+}

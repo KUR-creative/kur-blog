@@ -1,7 +1,7 @@
 (ns kur.blog.look.post
   (:require [hiccup.element :refer [link-to]]
             [hiccup.page :refer [html5]]
-            [kur.blog.look.template :refer [head]]
+            [kur.blog.look.template :refer [head header]]
             [kur.blog.page.post :as post]
             [kur.blog.page.post.md2x :refer [obsidian-html]]
             [kur.blog.policy :as policy]))
@@ -12,9 +12,10 @@
 
 (defn html [title md-text]
   (let [norm-title (policy/normalize-title title)]
-    (html5 (head :css-paths [policy/layout-css] ;css-paths
+    (html5 (head :css-paths policy/common-css-paths
                  :title norm-title)
            [:body
+            header
             [:article {:class "container"}
              [:h1 norm-title]
              (obsidian-html md-text)]])))

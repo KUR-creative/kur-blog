@@ -1,8 +1,9 @@
 (ns kur.blog.look.tags
   (:require [hiccup.page :refer [html5]]
             [kur.blog.look.post :as look-post]
-            [kur.blog.look.template :refer [head]]
-            [kur.blog.page.post :as post]))
+            [kur.blog.look.template :refer [head header]]
+            [kur.blog.page.post :as post]
+            [kur.blog.policy :as policy]))
 
 (defn tag-and-links-block [tag posts]
   (list [:h3 tag] [:ul (map look-post/post-link-li posts)]))
@@ -23,6 +24,10 @@
 ; TODO: Add js to sort tags
 (defn html [tag:posts no-tags-posts
             & {:keys [css-paths js-paths] :as opts}]
-  (html5 (head :css-paths css-paths
+  (html5 (head :css-paths policy/common-css-paths
                :title "tags")
-         [:body [:h1 "tags" (tags-summary tag:posts no-tags-posts)]]))
+         [:body
+          header
+          [:article {:class "container"}
+           [:h1 "tags"]
+           (tags-summary tag:posts no-tags-posts)]]))

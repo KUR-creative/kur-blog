@@ -20,16 +20,18 @@
    [:title title]])
 
 (def navigation
-  [:nav
+  [:nav {:class "navigation"}
    (link-to "archive" "archive")
    (link-to "series" "series")
    (link-to "tags" "tags")
-   (link-to "guests" "guests")])
+   (link-to "guests" "guests")
+   [:img {:src policy/search-logo :height "20px" :width "20px"}]])
+   ;; TODO: link to google site search url
 
 (def header
   [:header {:class "container"}
-   [:img {:src policy/kur-logo :height "60px" :width "60px"}]
-   [:div "KUR Creative"]
-   [:img {:src policy/search-logo :height "60px" :width "60px"}]
    [:hr]
-   navigation])
+   [:div {:class "site-title"} (link-to "home" "KUR Creative")]
+   [:hr]
+   navigation
+   [:hr]])
