@@ -23,6 +23,10 @@ sudo mkdir -p /www/blog/html
 sudo mkdir -p /www/blog-base/md
 sudo chown -R $USER:$USER /www
 
+# Copy frontend script files to /www/blog/resource/
+\cp -r updater/target/src/js /www/blog/resource/site/
+\cp -r updater/target/src/css /www/blog/resource/site/
+
 # Deploy updater
 cp -r updater/target/* /www/blog-base
 cp -r updater/config /www/blog-base/

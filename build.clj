@@ -26,7 +26,7 @@
   (println "Copying directories..")
   (copy-lang-dir "js")
   (copy-lang-dir "html")
-  #_(copy-lang-dir "css"))
+  (copy-lang-dir "css"))
 
 ;; clj -T:build uber
 (defn uber [_]
