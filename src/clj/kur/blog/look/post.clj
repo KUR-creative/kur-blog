@@ -10,13 +10,14 @@
   [:li (link-to (:id post)
                 (policy/normalize-title (post/title-or-id post)))])
 
-(defn html [css-paths title md-text]
+(defn html [title md-text]
   (let [norm-title (policy/normalize-title title)]
-    (html5 (head :css-paths css-paths
+    (html5 (head :css-paths [policy/layout-css] ;css-paths
                  :title norm-title)
            [:body
-            [:h1 norm-title]
-            (obsidian-html md-text)])))
+            [:article
+             [:h1 norm-title]
+             (obsidian-html md-text)]])))
 
 ;;
 (comment

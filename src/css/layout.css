@@ -1,0 +1,6 @@
+header,
+body article {
+    max-width: 48rem;
+    margin-left: auto;
+    margin-right: auto;
+}

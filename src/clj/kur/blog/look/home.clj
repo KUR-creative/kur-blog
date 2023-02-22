@@ -12,12 +12,13 @@
 
 (defn html
   "posts is seq of Post"
-  [posts & {:keys [css-paths]}]
+  [posts]
   (let [{:keys [text title]}
         (some #(when (policy/introduction-post? %) %) posts)]
-    (html5 (head :css-paths css-paths
+    (html5 (head :css-paths [policy/layout-css];css-paths
                  :title "KUR Creative Blog - Home")
            [:body
             header
-            [:h1 (policy/normalize-title title)]
-            (obsidian-html text)])))
+            [:article
+             [:h1 (policy/normalize-title title)]
+             (obsidian-html text)]])))

@@ -32,8 +32,11 @@
   "fname is (fs/file-name path): including extension."
   [fname]
   (str site-resource-dir "/" fname))
+
 (def kur-logo (site-resource "kur120.png"))
 (def search-logo (site-resource "search.svg"))
+
+(def layout-css (site-resource "css/layout.css"))
 
 ;;
 (comment

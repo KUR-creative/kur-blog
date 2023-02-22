@@ -53,7 +53,7 @@
     (concat
      (map (fn [post]
             [spit (html-path (post/html-file-name post))
-             (look-post/html nil (post/title-or-id post) (:text post))])
+             (look-post/html (post/title-or-id post) (:text post))])
           loaded-posts-to-write)
      [[spit (html-path "home.html") (look-home/html public-posts)]
       [spit (html-path "archive.html") (look-archive/html public-posts)]
