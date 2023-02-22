@@ -3,6 +3,12 @@ article {
     font-size: 16px;
 }
 
+img,
+video {
+    display: inline;
+    max-width: 100%;
+}
+
 /* paragraph and list */
 p {
     margin-top: 0.2em;
