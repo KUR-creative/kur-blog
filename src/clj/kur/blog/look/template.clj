@@ -21,10 +21,10 @@
 
 (def navigation
   [:nav
-   (link-to "archive.html" "archive")
-   (link-to "series.html" "series")
-   (link-to "tags.html" "tags")
-   (link-to "guests.html" "guests")])
+   (link-to "archive" "archive")
+   (link-to "series" "series")
+   (link-to "tags" "tags")
+   (link-to "guests" "guests")])
 
 (def header
   [:header
