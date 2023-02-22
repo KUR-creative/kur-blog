@@ -35,6 +35,7 @@
 
 (def kur-logo (site-resource "kur120.png"))
 (def search-logo (site-resource "search.png"))
+(def favicon (site-resource "k.png"))
 
 (def layout-css (site-resource "css/layout.css"))
 (def header-css (site-resource "css/header.css"))

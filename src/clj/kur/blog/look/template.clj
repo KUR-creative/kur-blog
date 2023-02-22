@@ -6,15 +6,21 @@
 (def scale1-viewport
   [:meta {:name "viewport"
           :content "width=device-width, initial-scale=1"}])
+
 (def charset-utf8 [:meta {:charset "utf-8"}])
+
 (def google-analytics-script
   (slurp "src/html/google-analytics.html"))
+
+(def favicon
+  [:link {:href policy/favicon :rel "icon" :type "image/x-icon"}])
 
 (defn head [& {:keys [js-paths css-paths title]}]
   [:head
    scale1-viewport
    charset-utf8
    google-analytics-script
+   favicon
    (apply include-css css-paths)
    (apply include-js js-paths)
    [:title title]])
