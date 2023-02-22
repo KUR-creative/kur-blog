@@ -19,6 +19,6 @@
                  :title "KUR Creative Blog - Home")
            [:body
             header
-            [:article
+            [:article {:class "container"}
              [:h1 (policy/normalize-title title)]
              (obsidian-html text)]])))

@@ -15,7 +15,7 @@
     (html5 (head :css-paths [policy/layout-css] ;css-paths
                  :title norm-title)
            [:body
-            [:article
+            [:article {:class "container"}
              [:h1 norm-title]
              (obsidian-html md-text)]])))
 

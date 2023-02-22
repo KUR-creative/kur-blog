@@ -27,7 +27,7 @@
    (link-to "guests" "guests")])
 
 (def header
-  [:header
+  [:header {:class "container"}
    [:img {:src policy/kur-logo :height "60px" :width "60px"}]
    [:div "KUR Creative"]
    [:img {:src policy/search-logo :height "60px" :width "60px"}]
