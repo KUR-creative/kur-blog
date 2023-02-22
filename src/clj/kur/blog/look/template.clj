@@ -31,7 +31,7 @@
 (def header
   [:header {:class "container"}
    [:hr]
-   [:div {:class "site-title"} (link-to "home" "KUR Creative")]
+   [:div {:class "site-title"} (link-to "/" "KUR Creative")]
    [:hr]
    navigation
    [:hr]])

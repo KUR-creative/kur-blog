@@ -34,7 +34,7 @@
   (str site-resource-dir "/" fname))
 
 (def kur-logo (site-resource "kur120.png"))
-(def search-logo (site-resource "search.svg"))
+(def search-logo (site-resource "search.png"))
 
 (def layout-css (site-resource "css/layout.css"))
 (def header-css (site-resource "css/header.css"))
