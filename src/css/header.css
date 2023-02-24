@@ -1,7 +1,7 @@
 .site-title {
     display: block;
     text-align: center;
-    font-size: 2.6rem;
+    font-size: 2.7rem;
     margin-block-start: 0.6rem;
     margin-block-end: 0.6rem;
     margin-inline-start: 0px;
@@ -22,3 +22,4 @@ header a:visited {
     color: inherit;
     cursor: pointer;
 }
+
