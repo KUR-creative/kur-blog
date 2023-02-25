@@ -4,12 +4,21 @@
             [kur.blog.page.post.name :as name]))
 
 (def ^:private file-s:title-s
-  {"=q=" "?"
-   "=star=" "*"})
+  {"={=" "["
+   "=}=" "]"
+
+   "=(=" "<"
+   "=)=" ">"
+
+   "=q=" "?"
+   "=;=" ":"
+   "=,=" "/"
+
+   "=8=" "*"})
 (defn normalize-title
-  "Return title that specific substring replaced. 
-   Android doesn't support specific charcters for file name. ex) ? \"
-   So to write title including question mark, use alternative str: =q=
+  "Return title that specific substring replaced.
+   Android and Obsidian don't support specific charcters for file name.
+   ex) ? \" [ ] *
    This fn replace alternative to the intended"
   [title]
   (reduce (fn [title [file-str title-str]]
