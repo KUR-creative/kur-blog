@@ -22,6 +22,5 @@
 (comment
   #_(def cfg (load-config :file "test/fixture/config/small.edn"))
   (def cfg "test/fixture/config/default.edn")
-
   (def monitor (-main cfg))
   (monitor/stop! monitor))

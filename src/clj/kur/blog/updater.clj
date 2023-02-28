@@ -1,6 +1,7 @@
 (ns kur.blog.updater ;; TODO: Updater(delete also?)
   (:require [babashka.fs :as fs]
             [kur.blog.look.archive :as look-archive]
+            [kur.blog.look.error :as look-error]
             [kur.blog.look.home :as look-home]
             [kur.blog.look.post :as look-post]
             [kur.blog.look.tags :as look-tags]
@@ -55,7 +56,9 @@
             [spit (html-path (post/html-file-name post))
              (look-post/html (post/title-or-id post) (:text post))])
           loaded-posts-to-write)
-     [[spit (html-path "home.html") (look-home/html public-posts)]
+     [[spit (html-path "404.html") (look-error/page-404 public-posts)]
+      [spit (html-path "50x.html") (look-error/page-50x public-posts)]
+      [spit (html-path "home.html") (look-home/html public-posts)]
       [spit (html-path "archive.html") (look-archive/html public-posts)]
       [spit (html-path "series.html") "FIXME"]
       [spit (html-path "tags.html")

@@ -32,8 +32,11 @@
   (= admin (-> post :id name/id-info :author)))
 
 (def introduction-id "admin0000000000")
-(defn introduction-post? [post]
-  (= introduction-id (:id post)))
+(def id-404          "admin0000000404")
+(def id-50x          "admin0000000500")
+(defn introduction-post? [post] (= introduction-id (:id post)))
+(defn id-404-post? [post] (= id-404 (:id post)))
+(defn id-50x-post? [post] (= id-50x (:id post)))
 
 ;;
 (def site-resource-dir "resource/site")
