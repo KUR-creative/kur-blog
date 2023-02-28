@@ -1,24 +1,12 @@
 (ns kur.blog.look.home
   (:require [hiccup.page :refer [html5]]
-            [kur.blog.look.template :refer [head header]]
+            [kur.blog.look.template :refer [article-page]]
             [kur.blog.page.post.md2x :refer [obsidian-html]]
             [kur.blog.policy :as policy]))
 
-#_(defn post-list
-    [posts]
-    (let [lis (mapv look-post/post-link-li posts)]
-      (when (seq lis) (assert (apply distinct? lis)))
-      (into [:ul] lis)))
-
-(defn html
-  "posts is seq of Post"
-  [posts]
+(defn html [posts]
   (let [{:keys [text title]}
         (some #(when (policy/introduction-post? %) %) posts)]
-    (html5 (head :css-paths policy/common-css-paths
-                 :title "KUR Creative Blog - Home")
-           [:body
-            header
-            [:article {:class "container"}
-             [:h1 (policy/normalize-title title)]
-             (obsidian-html text)]])))
+    (html5 (article-page {:title "KUR Creative Blog - Home"}
+                         {:h1 (policy/normalize-title title)
+                          :content (obsidian-html text)}))))

@@ -24,4 +24,4 @@
 
 (comment
   (def git-count 156)
-  (diff 156))
+  (println (:out (diff 156))))

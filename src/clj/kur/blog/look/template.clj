@@ -25,6 +25,7 @@
    (apply include-js js-paths)
    [:title title]])
 
+;; Common
 (def navigation
   [:nav {:class "navigation"}
    (link-to "archive" "archive")
@@ -41,3 +42,15 @@
    [:hr]
    navigation
    [:hr]])
+
+(defn article-page
+  [{:keys [css-paths title]} {:keys [h1 content]}]
+  (list (head :css-paths (if css-paths
+                           css-paths
+                           policy/common-css-paths)
+              :title title)
+        [:body
+         header
+         [:article {:class "container"}
+          (when (seq h1) [:h1 h1])
+          (when content content)]]))
