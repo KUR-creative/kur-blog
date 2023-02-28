@@ -13,5 +13,5 @@
 (defn html
   [posts]
   (html5 (article-page {:title "KUR Creative Blog - Archive"}; TODO: SEO?
-                       {:h1 "Archive"       ; TODO: refactor 'remove'
+                       {:h1 "Archive"
                         :content (post-list (remove policy/admin-post? posts))})))

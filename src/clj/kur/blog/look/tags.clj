@@ -2,8 +2,7 @@
   (:require [hiccup.page :refer [html5]]
             [kur.blog.look.post :as look-post]
             [kur.blog.look.template :refer [article-page]]
-            [kur.blog.page.post :as post]
-            [kur.blog.policy :as policy]))
+            [kur.blog.page.post :as post]))
 
 (defn tag-and-links-block [tag posts]
   (list [:h3 tag] [:ul (map look-post/post-link-li posts)]))
