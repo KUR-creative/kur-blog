@@ -1,4 +1,8 @@
-tag: 0.6.0
-summary: domain redirection, more title special chars
-hash: 00ffdac25ea9df13f57082d5abc6c58f21e3e194
-short_hash: 00ffdac
+tag: 1.0.0
+summary: MVP 1 features complete
+
+Add series
+Add Informative 404, 50x pages
+Add under construction pages for subscribe and guest book page
+hash: 45d5e3891bf69e8c7fade2e8eb5884970a698d49
+short_hash: 45d5e38
