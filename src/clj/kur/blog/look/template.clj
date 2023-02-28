@@ -28,8 +28,8 @@
 (def navigation
   [:nav {:class "navigation"}
    (link-to "archive" "archive")
-   (link-to "series" "series")
    (link-to "tags" "tags")
+   (link-to "subscribe" "subscribe")
    (link-to "guests" "guests")
    [:img {:src policy/search-logo :height "20px" :width "20px"}]])
    ;; TODO: link to google site search url

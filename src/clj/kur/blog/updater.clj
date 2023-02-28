@@ -61,7 +61,7 @@
       [spit (html-path "50x.html") (look-error/page-50x public-posts)]
       [spit (html-path "home.html") (look-home/html public-posts)]
       [spit (html-path "archive.html") (look-archive/html public-posts)]
-      [spit (html-path "series.html") "FIXME"]
+      [spit (html-path "subscribe.html") "FIXME"]
       [spit (html-path "tags.html")
        (look-tags/html (tags/tag:posts public-posts)
                        (filter #(not (tags/has-tags? %)) public-posts))]
