@@ -8,7 +8,8 @@
             [medley.core :refer [filter-keys]]))
 
 (defn tag-and-links-block [tag posts]
-  (list [:h3 tag] [:ul (map look-post/post-link-li posts)]))
+  (list [:h3 {:id tag :style "margin-top: 0.5em;"} tag]
+        [:ul (map look-post/post-link-li posts)]))
 
 (defn tags-summary [tag:posts no-tags-posts]
   ;(def tag:posts tag:posts)
@@ -16,7 +17,7 @@
   (let [sort-by-title #(sort-by post/title-or-id %)
         no-tags-posts (sort-by-title no-tags-posts)]
     (cons (mapcat (fn [[tag posts]]
-                    (tag-and-links-block (str "#" tag) posts))
+                    (tag-and-links-block tag posts))
                   (into (sorted-map)
                         (-> tag:posts
                             (update-keys str)
@@ -24,12 +25,27 @@
           (when (seq no-tags-posts)
             (tag-and-links-block "No tag" no-tags-posts)))))
 
+(defn series-summary [series:posts]
+  (->> series:posts
+       (sort-by key)
+       (map (fn [[series posts]]
+              (tag-and-links-block series posts)))))
+
 ; TODO: Add js to sort tags
 (defn html [posts]
   (let [posts (remove policy/admin-post? posts)
         tag:posts (tags/tag:posts posts)
         no-tags-posts (remove tags/has-tags? posts)]
-    (html5 (article-page {:title "KUR Creative Blog - series & tags"}
-                         {:h1 "Series & Tags"
-                          :content (tags-summary tag:posts
-                                                 no-tags-posts)}))))
+    ;(def tag:posts tag:posts)
+    (html5 (article-page
+            {:title "KUR Creative Blog - series & tags"}
+            {:content
+             (list
+              [:h1 {:style "margin-bottom: 0.1em;"} "Series"]
+              (series-summary (tags/series:posts tag:posts))
+              [:h1 {:style "margin-bottom: 0.1em;"} "Tags"]
+              (tags-summary (filter-keys #(not (tags/series-info %))
+                                         tag:posts)
+                            no-tags-posts))}))))
+
+#_(tags/series:posts tag:posts)
