@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html><head><meta content="width=device-width, initial-scale=1" name="viewport"><meta charset="utf-8"><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3VM2LWXJF8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3VM2LWXJF8');
+</script>
+<link href="resource/site/k.png" rel="icon" type="image/x-icon"><link href="resource/site/css/layout.css" rel="stylesheet" type="text/css"><link href="resource/site/css/header.css" rel="stylesheet" type="text/css"><link href="resource/site/css/article.css" rel="stylesheet" type="text/css"><title>고전적 소프트웨어 공학(좆같은 UML 그리기)의 단점</title></head><body><header class="container"><hr><div class="site-title"><a href="/">KUR Creative</a></div><hr><nav class="navigation"><a href="archive">archive</a><a href="tags">tags</a><a href="subscribe">subscribe</a><a href="guests">guests</a><img height="20px" src="resource/site/search.png" width="20px"></nav><hr></header><article class="container"><h1>고전적 소프트웨어 공학(좆같은 UML 그리기)의 단점</h1><p>최근에 석사 수업으로 오오래된 소공을 배웠다.<br>
+컴공이면 다들 아는 악명 높은 그것 맞다.</p>
+<p>내가 개인적으로 구루들 강연이나 기타 잡다한 곳에서 배운 방식들이 있는데,<br>
+그것과 고오전적 소공을 비교해보고 몇가지 단점을 생각해 보았다.</p>
+<p>명확해 보이는 것만 말해본다.</p>
+<h2>오로지 탑-다운 사고 방식 뿐</h2>
+<p>탑다운 방식으로 만든 컴포넌트는 조합하여 사용하기 어렵다.<br>
+탑다운 방식으로 만든 컴포넌트를 조합해서 새롭고 다양한 기능을 만들고 싶다면,<br>
+반드시 그런 조합을 염두에 두고 설계해야만 한다.<br>
+그래서 탑다운 방식은 설계자의 경험에 크게 의존한다.</p>
+<p>바텀업 방식으로 컴포넌트를 만들 경우 애초에 조합하지 않으면 기능 자체를 만들 수 없기 때문에<br>
+설계자는 강제적으로 컴포넌트의 조합을 미리 생각해야만 한다.<br>
+그리고 기본적으로 조합을 통해 다양한 기능을 구현해야 하기 때문에<br>
+자연스럽게 탑다운보다 적은 수의 컴포넌트를 만들게 된다.</p>
+<p>탑-다운은 문제를 쪼개서 해결하는 것에 가까운 반면,<br>
+바텀-업은 문제를 해결하기 위한 언어를 만드는 것에 가깝다.<br>
+이는 SICP에서 말하는 &quot;언어적 추상화&quot;에 가깝다.<br>
+(다들 알다시피 하나의 프밍 언어로 수 없이 다양한 어플리케이션을 만들고 있다)</p>
+<p>그런데 고전적 소프트웨어 공학은 바텀업 방식에 대해서는 일언반구도 없다.<br>
+사실 그런 게 있는지도 모르는 거 같다.</p>
+<p>문제를 이해하기 위해서는 탑-다운을 적용해야 하지만,<br>
+시스템 설계에는 바텀-업이 더 낫다.</p>
+<h2>스펙을 문서로 작성한다</h2>
+<p>스펙은 코드로 작성하는 게 더 낫다.<br>
+더 구체적으로는 &quot;스펙&quot;을 명시하기 위해 정의된 DSL로 스펙을 명시하면<br>
+스펙을 검증하는 테스트가 자동으로 뽑혀져 나오고 그것으로 테스트를 할 수 있어야 한다<a href="https://clojure.org/about/spec">^1</a><br>
+(말도 안 된다고 생각하는 사람도 있겠지만 실제로 일어나고 있는 일이다...).</p>
+<p>게다가 코드로 정의되면서 테스트를 자동 생성하는 스펙은<br>
+정의하는 도중에 실행해보면서 스펙의 모순을 찾거나 생각을 더 명료하게 표현할 수 있다.<br>
+즉 빠른 피드백을 통해 스펙을 발전시킬 수 있다.</p>
+<p>그런데 고전적 소공에서는 스펙을 x같은 UML과  문서로 떡쳐대고 있다.<br>
+그런 식으로는 산전 수전 다 겪은 고인물도 제대로된 스펙을 짜기 힘들거다.<br>
+스펙을 코드로 작성하는게 불가능하다고 생각되던 시절에 기록된 방식이라 그런건가? 하는 생각도 든다.</p>
+<h2>문서가 너무 많다</h2>
+<p>이건 사실 누구나 소공 들으면서 무의미한 과제를 조금이라도 해보면 쌍욕이 튀어나오면서 뼈저리게 느끼는 부분이다.<br>
+그리고 x같은 uml도... 사실 이건 내가 말 해도 뻔하긴 하다.</p>
+<p>그래서 21세기에는 아무도 그렇게 안 한다. 아주 조금씩, 필요한 것만 한다.<br>
+문서를 x나게 만들어대는 메타는 20세기 방식인데 이걸 왜 아직 배우는지는 잘 모르겠다.<br>
+하도 시달리다가 질려버린 구루들이 &quot;애자일&quot; &quot;익스트림&quot;이라는 걸 만들었다.</p>
+<p>그런데 이제는 또 &quot;애자일&quot;이라는 명목 하에 설계도 안 하고 뭣도 없이 짜다가 뚝배기가 깨져버린 사람들이 슬슬 나오는 거 같으니...</p>
+<p>나는 큰 시스템을 만드려면 설계는 반드시 필요하다고 생각한다. 그러나 고오전 소공의 그런 방식은 아니다.<br>
+좆같은 uml보다, 정말로 시스템 만들 때 필요한 설계의 표현 방식을 누구라도 좀 알려 줬으면 좋겠다. 어려운 일이다...</p>
+<h2>결론</h2>
+<p>하다보니 탑다운이랑 바텀업 이야기만으로 이 정도 길이가 뚝딱 나와서 다 지우고 다시 썼다.<br>
+3줄 요약해보겠다.</p>
+<p>고전적 소프트웨어 공학은</p>
+<ol>
+<li>바텀업 사고방식과 언어적 추상화에 대한 생각이 없다.</li>
+<li>스펙을 문서로만 정의하여 자동적 검증과 테스트가 불가능하다.</li>
+<li>그 외에도 온갖 x같은 문서를 미친듯이 만들어 대는데 안 봐도 인생이 힘들어질 것이 눈에 선하다.</li>
+</ol>
+<p>내가 느끼는 고전 소프트웨어 공학의 장점은</p>
+<ol>
+<li>설계라는 걸 일단 하기는 한다. 쫌끔 불타버린 거 같긴 하지만...</li>
+<li>시스템을 만드는 사람들을 폭발적으로 늘릴 수 있다. 즉 일자리가 창출된다는 것이다.<br>
+회사에는 손해일 수도 있지만 국가에는 아무튼 이득이다. 사장님, 사업을 좀 대국적으로 하십시오!</li>
+<li>특정 설계 표현에 대해 참고해볼 만한 매우 명확한 표현(uml)을 제공한다.<br>
+근데 강요하지 말고 참고만 하자..</li>
+</ol>
+<hr>
+<p><a href="https://m.blog.naver.com/CommentList.naver?blogId=rhdnfka94&amp;logNo=222174566051">과거 블로그 댓글</a></p>
+<ul>
+<li><a href="kur2102041115.-.Q. 혹시 그러면 코드를 짤 때 설계도를 그리는 방법론에 관해서 작성자님의 생각과 비슷하거나 혹은 작성자님이 추천해주시는 컨텐츠가 있을까요=q==q=">후속 글(과거 블로그 첫 댓글에 대한 답변)</a></li>
+</ul>
+</article></body></html>

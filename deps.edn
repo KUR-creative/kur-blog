@@ -1,5 +1,5 @@
 {:paths ["src/clj" "src/js"
-         "test/unit" "test/integration"]
+         "test/unit" "test/integration" "test/regression"]
  :deps
  {;; Fundamental
   medley/medley {:mvn/version "1.4.0"}
