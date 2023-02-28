@@ -9,7 +9,8 @@
             [kur.blog.page.post.diff :as post-diff]
             [kur.blog.page.post.name :as name]
             [kur.blog.page.tags :as tags]
-            [kur.util.file-system :as uf]))
+            [kur.util.file-system :as uf]
+            [kur.blog.policy :as policy]))
 
 (defn post-set
   "Policy: Get post files in md-dir, not recursively!"
@@ -55,7 +56,7 @@
      (map (fn [post]
             [spit (html-path (post/html-file-name post))
              (look-post/html (post/title-or-id post) (:text post))])
-          loaded-posts-to-write)
+          (remove policy/admin-post? loaded-posts-to-write))
      [[spit (html-path "404.html") (look-error/page-404 public-posts)]
       [spit (html-path "50x.html") (look-error/page-50x public-posts)]
       [spit (html-path "home.html") (look-home/html public-posts)]
