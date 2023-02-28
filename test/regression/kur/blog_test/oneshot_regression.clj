@@ -24,4 +24,6 @@
 
 (comment
   (def git-count 156)
-  (println (:out (diff 156))))
+  (println (:out (diff 156)))
+  (println (:out (diff 159))) ; Subscribe, Guests temp page were added
+  )

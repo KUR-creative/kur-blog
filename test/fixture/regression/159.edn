@@ -1,0 +1,11 @@
+;; git hash = c98ab8a, count = 156
+;; config for regression test
+{:md-dir "test/fixture/regression/159/md"
+ :html-dir "test/fixture/blog-root/tmp-html"
+ :fs-wait-ms 1000}
+
+; md-dir          An directory to MONITOR post markdown
+; html-dir        An directory to UPDATE post html
+; fs-wait-ms      MONITOR waits fs-wait-ms milliseconds
+;                 after consecutive file events in md-dir and then
+;                 requests UPDATER to write/update/delete posts

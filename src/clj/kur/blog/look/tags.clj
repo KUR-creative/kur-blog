@@ -2,7 +2,10 @@
   (:require [hiccup.page :refer [html5]]
             [kur.blog.look.post :as look-post]
             [kur.blog.look.template :refer [article-page]]
-            [kur.blog.page.post :as post]))
+            [kur.blog.page.tags :as tags]
+            [kur.blog.page.post :as post]
+            [kur.blog.policy :as policy]
+            [medley.core :refer [filter-keys]]))
 
 (defn tag-and-links-block [tag posts]
   (list [:h3 tag] [:ul (map look-post/post-link-li posts)]))
@@ -18,10 +21,15 @@
                         (-> tag:posts
                             (update-keys str)
                             (update-vals sort-by-title))))
-          (tag-and-links-block "No tag" no-tags-posts))))
+          (when (seq no-tags-posts)
+            (tag-and-links-block "No tag" no-tags-posts)))))
 
 ; TODO: Add js to sort tags
-(defn html [tag:posts no-tags-posts]
-  (html5 (article-page {:title "tags"}
-                       {:h1 "tags"
-                        :content (tags-summary tag:posts no-tags-posts)})))
+(defn html [posts]
+  (let [posts (remove policy/admin-post? posts)
+        tag:posts (tags/tag:posts posts)
+        no-tags-posts (remove tags/has-tags? posts)]
+    (html5 (article-page {:title "KUR Creative Blog - series & tags"}
+                         {:h1 "Series & Tags"
+                          :content (tags-summary tag:posts
+                                                 no-tags-posts)}))))

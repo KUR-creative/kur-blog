@@ -10,7 +10,6 @@
             [kur.blog.page.post :as post]
             [kur.blog.page.post.diff :as post-diff]
             [kur.blog.page.post.name :as name]
-            [kur.blog.page.tags :as tags]
             [kur.blog.policy :as policy]
             [kur.util.file-system :as uf]))
 
@@ -64,9 +63,7 @@
       [spit (html-path "home.html") (look-home/html public-posts)]
       [spit (html-path "archive.html") (look-archive/html public-posts)]
       [spit (html-path "subscribe.html") (look-subscribe/html)]
-      [spit (html-path "tags.html")
-       (look-tags/html (tags/tag:posts public-posts)
-                       (filter #(not (tags/has-tags? %)) public-posts))]
+      [spit (html-path "tags.html") (look-tags/html public-posts)]
       [spit (html-path "guests.html") (look-guests/html)]]
      (map (fn [post]
             [fs/delete-if-exists (html-path (post/html-file-name post))])
