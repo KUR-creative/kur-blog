@@ -15,6 +15,7 @@
           #js{:slugify #(-> % str/trim (str/replace #"\s+" "-"))
               :permalink ((.. mdit-a -permalink -headerLink)
                           #js{:class "only-cursor"})})
+    (.use (js/require "markdown-it-footnote"))
     (.use enable-wikilink!)))
 
 (def exports
@@ -65,7 +66,15 @@
        "# Te St 테스 트! ? !  "
        "<h1 id=\"Te-St-테스-트!-?-!\" tabindex=\"-1\"><a class=\"only-cursor\" href=\"#Te-St-테스-트!-?-!\">Te St 테스 트! ? !</a></h1>\n"
        "##  Te St 테스  트!!"
-       "<h2 id=\"Te-St-테스-트!!\" tabindex=\"-1\"><a class=\"only-cursor\" href=\"#Te-St-테스-트!!\">Te St 테스  트!!</a></h2>\n"])
+       "<h2 id=\"Te-St-테스-트!!\" tabindex=\"-1\"><a class=\"only-cursor\" href=\"#Te-St-테스-트!!\">Te St 테스  트!!</a></h2>\n"
+       ;; Add footnote
+       "Here is a footnote[^1] reference,[^1] and another.[^longnote]
+
+[^1]: Here is the footnote.
+[^longnote]: Here's one with multiple blocks.
+
+    Subsequent paragraphs are indented to show that they
+belong to the previous footnote." "<p>Here is a footnote<sup class=\"footnote-ref\"><a href=\"#fn1\" id=\"fnref1\">[1]</a></sup> reference,<sup class=\"footnote-ref\"><a href=\"#fn1\" id=\"fnref1:1\">[1:1]</a></sup> and another.<sup class=\"footnote-ref\"><a href=\"#fn2\" id=\"fnref2\">[2]</a></sup></p>\n<hr class=\"footnotes-sep\">\n<section class=\"footnotes\">\n<ol class=\"footnotes-list\">\n<li id=\"fn1\" class=\"footnote-item\"><p>Here is the footnote. <a href=\"#fnref1\" class=\"footnote-backref\">↩︎</a> <a href=\"#fnref1:1\" class=\"footnote-backref\">↩︎</a></p>\n</li>\n<li id=\"fn2\" class=\"footnote-item\"><p>Here's one with multiple blocks.</p>\n<p>Subsequent paragraphs are indented to show that they<br>\nbelong to the previous footnote. <a href=\"#fnref2\" class=\"footnote-backref\">↩︎</a></p>\n</li>\n</ol>\n</section>\n"])
 
     (def md->html (.-obsidian exports))
     (keep (fn [[md html]]
@@ -80,4 +89,6 @@
   (md->html "[[글댓비full.png]]")
   (md->html "asd [[test]] aa")
 
-  (md->html "# Te St 테스 트! ? !  "))
+  (md->html "# Te St 테스 트! ? !  ")
+
+  (md->html))
