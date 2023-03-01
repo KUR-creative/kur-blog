@@ -10,19 +10,29 @@
   [:li (link-to (:id post)
                 (policy/normalize-title (post/title-or-id post)))])
 
+(defn has-code? [html-str]
+  (re-find #"<code.+hljs.+>" html-str))
+
 (defn html [title md-text]
-  (let [norm-title (policy/normalize-title title)]
+  (let [norm-title (policy/normalize-title title)
+        html-str (obsidian-html md-text)]
     (html5 (head :css-paths policy/common-css-paths
-                 :title norm-title)
+                 :title norm-title
+                 :more-tags (when (has-code? html-str)
+                              [policy/agate-code-style-link]))
            [:body
             header
             [:article {:class "container"}
              [:h1 norm-title]
-             (obsidian-html md-text)]])))
+             html-str]])))
 
 ;;
 (comment
   (def text "# 1 \n ## 2 \n ppap \n\n bbab \n - 1 \n - 22")
   (spit "t.html" (html [] "TITLE!!!" text))
   #_(spit "t.html"
-          (html ["test/fixture/css/test-p/red-p.css"] text)))
+          (html ["test/fixture/css/test-p/red-p.css"] text))
+
+  (has-code? "<code class=\"hljs language-bash\">sudo pacman -Syu
+sudo pacman -S clojure
+</code>"))

@@ -9,6 +9,20 @@ video {
     max-width: 100%;
 }
 
+pre {
+    margin-top: 0.1em;
+}
+
+/* footnote */
+.footnote-ref > a,
+.footnote-backref {
+    text-decoration: none;
+}
+
+.footnote-item {
+    font-size: .85em;
+}
+
 /* paragraph and list */
 p {
     margin-top: 0.2em;

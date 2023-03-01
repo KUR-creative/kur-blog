@@ -15,15 +15,16 @@
 (def favicon
   [:link {:href policy/favicon :rel "icon" :type "image/x-icon"}])
 
-(defn head [& {:keys [js-paths css-paths title]}]
-  [:head
-   scale1-viewport
-   charset-utf8
-   google-analytics-script
-   favicon
-   (apply include-css css-paths)
-   (apply include-js js-paths)
-   [:title title]])
+(defn head [& {:keys [js-paths css-paths title more-tags]}]
+  (into [:head
+         scale1-viewport
+         charset-utf8
+         google-analytics-script
+         favicon
+         (apply include-css css-paths)
+         (apply include-js js-paths)
+         [:title title]]
+        more-tags))
 
 ;; Common
 (defn heading-id [heading]

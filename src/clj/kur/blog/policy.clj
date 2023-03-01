@@ -50,12 +50,21 @@
 (def search-logo (site-resource "search.png"))
 (def favicon (site-resource "k.png"))
 
+;;
 (def layout-css (site-resource "css/layout.css"))
 (def header-css (site-resource "css/header.css"))
 (def article-css (site-resource "css/article.css"))
 (def anchor-css (site-resource "css/anchor.css"))
 (def common-css-paths
   [layout-css header-css article-css anchor-css])
+
+(def agate-code-style-link
+  "Search `agate` in https://cdnjs.com/libraries/highlight.js"
+  [:link {:rel "stylesheet"
+          :href "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/agate.min.css"
+          :integrity "sha512-wI7oXtzNHj/bqfLA3P6x3XYbcwzsnIKaPLfjjX8ZAXhc65+kSI6sh8gLOOByOKImokAjHUQR0xAJQ/xZTzwuOA=="
+          :crossorigin "anonymous"
+          :referrerpolicy "no-referrer"}])
 
 ;;
 (comment
