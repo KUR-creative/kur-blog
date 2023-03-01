@@ -15,11 +15,3 @@
     margin-left: 1rem;
     margin-right: 1rem;
 }
-
-header a:link,
-header a:visited {
-    text-decoration: inherit;
-    color: inherit;
-    cursor: pointer;
-}
-
