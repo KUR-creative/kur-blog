@@ -15,6 +15,7 @@
    "=,=" "/"
 
    "=8=" "*"})
+
 (defn normalize-title
   "Return title that specific substring replaced.
    Android and Obsidian don't support specific charcters for file name.
@@ -52,7 +53,9 @@
 (def layout-css (site-resource "css/layout.css"))
 (def header-css (site-resource "css/header.css"))
 (def article-css (site-resource "css/article.css"))
-(def common-css-paths [layout-css header-css article-css])
+(def anchor-css (site-resource "css/anchor.css"))
+(def common-css-paths
+  [layout-css header-css article-css anchor-css])
 
 ;;
 (comment
