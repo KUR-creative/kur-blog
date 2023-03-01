@@ -26,6 +26,15 @@
    [:title title]])
 
 ;; Common
+(defn heading-id [heading]
+  (-> heading clojure.string/trim (clojure.string/replace #"\s+" "-")))
+
+(defn only-cursor-link-to [url content]
+  (link-to {:class "only-cursor"} url content))
+
+(defn heading-link [heading]
+  (only-cursor-link-to (str "#" (heading-id heading)) heading))
+
 (def navigation
   [:nav {:class "navigation"}
    (link-to {:class "only-cursor"} "archive" "archive")

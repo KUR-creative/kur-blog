@@ -1,14 +1,14 @@
 (ns kur.blog.look.tags
   (:require [hiccup.page :refer [html5]]
             [kur.blog.look.post :as look-post]
-            [kur.blog.look.template :refer [article-page]]
-            [kur.blog.page.tags :as tags]
+            [kur.blog.look.template :refer [article-page heading-link]]
             [kur.blog.page.post :as post]
+            [kur.blog.page.tags :as tags]
             [kur.blog.policy :as policy]
             [medley.core :refer [filter-keys]]))
 
 (defn tag-and-links-block [tag posts]
-  (list [:h3 {:id tag :style "margin-top: 0.5em;"} tag]
+  (list [:h3 {:id tag :style "margin-top: 0.5em;"} (heading-link tag)]
         [:ul (map look-post/post-link-li posts)]))
 
 (defn tags-summary [tag:posts no-tags-posts]
@@ -41,12 +41,13 @@
             {:title "KUR Creative Blog - series & tags"}
             {:content
              (list
-              [:h1 {:style "margin-bottom: 0.1em;"} "Series"]
+              [:h1 {:id "Series" :style "margin-bottom: 0.1em;"}
+               (heading-link "Series")]
               (series-summary (tags/series:posts tag:posts))
-              [:h1 {:style "margin-bottom: 0.1em;"} "Tags"]
+              [:h1 {:id "Tags" :style "margin-bottom: 0.1em;"}
+               (heading-link "Tags")]
               (tags-summary (filter-keys #(not (tags/series-info %))
                                          tag:posts)
                             no-tags-posts))}))))
 
 #_(tags/series:posts tag:posts)
-;"<h2 id=\"Te-St-테스-트!!\" tabindex=\"-1\"><a class=\"only-cursor\" href=\"#Te-St-테스-트!!\">Te St 테스  트!!</a></h2>\n"
