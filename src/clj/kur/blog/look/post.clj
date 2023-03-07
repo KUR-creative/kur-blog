@@ -16,7 +16,9 @@
 (defn has-code? [html-str]
   (re-find #"<code.+hljs.+>" html-str))
 
-(defn html [post]
+;(defn) ()
+
+(defn html [post posts]
   (let [norm-title (-> post post/title-or-id policy/normalize-title)
         html-str (obsidian-html (:text post))
         tags (-> post :frontmatter :tags)

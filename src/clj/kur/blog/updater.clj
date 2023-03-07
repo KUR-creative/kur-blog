@@ -48,15 +48,15 @@
   "Return commands to maintain html files of site
    commands are [[f & args]*]"
   [unchanged-posts post-to-delete loaded-posts-to-write html-dir]
-  (let [public-posts (sort-by :id #(compare %2 %1)
-                              (concat unchanged-posts
-                                      loaded-posts-to-write))
+  (let [public-posts (apply sorted-set-by #(compare (:id %2) (:id %1))
+                            (concat unchanged-posts
+                                    loaded-posts-to-write))
         html-path #(str (fs/path html-dir %))
         {:keys [series tags]} (look-tns/htmls public-posts)]
     (concat
      (map (fn [post] [spit
                       (html-path (post/html-file-name post))
-                      (look-post/html post)])
+                      (look-post/html post public-posts)])
           (remove policy/admin-post? loaded-posts-to-write))
      [[spit (html-path "404.html") (look-error/page-404 public-posts)]
       [spit (html-path "50x.html") (look-error/page-50x public-posts)]
