@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html><head><meta content="width=device-width, initial-scale=1" name="viewport"><meta charset="utf-8"><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3VM2LWXJF8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3VM2LWXJF8');
+</script>
+<link href="resource/site/k.png" rel="icon" type="image/x-icon"><link href="resource/site/css/layout.css" rel="stylesheet" type="text/css"><link href="resource/site/css/header.css" rel="stylesheet" type="text/css"><link href="resource/site/css/footer.css" rel="stylesheet" type="text/css"><link href="resource/site/css/article.css" rel="stylesheet" type="text/css"><link href="resource/site/css/anchor.css" rel="stylesheet" type="text/css"><link href="resource/site/css/highlight_fragment.css" rel="stylesheet" type="text/css"><title>(OLD) 소프트웨어 개발을 위한 지식 기반 시스템 Knowledge Base System for Software Development</title></head><body><header class="container"><hr><div class="site-title"><a class="only-cursor" href="/">KUR Creative</a></div><hr><nav class="navigation"><a class="only-cursor" href="archive">archive</a><a class="only-cursor" href="series">series</a><a class="only-cursor" href="tags">tags</a><a class="only-cursor" href="subscribe">subscribe</a><a href="https://www.google.com/search?q=site%3Ablog.kurcreative.com+공사중.."><img height="20px" src="resource/site/search.png" width="20px"></a></nav><hr></header><article class="container"><h1>(OLD) 소프트웨어 개발을 위한 지식 기반 시스템 Knowledge Base System for Software Development</h1><blockquote>
+<p>주의) (<mark><strong>OLD</strong></mark>)로 표기된 글은 현재 제 생각과 크게 다르거나 <mark>중대한 오류</mark>가 있지만<br>
+아카이브용으로 유지하는 글입니다</p>
+</blockquote>
+<h2 id="프로그래밍이란-무엇인가(무엇이어야-하는가)" tabindex="-1"><a class="only-cursor" href="#프로그래밍이란-무엇인가(무엇이어야-하는가)">프로그래밍이란 무엇인가(무엇이어야 하는가)</a></h2>
+<p><strong>프로그래밍은 현실의 문제를 해결하기 위해</strong><br>
+<strong>문제를 모델링하고, 그에 대한 해답을 소프트웨어로 제시하는 과정이다.</strong></p>
+<p><strong>프로그래밍은 모르는 것을 알아가는 과정이다(이어야 한다).</strong><br>
+인간은 본능적으로 프로그래밍을 할 수 있게 태어나지 않았다.<br>
+무슨 일을 해도 모르는 부분이 반드시 있다.<br>
+그것을 메꾸기 위해 문서도 보고, 프로토타입도 만들고, 스파이크도 하고.</p>
+<h3 id="지금의-상황" tabindex="-1"><a class="only-cursor" href="#지금의-상황">지금의 상황</a></h3>
+<p><strong>문제: 현실과 합치하지 않는 인식을 토대로 이루어지는 개발</strong><br>
+이 바로 소프트웨어 프로젝트 실패의 가장 큰 원인이다.</p>
+<ul>
+<li>알아야하는 것을 충분히 알지 못한 채로 해답(프로그램)을 내놓거나</li>
+<li>해결해야 하는 진정한 문제가 뭔지 모르는 상태에서 해답을 내놓거나</li>
+<li>된다고 믿었던 것이 사실 그렇지 않거나</li>
+<li>시간에 쫓겨서 잘 알지 못하지만 <em>잘 되리라 믿고</em> 일을 진행하기 때문.</li>
+</ul>
+<p><strong>문제: 복잡하고 혼돈스러운 소프트웨어 개발 과정</strong><br>
+뭔가 알기 위해 했던 일이 그대로 해답이 되거나, (프로토타입이 제품이 되는 경우)<br>
+중요하지 않은 일(이른 최적화, ..)을 하다가 정말 중요한 것을 하지 못하는 등.<br>
+이는 <em>지금 무슨 일을 하고 있는지 (해야 하는지) 모르고 개발하기 때문</em>이다.</p>
+<h2 id="제안하는-해답" tabindex="-1"><a class="only-cursor" href="#제안하는-해답">제안하는 해답</a></h2>
+<p><strong>해답: 지식 기반을 이용한 소프트웨어 개발</strong><br>
+알게 된 것들과 새로운 사실, 물음과 그에 대한 해답을<br>
+머리속 뿐만 아니라 어딘가에 <strong>명시적으로 기록</strong>해 두어야 한다.</p>
+<p>그것을 관리하기 위해 <strong>지식 기반</strong>이 필요하다.</p>
+<h3 id="프로그래밍을-위한-지식-기반-Knowledge-Base-for-Programming" tabindex="-1"><a class="only-cursor" href="#프로그래밍을-위한-지식-기반-Knowledge-Base-for-Programming">프로그래밍을 위한 지식 기반 Knowledge Base for Programming</a></h3>
+<p><strong>지식은 작은 문장들로 이루어진다.</strong><br>
+소프트웨어 설계를 위한 지식 기반은 <em>문장들의 모임</em>으로 표현될 수 있다.</p>
+<p>문장은 다음처럼 나눌 수 있다.</p>
+<ul>
+<li><strong>사실</strong> fact: 현실과 합치할 가능성이 매우 높은 문장. 물론 틀릴 수도 있음.</li>
+<li><strong>물음</strong> question❓: 참/거짓, 선택, 혹은 문장(들)으로 &quot;답&quot;을 내야 하는 문장</li>
+<li><strong>제안/해답</strong> proposition/answer🙋: 주장. 사실이 될 수도 있는 문장.</li>
+<li><strong>조건</strong> constraint❗: 제안/해답이 만족해야하는 문장. (&quot;사실&quot;의 특수한 종류)</li>
+</ul>
+<p><strong>조건</strong>은 흔히들 &quot;요구사항&quot;이라고 부르는 것이다.<br>
+<strong>물음</strong>은 우리가 알고 있는 &quot;아직 모르는 것들&quot;이다.<br>
+문제의 핵심적(답하면 문제가 해결되는) &quot;물음&quot;은 **&quot;미지&quot;**라고도 한다.</p>
+<h3 id="명시적인-지식-기반을-이용하는-소프트웨어-개발" tabindex="-1"><a class="only-cursor" href="#명시적인-지식-기반을-이용하는-소프트웨어-개발">명시적인 지식 기반을 이용하는 소프트웨어 개발</a></h3>
+<p><strong>소프트웨어는 제안/해답을 구현한 것이다.</strong> <small>(모든 제안/해답이 소프트웨어인 것은 아니다.)</small></p>
+<p>소프트웨어 개발은</p>
+<ul>
+<li>다양한 행동(탐구 - 문서, 스오플 읽기 / 탐험 - 스파이크, 프로토타입)으로</li>
+<li><strong>물음</strong>에 대한 답(제안/해답 -&gt; 사실)을 만들어 나가다가,</li>
+<li>결국 **가장 핵심적인 물음(미지)**에 답을 내는 행위이다.</li>
+</ul>
+<p>소프트웨어 개발을 위한 지식 기반을 명시적으로 표현하면</p>
+<ul>
+<li>복잡하고 혼돈스러운 개발 과정이 좀 더 이해하기 쉬워질 것이다.</li>
+<li>무엇을 해야할지(TODO) 더 빨리 알 수 있게 될 것이다.</li>
+<li>모르는 것을 명시하고 해결해 나가서, 잠재적 위험을 줄일 수 있다.
+<ul>
+<li>운에 맡기는 프로그래밍이 줄어들 것이다.</li>
+</ul>
+</li>
+</ul>
+<h2 id="소프트웨어-지식-기반이-만족해야-하는-조건" tabindex="-1"><a class="only-cursor" href="#소프트웨어-지식-기반이-만족해야-하는-조건">소프트웨어 지식 기반이 만족해야 하는 조건</a></h2>
+<h3 id="작은-&quot;문장&quot;들을-관리할-수-있어야-한다." tabindex="-1"><a class="only-cursor" href="#작은-&quot;문장&quot;들을-관리할-수-있어야-한다.">작은 &quot;문장&quot;들을 관리할 수 있어야 한다.</a></h3>
+<p><strong>문장은 여러가지 형태로 표현될 수 있어야 한다.</strong></p>
+<ul>
+<li>문자열 - 말 그대로 문장의 형태</li>
+<li>그림, 혹은 그림의 일부</li>
+<li>테이블, 혹은 테이블의 일부</li>
+<li>요약하는 이름</li>
+</ul>
+<p><strong>문장은 특정 attribute를 추가할 수 있어야 한다.</strong></p>
+<ul>
+<li>kind: 사실, 물음, 제안/해답, 조건</li>
+<li>관계나 표현(문자열, 그림, 테이블..)들도 모두 attribute로 표현 가능하다.</li>
+</ul>
+<p><strong>문장들은 서로 관계를 맺을 수 있어야 한다</strong></p>
+<ul>
+<li>물음 -&gt; 답 -&gt; 사실</li>
+<li>물음 -&gt; 답 -&gt; 참/거짓</li>
+<li>사실 -&gt; 새버전 -&gt; 사실</li>
+<li>물음 =&gt; 알아야할것들 =&gt; 사실(들)</li>
+</ul>
+<p><strong>문장은 버전이 관리되고 모두 기록되며 이후 변화를 확인할 수 있어야 한다</strong>(datomic)</p>
+<p><strong>문장의 reference가 쉬워야 한다.</strong><br>
+정보가 중복되어서는 안 된다. 문장을 찾기 쉽고 참조를 만들기 쉬워야 한다.</p>
+<h3 id="&quot;문장&quot;의-&quot;표현&quot;을-쉽고-효과적으로-관리할-수-있어야-한다." tabindex="-1"><a class="only-cursor" href="#&quot;문장&quot;의-&quot;표현&quot;을-쉽고-효과적으로-관리할-수-있어야-한다.">&quot;문장&quot;의 &quot;표현&quot;을 쉽고 효과적으로 관리할 수 있어야 한다.</a></h3>
+<p>문자열, 그림, 테이블, ref를 관리해야 함.<br>
+문서 표현은 중간에 그림이 들어갈 수 있어야 함.</p>
+<h3 id="기타" tabindex="-1"><a class="only-cursor" href="#기타">기타</a></h3>
+<p><strong>자료</strong>는 아직 정리되지 않은, 소화되지 않은 원본 자료나 출처를 뜻한다.<br>
+자료를 보고 듣고 정리하여 지식 기반에 <strong>사실</strong>을 더해나간다.<br>
+자료는 문장은 아니지만, 현실적인 이유에서 지식 기반에 포함시킨다.</p>
+<p>고객의 의견이나, 기능 요구(feature request)는 &quot;자료&quot;가 된다.<br>
+개발자는 고객의 요구를 다 들어주는 게 아니라, 고객의 문제를 해결해주어야 한다.</p>
+<h2 id="소프트웨어-지식-기반---구현-예상" tabindex="-1"><a class="only-cursor" href="#소프트웨어-지식-기반---구현-예상">소프트웨어 지식 기반 - 구현 예상</a></h2>
+<p>이모지를 쓰거나, 특정한 표시를 통해 문장에 달린 어트리뷰트를 명시할 수 있다.<br>
+문장 표현 정책을 전역적/부분적으로 정의할 수 있다.</p>
+<h3 id="문서-표현" tabindex="-1"><a class="only-cursor" href="#문서-표현">문서 표현</a></h3>
+<p>문장을 여러개 모아서 만들 수 있다.<br>
+전형적인 설계 문서의 예시로는 &quot;문제&quot; 문서 표현이 있다.</p>
+<p>문제의 이름을 문서의 이름으로 적고,<br>
+문제와 관련된 문장(사실, 조건)을 모아 넣는다.<br>
+사실, 조건들을 적당한 카테고리로 나눠 담을 수도 있다.</p>
+<p>문제를 해결하기 위해 제안하는 해답도 적는다.<br>
+해답으로 테이블을 쓸 경우 조건들이 자동으로 행의 첫 요소로 붙는다.</p>
+<blockquote>
+<h5 id="제목:-문제의-이름" tabindex="-1"><a class="only-cursor" href="#제목:-문제의-이름">제목: 문제의 이름</a></h5>
+<p>미지:❓문제의 핵심적인 물음</p>
+<p>사실 카테고리</p>
+<ul>
+<li>사실1
+<ul>
+<li>❗사실1과 연관된 조건 1</li>
+<li>❓사실1과 연관된 문제 1</li>
+</ul>
+</li>
+<li>사실2
+<ul>
+<li>사실 2.1</li>
+<li>사실 2.2</li>
+</ul>
+</li>
+<li>사실3ref</li>
+<li>사실4ref</li>
+</ul>
+<p>조건 카테고리</p>
+<ul>
+<li>❗조건 2</li>
+<li>❗조건 3</li>
+</ul>
+<p>해답(문장)<br>
+🙋해답 1: 은 문제에 대한 해답 제시<br>
+🙋해답 2: 는 문제에 대한 해답 제시</p>
+<p>해답(테이블)</p>
+<table>
+<thead>
+<tr>
+<th>미지</th>
+<th>🙋해답 1</th>
+<th>🙋 해답 2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>❗조건 1</td>
+<td>테이블의</td>
+<td>사실은</td>
+</tr>
+<tr>
+<td>❗조건 2</td>
+<td>일종의</td>
+<td>❓물음이</td>
+</tr>
+<tr>
+<td>❗조건 3</td>
+<td>될수도</td>
+<td>있다</td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>&quot;문제 문서&quot;는 다양한 연관 관계를 표현한다...<br>
+또한 자동적으로 생성되는 물음들이 있다(테이블에 넣을 사실들)</p>
+<h3 id="TODO-문서-표현" tabindex="-1"><a class="only-cursor" href="#TODO-문서-표현">TODO 문서 표현</a></h3>
+<p>지식 기반에 존재하는 ❓물음은 그 자체로 TODO가 될 수 있다.<br>
+혹은 ❓물음을 해결하기 위한 활동(탐구/탐험)을 연결시켜 TODO로 제시할 수 있다.</p>
+<p>물음들을 (가능하면 컨텍스트까지) 가져와서 모아두면<br>
+그것들은 바로 해결해야 하는 TODO 리스트가 된다.</p>
+<p>TODO는 리스트로 표현할 수도 있고, 테이블로 표현할 수도 있다.</p>
+<p>물읍에 대한 답과, 그 근거(사실)를 연결할 수 있다.</p>
+<blockquote>
+<h5 id="TODO(자동-생성)" tabindex="-1"><a class="only-cursor" href="#TODO(자동-생성)">TODO(자동 생성)</a></h5>
+<table>
+<thead>
+<tr>
+<th>물음</th>
+<th>활동 1</th>
+<th>활동 2</th>
+<th>...</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>❓물음 1</td>
+<td>📖탐구 1</td>
+<td>🏃탐험 1.1</td>
+<td></td>
+</tr>
+<tr>
+<td>❓물음 2</td>
+<td>📖탐구 2 -&gt; 사실1, 사실2,..</td>
+<td>🏃탐험 2.1</td>
+<td></td>
+</tr>
+<tr>
+<td>❓물음 3</td>
+<td>🏃탐험 3.1</td>
+<td>🏃탐험 3.2</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</blockquote>
+<p>테이블에서 물음의 중요성(&quot;미지&quot;라면 크다)이나 연관된 속성에 따라 sort 가능</p>
+<h3 id="테이블을-이용한-해답-trade-off" tabindex="-1"><a class="only-cursor" href="#테이블을-이용한-해답-trade-off">테이블을 이용한 해답 trade off</a></h3>
+<table>
+<thead>
+<tr>
+<th>물음<br>(문제)</th>
+<th>해답1</th>
+<th>해답 2</th>
+<th>해답 3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>조건1</td>
+<td>사실</td>
+<td>사실</td>
+<td>...</td>
+</tr>
+<tr>
+<td>조건2</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>조건3</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>이런 방식으로 여러 해답을 비교할 수 있다.</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>표현하는 연관관계: 문제 &lt;-&gt; 조건, 문제 &lt;-&gt; 해답, [조건+해답] &lt;-&gt; 사실</p>
+<p>테이블 사용은 스프레드 시트 정도로 편하면 좋겠다.<br>
+테이블은 sort가 가능해야 한다.</p>
+<h3 id="해답:-더-작은-문제로-분해하기" tabindex="-1"><a class="only-cursor" href="#해답:-더-작은-문제로-분해하기">해답: 더 작은 문제로 분해하기</a></h3>
+<ul>
+<li>문제1
+<ul>
+<li>문제1.1
+<ul>
+<li>문제 1.1.1</li>
+<li>문제 1.1.2</li>
+</ul>
+</li>
+<li>문제1.2
+<ul>
+<li>문제 1.2.1</li>
+<li>문제 1.2.2</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>문제는 더 작은 문제로 분해될 수 있다.<br>
+이런 문제의 분해 자체가 (특히 설계 문제의) 해답이다.</p>
+<p>표현은 접을 수 있어야 한다.<br>
+트리 다이어그램으로도 표현할 수 있다.</p>
+<p>표현 관계: 문제1 &lt;- 문제/소문제 -&gt; 문제 1.1 &lt;- 문제/소문제 -&gt; 문제1.1.2</p>
+<h3 id="그림" tabindex="-1"><a class="only-cursor" href="#그림">그림</a></h3>
+<p>그림은 자유롭게 그릴 수도 있지만,<br>
+그림 전체나 일부를 문장과 연관시킬 수도 있다.<br>
+문서 중간에 삽입할 수 있어야 한다.</p>
+<h3 id="ref-관리" tabindex="-1"><a class="only-cursor" href="#ref-관리">ref 관리</a></h3>
+<p>어떤 사실이 삭제되거나 변경될 경우,<br>
+그것을 ref하는 모든 곳에서 삭제/변경된다.</p>
+<p>이 과정은 사용자와 인터렉티브하게 진행될 수 있다.<br>
+그래서 삭제/변경이 지식 기반에 미치는 영향을 확인할 수 있다.<br>
+또한 그렇기에 문장이 어디에 저장되는지는 중요하지 않게 된다.</p>
+<p>또한 한번 기억된 문장은 삭제/변경으로도 지식 기반에서 제거되지 않는다.<br>
+그냥 &quot;과거의 것&quot;이라 표시되며, 이후에도 확인할 수 있다.<br>
+이는 시간과 인식에 따라 사실(참이라 생각하는 것)이 달라질 수 있기 때문이다.<br>
+<sub>datomic 계열의 db로 구현하자...</sub></p>
+<h2 id="이-문서가-제안하는-해답을-어떻게-평가하는가?" tabindex="-1"><a class="only-cursor" href="#이-문서가-제안하는-해답을-어떻게-평가하는가?">이 문서가 제안하는 해답을 어떻게 평가하는가?</a></h2>
+<p>뭔가 논문처럼 생긴 글인데...<br>
+사실 당장은 명시적인 실험이나 평가가 불가능하다.<br>
+지식 기반 툴을 실제로 만들고 사용해볼 수 밖에 없다.</p>
+<p>일단 RoamResearch를 이용해서 어느 정도는 따라해 볼 생각이다.<br>
+Obsidian은 다 좋은데 글의 일부를 레퍼런스 하는 block ref 기능이 넘 구려서<br>
+알아볼 생각이다.</p>
+<p>근데 결국 내가 이거 만들지 싶다.</p>
+<p>그리고 논문을 쓴다면..<br>
+다양한 주장에 대해 빠짐없이 근거나 레퍼런스를 들어야겠지.<br>
+그건 개발에 도움이 될 거 같다.</p>
+<p>논문을 진짜로 쓴다면, 아마 귀찮아서 안 하겠지만..<br>
+백서와 같은 보고서 정도는 쓸 수 있겠다.</p>
+<p><br>
+<strong>참고</strong><br>
+해먹 주도 개발<br>
+<a href="https://blog.naver.com/rhdnfka94/222199401538">그래프 기반 툴?</a><br>
+<a href="https://blog.naver.com/rhdnfka94/222182690797">개발 방법론: 프로그래밍은 모르는 것을 알아가는 과정이다</a><br>
+<a href="https://blog.naver.com/rhdnfka94/222148639809">설계 문서를 어떻게 써야 하나</a><br>
+<a href="https://blog.naver.com/rhdnfka94/222143118074">소프트웨어 설계와 구현</a></p>
+<p>이 글의 근거라 할 만한 건<br>
+내 글이랑 해먹 주도 개발이랑 개인적인 경험 밖에 없음 엌ㅋㅋ<br>
+어디 가서 발표하면 싸대기 맞기 딱 좋은 논문이라 할 수도 없는<br>
+그러니 블로그에 쓰지 ㅋㅋ루삥뽕</p>
+<p><br>
+<br>
+<br>
+<mark>주의: 이 글은 아무런 의미 없는 헛소리입니다</mark> 그냥 저장용입니다.<br>
+이 글에 대한 비판과 23년 현재 설계에 대한 제 생각은 [여기]서 확인해 주세요</p>
+<div class="post-link-pane"><a class="hover-link" href="kur2012151553">kur2012151553</a><a class="hover-link" href="archive#kur2101231411">Archive</a><a class="hover-link" href="kur2102041115">kur2102041115</a></div></article><footer class="container"><div class="site-footer">Copyright 2023 KUR. All Rights Reserved.</div></footer></body></html>

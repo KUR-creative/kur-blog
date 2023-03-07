@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html><head><meta content="width=device-width, initial-scale=1" name="viewport"><meta charset="utf-8"><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3VM2LWXJF8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3VM2LWXJF8');
+</script>
+<link href="resource/site/k.png" rel="icon" type="image/x-icon"><link href="resource/site/css/layout.css" rel="stylesheet" type="text/css"><link href="resource/site/css/header.css" rel="stylesheet" type="text/css"><link href="resource/site/css/footer.css" rel="stylesheet" type="text/css"><link href="resource/site/css/article.css" rel="stylesheet" type="text/css"><link href="resource/site/css/anchor.css" rel="stylesheet" type="text/css"><link href="resource/site/css/highlight_fragment.css" rel="stylesheet" type="text/css"><title>[CS:APP 10] C/C++에서 아주 간단한 최적화</title></head><body><header class="container"><hr><div class="site-title"><a class="only-cursor" href="/">KUR Creative</a></div><hr><nav class="navigation"><a class="only-cursor" href="archive">archive</a><a class="only-cursor" href="series">series</a><a class="only-cursor" href="tags">tags</a><a class="only-cursor" href="subscribe">subscribe</a><a href="https://www.google.com/search?q=site%3Ablog.kurcreative.com+공사중.."><img height="20px" src="resource/site/search.png" width="20px"></a></nav><hr></header><article class="container"><a class="series-top-link" href="series#CSAPP독학">CSAPP독학</a><h1>[CS:APP 10] C/C++에서 아주 간단한 최적화</h1><p><a href="https://youtu.be/rH91tGltTiw?list=PLyboo2CCDSWnhzzzzDQ3OBPrRiIjl-aIE&amp;t=1125">10강|embed</a></p>
+<h2 id="루프안에서-함수-호출-줄이기" tabindex="-1"><a class="only-cursor" href="#루프안에서-함수-호출-줄이기">루프안에서 함수 호출 줄이기</a></h2>
+<p><img src="resource/CSAPP10-1.png" alt="resource/CSAPP10-1.png"><br>
+<img src="resource/CSAPP10-2.png" alt="resource/CSAPP10-2.png"><br>
+<img src="resource/CSAPP10-3.png" alt="resource/CSAPP10-3.png"></p>
+<p>루프 이전에 임시변수를 선언해서 해결할 수 있다.</p>
+<h2 id="의도하지-않은-Memory-Aliasing(어떤-포인터가-하나의-메모리를-가리키는-경우)-없애기" tabindex="-1"><a class="only-cursor" href="#의도하지-않은-Memory-Aliasing(어떤-포인터가-하나의-메모리를-가리키는-경우)-없애기">의도하지 않은 Memory Aliasing(어떤 포인터가 하나의 메모리를 가리키는 경우) 없애기</a></h2>
+<p><img src="resource/CSAPP10-4.png" alt="resource/CSAPP10-4.png"><br>
+(register 접근보다) 상대적으로 느린 메모리 액세스를 2번이나 함</p>
+<p><img src="resource/CSAPP10-5.png" alt="resource/CSAPP10-5.png"><br>
+그 이유는 C는 포인터로 접근해서 메모리를 건드릴 수 있기 때문.<br>
+이를 Memory Aliasing(어떤 포인터가 하나의 메모리를 가리키는 경우)이라 한다.</p>
+<p><img src="resource/CSAPP10-6.png" alt="resource/CSAPP10-6.png"><br>
+이제 메모리 액세스는 한번 ㅎ</p>
+<p>역시 적절한 임시변수를 선언해서 해결할 수 있다.</p>
+<h2 id="결론:-C/C++에선-임시변수-써라" tabindex="-1"><a class="only-cursor" href="#결론:-C/C++에선-임시변수-써라">결론: C/C++에선 임시변수 써라</a></h2>
+<p>겨우 임시변수 하나 선언한 것 만으로 컴파일러가 아름다운 머신코드를 뽑아내게 해 줌<br>
+안 하면 느린 어셈 뽑아줌 ...</p>
+<p>이것들은 거창하게 최적화라는 말을 붙일 게 아니고 그냥<br>
+야만어/쓰까어의 함정 수준..</p>
+<p>C/C++을 주력으로 삼는다면 위 두개는 최대한 처리하는 습관을 들여야...</p>
+<hr>
+<p>이 외에도 강의에는 루프 언롤링 이야기를 하는데<br>
+코드가 좀 해괴해지기 떄문에 꼭 필요할 때만 쓰는 것 같았음</p>
+<p><br>
+보통 잘 모르는 뉴비들이 <em>변수 선언하면 뭔가 생기니까(?) 더 느려지는 줄 알고</em><br>
+죽어라 임시변수 없이 장황한 코드 짜는 경우가 있는데</p>
+<p>오히려 <strong>임시 변수를 만드는 게 많은 경우 이득</strong>이라는 점! 알아둘 것!</p>
+<hr>
+<p><a href="https://gall.dcinside.com/board/view/?id=programming&amp;no=668663&amp;t=cv">프로그래밍 갤러리 댓글</a></p>
+<div class="post-link-pane"><a class="hover-link" href="kur1702090019">이전글</a><a class="hover-link" href="series#CSAPP독학">CSAPP독학</a><a class="hover-link" href="kur1612212102">다음글</a></div><div class="post-link-pane"><span class="no-post">no more posts</span><a class="hover-link" href="archive#kur1612201958">Archive</a><a class="hover-link" href="kur1612212102">kur1612212102</a></div></article><footer class="container"><div class="site-footer">Copyright 2023 KUR. All Rights Reserved.</div></footer></body></html>

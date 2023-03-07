@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html><head><meta content="width=device-width, initial-scale=1" name="viewport"><meta charset="utf-8"><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3VM2LWXJF8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3VM2LWXJF8');
+</script>
+<link href="resource/site/k.png" rel="icon" type="image/x-icon"><link href="resource/site/css/layout.css" rel="stylesheet" type="text/css"><link href="resource/site/css/header.css" rel="stylesheet" type="text/css"><link href="resource/site/css/footer.css" rel="stylesheet" type="text/css"><link href="resource/site/css/article.css" rel="stylesheet" type="text/css"><link href="resource/site/css/anchor.css" rel="stylesheet" type="text/css"><link href="resource/site/css/highlight_fragment.css" rel="stylesheet" type="text/css"><title>오버 띵킹의 함정을 조심하라</title></head><body><header class="container"><hr><div class="site-title"><a class="only-cursor" href="/">KUR Creative</a></div><hr><nav class="navigation"><a class="only-cursor" href="archive">archive</a><a class="only-cursor" href="series">series</a><a class="only-cursor" href="tags">tags</a><a class="only-cursor" href="subscribe">subscribe</a><a href="https://www.google.com/search?q=site%3Ablog.kurcreative.com+공사중.."><img height="20px" src="resource/site/search.png" width="20px"></a></nav><hr></header><article class="container"><h1>오버 띵킹의 함정을 조심하라</h1><blockquote>
+<p>오버 엔지니어링을 조심하라</p>
+</blockquote>
+<p>프로그래밍에서 오버 엔지니어링은 필요 없는데 과도한 설계를 하여 과도한 코드를 짜는 경우를 의미한다.<br>
+그런데 오버 엔지니어링은 일단 돌아는 간다. 그것보다 더 나쁜 것이 있었으니<br>
+이름하야 <strong>오버-띵킹</strong> 이다.<br>
+<img src="resource/thinking.png" alt="resource/thinking.png"></p>
+<p>내가 자주 빠지는 함정 중에 하나를 드디어 파악했다.</p>
+<h2 id="프로그래밍의-단계" tabindex="-1"><a class="only-cursor" href="#프로그래밍의-단계">프로그래밍의 단계</a></h2>
+<p>프로그래밍에는 단계가 있다.</p>
+<ol>
+<li><strong>코드를 짜지 않고 띵킹을 하며 설계를 주로 해야 하는 단계</strong>가 있는가 하면</li>
+<li><strong>그냥 목표를 향해 미친 개처럼 달려야 할 때</strong>가 있다.</li>
+</ol>
+<p>그런데 <strong>자신이 잘 모르는 분야에서는 1.은 통하지 않는다.</strong><br>
+모르는 도메인에서 띵킹만 하고 있으면 그건 완전 시간낭비다.</p>
+<p>처음 접하거나 익숙하지 않은 도메인이라면<br>
+그냥 마구 달려들어서 짜고 돌려보고 짜고 돌려보면서 시행착오를 거쳐야 한다.<br>
+이럴 때는 테스트도 필요 없다. 그냥 목표를 달성할 때까지 마구 달려야 한다.</p>
+<p>그러면서 도메인과 해결하려는 문제에 대해 알아가야 한다 - 이를 &quot;요구사항을 채굴 한다&quot; 라고 표현하기도 한다.</p>
+<p>목표를 달성했다면 이제서야 다시 띵킹을 하면서<br>
+막 달리면서 생성했던 코드를 이리저리 쪼개고 합치면서 더 성숙한 프로그램을 만들면 된다.</p>
+<p>이걸 반대로 하면 큰일 난다!</p>
+<h2 id="멸망하는-프로젝트의-두가지-패턴" tabindex="-1"><a class="only-cursor" href="#멸망하는-프로젝트의-두가지-패턴">멸망하는 프로젝트의 두가지 패턴</a></h2>
+<h3 id="오버띵킹-Overthinking" tabindex="-1"><a class="only-cursor" href="#오버띵킹-Overthinking">오버띵킹 Overthinking</a></h3>
+<p><strong>잘 알지도 못하는데 띵킹만 하고 있으면</strong> - <mark>시간이 남아 돌면</mark> <em>생각보다 흔하게</em> 일어난다<br>
+정작 실제로 코딩을 할 때는 <strong>쓸데없는 코드만 잔뜩</strong> 만들게 되거나<br>
+아무 <strong>쓸모도 없이 복잡</strong>하기만 한 구조에서 똥에 똥을 치대게 될 수 있다.<br>
+<img src="resource/thonking.jpg" alt="resource/thonking.jpg"><br>
+물론 시간이 남아도니까 또 리팩토링 할 수 있겠지만... 쓸데 없는 곳에 낭비한 인생이 아깝다.</p>
+<h3 id="흔한-소프트웨어-개발-양상" tabindex="-1"><a class="only-cursor" href="#흔한-소프트웨어-개발-양상">흔한 소프트웨어 개발 양상</a></h3>
+<p>띵킹을 하고 조심스럽게 설계해야할 때 마구 달리고 있으면 - 시간이 촉박하면 흔하게 일어난다 -<br>
+어느 순간 프로젝트의 복잡도가 닝겐이 관리할 수 없는 레벨이 되어 버린다.<br>
+테스트까지 짜두지 않았다면.. 어느 순간 잡을 수 없는 버그가 등장하여<br>
+프로젝트가 그대로 망해버릴 수도 있어 굉장히 위험하다.<br>
+<img src="resource/we-r-2-busy(with square wheel).png" alt="resource/we-r-2-busy(with square wheel).png"></p>
+<p><em>사실 2는 누구나 경험하게 된다. 시간이 충분한 프로젝트는 거의 없으니까.</em><br>
+<em>그러나 2의 경우 거지같더라도 일단은 돌아가는 코드가 나오게 된다.</em><br>
+<em>어떤 면에서는 그냥 좆같은 코드일 뿐 고객에게는 상관 없을 수도 있다.</em></p>
+<h2 id="오버띵킹의-함정" tabindex="-1"><a class="only-cursor" href="#오버띵킹의-함정">오버띵킹의 함정</a></h2>
+<p><strong>오버띵킹</strong> 은 <strong>시간이 충분한 <em>개인</em> 프로젝트</strong>에서 생각보다 자주 일어난다.</p>
+<p>아무도 재촉하는 사람도 없고 내 맘대로 해도 아무도 뭐라 안 한다.<br>
+얼마든지 코드 품질로 딸딸이를 칠 수 있고 함슬람을 쓰던 어셈을 쓰던 진짜 내좆대로 가능하다.</p>
+<p>어느 순간 완벽한 설계 혹은 깔끔하고 심플한 구조, 완벽한 성능 등 쓸데 없는 것에 신경쓰다가<br>
+정신을 차려보면 <strong>코드는 안 짜고 <em>띵킹에 띵킹만 계속</em> 하게 된다.</strong><br>
+개인 프로젝트를 많이 해본 사람이면 사실 완성한 프로젝트보다 _띵킹만 하다 접은 프로젝트가 훨씬 더 많을 것_이다.</p>
+<h3 id="오버띵킹은-생각-이상으로-위험하다" tabindex="-1"><a class="only-cursor" href="#오버띵킹은-생각-이상으로-위험하다">오버띵킹은 생각 이상으로 위험하다</a></h3>
+<p>그 도메인에서 산전 수전 공중전 다 겪은 고인물이 아닌 이상 <strong><em>오버띵킹이 산출하는 건 아무것도 없다.</em></strong></p>
+<p><em>완벽한 설계와 구조</em>라고 생각하면서<br>
+아무짝에도 쓸모 없고 혼자만 알아보는 요구사항 문서 같은 것을 만들어낼 수는 있지만<br>
+거기에 맞춰서 코딩하다보면 곧 아무 짝에도 쓸모 없다는 것을 깨닫게 된다.</p>
+<h2 id="결론" tabindex="-1"><a class="only-cursor" href="#결론">결론</a></h2>
+<p>내가 오버 띵킹에 빠져서 얼마나 많은 시간을 낭비했는지 모르겠다...</p>
+<p><strong>개인 프로젝트를 진행하는 사람들은 오버띵킹의 함정에 빠지지 않게 조심하자.</strong></p>
+<p><br>
+<br>
+<br>
+요약</p>
+<ul>
+<li>오버 띵킹은 현실이 아닌 자기만의 생각과 독선에 빠져 오버 엔지니어링을 하는 것을 의미한다.</li>
+<li>늘 시간이 부족한 직업 프로그래밍보다는 개인 프로젝트에서 많이 발생한다.</li>
+<li>아무 것도 생산하지 않는 오버 띵킹의 함정에 빠지지 않게 늘 조심해야 한다.</li>
+</ul>
+<p><br>
+<a href="https://m.blog.naver.com/CommentList.naver?blogId=rhdnfka94&amp;logNo=221928630741">과거 블로그 댓글</a></p>
+<div class="post-link-pane"><a class="hover-link" href="kur2002190925">kur2002190925</a><a class="hover-link" href="archive#kur2004251711">Archive</a><a class="hover-link" href="kur2006111331">kur2006111331</a></div></article><footer class="container"><div class="site-footer">Copyright 2023 KUR. All Rights Reserved.</div></footer></body></html>
