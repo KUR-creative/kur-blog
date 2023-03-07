@@ -6,7 +6,7 @@
     padding-bottom: 1rem;
 }
 
-.adjacent-in-time {
+.post-link-pane {
     font-family: monospace;
     display: flex;
     justify-content: space-between;

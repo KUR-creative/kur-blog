@@ -8,13 +8,13 @@
     (when series? {:name name :no no})))
 
 ;;
+(defn tags [post]
+  (-> post :frontmatter :tags))
+
 (defn series
   "NOTE: Currently, only one series per post is allowed"
   [post]
-  (->> post :frontmatter :tags (some #(series-info %))))
-
-(defn tags [post]
-  (-> post :frontmatter :tags))
+  (some #(series-info %) (tags post)))
 
 (defn has-tags? [post]
   (seq (tags post)))

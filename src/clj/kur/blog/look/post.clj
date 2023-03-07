@@ -34,32 +34,53 @@
     (link-to {:class "hover-link"} (:id post) (:id post))
     [:span {:class "no-post"} "no more posts"])); id always 3(kur) + 10(YYMMddHHmm)
 
+(defn related-post-link
+  ([post]
+   (related-post-link post (:id post) "no more posts"))
+  ([post text]
+   (related-post-link post text text))
+  ([post some-text nil-text]
+   (if post
+     (link-to {:class "hover-link"} (:id post) some-text)
+     [:span {:class "no-post"} nil-text])))
+
 (defn html [post posts]
   (let [norm-title (-> post post/title-or-id policy/normalize-title)
         html-str (obsidian-html (:text post))
+
         series-name (:name (tags/series post))
+        series (when series-name
+                 (->> posts
+                      (filter #(= series-name (:name (tags/series %))))
+                      (apply sorted-set-by
+                             #(compare (-> %2 tags/series :no)
+                                       (-> %1 tags/series :no)))))
+
         [prev next] (prev-next post posts)
-        #_[prev-chapter next-chapter]
-        #_(prev-next post
-                     (apply)
-                     (filter #(= series (-> % tags/series-info :name))))]
-    ;(def posts posts) (map #(dissoc % :text) posts)
+        [prev-chapter next-chapter] (when series (prev-next post series))]
     (html5 (article-page
             {:title norm-title
              :more-tags (when (has-code? html-str)
                           [policy/agate-code-style-link])}
             {:content
-             (list (when series-name
-                     (link-to {:class "series-top-link"}
-                              (str "series#" series-name) series-name))
-                   [:h1 norm-title]
-                   html-str
-                   ; tags pane
-                   [:div {:class "adjacent-in-time"}
-                    (related-post-link prev)
-                    (link-to {:class "hover-link"}
-                             (str "archive#" (:id post)) "Archive")
-                    (related-post-link next)])}))))
+             (list
+              (when series-name
+                (link-to {:class "series-top-link"}
+                         (str "series#" series-name) series-name))
+              [:h1 norm-title]
+              html-str
+              ; tags pane (위에 hr ?)
+              (when series
+                [:div {:class "post-link-pane"}
+                 (related-post-link prev-chapter "이전글")
+                 (link-to {:class "hover-link"}
+                          (str "series#" series-name) series-name)
+                 (related-post-link next-chapter "다음글")])
+              [:div {:class "post-link-pane"}
+               (related-post-link prev)
+               (link-to {:class "hover-link"}
+                        (str "archive#" (:id post)) "Archive")
+               (related-post-link next)])}))))
 
 ;;
 (comment
