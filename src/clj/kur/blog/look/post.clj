@@ -7,9 +7,11 @@
             [kur.blog.page.tags :as tags]
             [kur.blog.policy :as policy]))
 
-(defn post-link-li [post]
-  [:li (link-to (:id post)
-                (policy/normalize-title (post/title-or-id post)))])
+(defn post-link-li [post & {:keys [fragment-id]}]
+  [:li
+   (when fragment-id {:id fragment-id})
+   (link-to (:id post)
+            (policy/normalize-title (post/title-or-id post)))])
 
 (defn has-code? [html-str]
   (re-find #"<code.+hljs.+>" html-str))
