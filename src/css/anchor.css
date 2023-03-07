@@ -3,3 +3,15 @@
     color: inherit;
     cursor: pointer;
 }
+
+.hover-link {
+    text-decoration: inherit;
+    color: inherit;
+    cursor: pointer;
+}
+
+.hover-link:hover {
+    text-decoration: inherit;
+    color: #0000EE;
+    cursor: pointer;
+}

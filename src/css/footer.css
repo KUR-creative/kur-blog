@@ -5,3 +5,13 @@
     padding-top: 1.7rem;
     padding-bottom: 1rem;
 }
+
+.adjacent-in-time {
+    font-family: monospace;
+    display: flex;
+    justify-content: space-between;
+}
+
+.no-post {
+    color: #808080;
+}

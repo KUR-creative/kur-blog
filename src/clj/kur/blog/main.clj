@@ -10,7 +10,7 @@
          :as config} (load-config :file config-path)
         state (atom (state/initial))
         update! #(state/update! state (state/current @state config))]
-    ;(def state state) (map :id @state)
+    (def state state) (map :id @state)
 
     ;; Initialize
     (uf/delete-all-except-gitkeep html-dir)
