@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html><head><meta content="width=device-width, initial-scale=1" name="viewport"><meta charset="utf-8"><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3VM2LWXJF8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3VM2LWXJF8');
+</script>
+<link href="resource/site/k.png" rel="icon" type="image/x-icon"><link href="resource/site/css/layout.css" rel="stylesheet" type="text/css"><link href="resource/site/css/header.css" rel="stylesheet" type="text/css"><link href="resource/site/css/footer.css" rel="stylesheet" type="text/css"><link href="resource/site/css/article.css" rel="stylesheet" type="text/css"><link href="resource/site/css/anchor.css" rel="stylesheet" type="text/css"><link href="resource/site/css/highlight_fragment.css" rel="stylesheet" type="text/css"><title>혼자서 하는 이미지 위주 머신 러닝 프로젝트의 데이터를 관리할 때 RDB가 필요한가?</title></head><body><header class="container"><hr><div class="site-title"><a class="only-cursor" href="/">KUR Creative</a></div><hr><nav class="navigation"><a class="only-cursor" href="archive">archive</a><a class="only-cursor" href="series">series</a><a class="only-cursor" href="tags">tags</a><a class="only-cursor" href="subscribe">subscribe</a><a href="https://www.google.com/search?q=site%3Ablog.kurcreative.com+공사중.."><img height="20px" src="resource/site/search.png" width="20px"></a></nav><hr></header><article class="container"><a class="series-top-link" href="series#식질머신데이터관리시스템old">식질머신데이터관리시스템old</a><h1>혼자서 하는 이미지 위주 머신 러닝 프로젝트의 데이터를 관리할 때 RDB가 필요한가?</h1><p>더 정확한 물음은:</p>
+<p><strong>혼자서 하는 이미지 위주 머신 러닝 프로젝트의 데이터를 관리하는 가장 효율적인 모델(추상화)은 무엇인가?</strong></p>
+<p>아직도 답을 찾지 못하고 있다.<br>
+너무 어렵다.</p>
+<h2 id="처참하다.-한-달을-만들었는데(과거-블로그)" tabindex="-1"><a class="only-cursor" href="#처참하다.-한-달을-만들었는데(과거-블로그)"><a href="https://blog.naver.com/rhdnfka94/222064888822">처참하다. 한 달을 만들었는데(과거 블로그)</a></a></h2>
+<blockquote>
+<p>도저히 쓸만한 물건이 못 되는 거 같다.</p>
+<p><br>
+알고리즘보다 아키텍처를 설계하는 게 더 어려운 거 같다.<br>
+알고리즘은 문제와 답이 명확한데 아키텍처는 문제도 정답도 불분명하다.</p>
+<p>그렇지만 내가 지금 시간 낭비를 하고 있다는 건 확실히 알겠다.<br>
+내가 도입한 구조 때문에 디버깅은 더 어렵고, 성능은 떨어지고, 유연성도 떨어진다.<br>
+이건 재앙이다. 그것도 내가 자초한 인재다.</p>
+<p><br>
+정말로 쉬운 문제를 너무나도 어렵게 풀고 있다.<br>
+이건 아니다. 이대로는 안 된다.</p>
+<p>어쩔 수 없다.</p>
+<p>한 달이나 짰지만 버려야 한다..</p>
+<p><br>
+<br>
+그저 참담한 심정이다.</p>
+</blockquote>
+<p><br>
+데이터 관리를 RDB로 해보려다가 대가리가 완전히 깨졌었다.<br>
+머리통이 깨져보고 나니 DB에 대한 환상? 믿음? SQL의 유용함? 그런 거 다 버릴 수 있었다.<br>
+혼자서 하는데 DB는 정말로 소잡는 칼이었다.</p>
+<p>진짜 문제는 <strong>사용은 생각하지 않고 DB 스키마를 짰다</strong>는 점이다.</p>
+<p>관리하는 모든 객체를 데이터로 표현하기 위해 UUID를 id로 삼았다.<br>
+이렇게 하니까 <strong>이미지를 보고 싶으면 SQL을 써야했다</strong>. 정말 끔찍했다.</p>
+<p>정말 간단한 데이터를 찾는 일에도 복잡한 SQL을 써야하니 개발 속도가 느려지다 못해 멈출 지경이였다.</p>
+<p>이 때 ORM도 써보고, 타입 붙인 파이썬도 써봤다. 다 실패였다.<br>
+ORM은 그냥 사람만 빡치게 했고, 파이썬의 타입은 절름발이였다.</p>
+<p>테스트도 항상 붙였지만 의미 있는 테스트는 전무했다.<br>
+DB에 들어간 행의 수를 세는 쓸모 없는 테스트나 해댔다.<br>
+그 딴 것보다 이미지를 직접 띄워 눈으로 보는 게 훨씬 나았다.</p>
+<p>그러다 별 것도 아닌 관계를 SQL join으로 표현하다가 도무지 sql을 표현할 방법을 찾지 못해서<br>
+결국 개발을 그만두고 만다.<br>
+<small>(내 SQL 실력 문제였겠지만 그냥 이것 떄문에 개발이 너무 늦어지다 못해 멈춰버렸다)</small></p>
+<h2 id="RDB도-은총알은-아니다..-그렇지?" tabindex="-1"><a class="only-cursor" href="#RDB도-은총알은-아니다..-그렇지?">RDB도 은총알은 아니다.. 그렇지?</a></h2>
+<p>혼자서 일 하는 입장에서, DB는 그냥 관리 자체가 비용이 너무 많이 드는 거 같다.</p>
+<p>혼자서 쓰니까 DB가 제공해주는 트랜잭션이니 동시성 처리니 다 건 필요가 없다.<br>
+실시간 처리도 필요 없다. 그보다 아주 오랫동안 그냥 냅뒀다가 가끔씩 손 대는 데이터가 더 많다.</p>
+<p>데이터 자체가 굳이 테이블일 필요가 없는 거 같다..<br>
+모든 경우를 커버하는 적절한 구조의 스키마를 도저히 생각해내지 못하겠다.<br>
+내 실력이 안 되는건지 뭔지 모르겠지만 나는 그냥 포기하기로 했다. 나는 못하겠다!</p>
+<p>끝내주는 스키마를 생각해내는 것 자체가 비용인 거 같다.<br>
+그냥 데이터를 데이터 그대로 표현하는 게 낫다고 생각한다.<br>
+내가 쓰는 데이터는 테이블이 아니라도 표현이 가능하다...</p>
+<p>현재는 파일시스템을 그대로 쓰고 파일 시스템에 대한 메타데이터를 yaml이나 json으로 저장하고 있다.<br>
+SQL을 안 써도 되는 점이 편하긴 한데....</p>
+<p><br>
+정말로 SQL은 나쁜가? 밥 아재는 SQL과 관계형 DB에 대한 적대감을 여러번 드러낸 적이 있다.<br>
+<a href="https://blog.cleancoder.com/uncle-bob/2012/05/15/NODB.html">https://blog.cleancoder.com/uncle-bob/2012/05/15/NODB.html</a></p>
+<p>나는 확신을 내리지 못하겠다. 여전히 쓸모 있는 분야가 많은 거 같지만....</p>
+<p>그렇지만 비용 문제 때문에라도 내가 하는 일을 관계형 DB로 처리하지는 못하겠다.<br>
+관계형 DB로 식질머신과 관련된 데이터를 처리하는 건 내게는 너무 어려워서 할 수가 없다.</p>
+<p><strong>모든 경우에 RDBMS가 어울리지는 않는다.</strong><br>
+이것 하나는 확실히 알겠다.<br>
+&quot;사소한 스크립트&quot;가 아닌 상용 프로젝트에는 반드시 RDBMS를 써야 한다고 주장하는 사람도 있다.<br>
+나는 그런 말은 못하겠다.<br>
+지금 내가 하는 일도 혼자 하는 일이지만 식질머신의 핵심 중에 핵심이라는 점에서<br>
+상용 프로그램이나 매한가지다.</p>
+<p><br>
+세상의 모든 정보를 테이블로 표현할 수 있다. 안 될 건 없다.<br>
+그러나 그게 효율적일지는 알 수 없다.<br>
+<small>컴퓨터에 있는 모든 이미지는 이진수로 저장되어 있지만 망가를 이진수로 보는 정신병자는 없다.</small></p>
+<p><strong>RDBMS도 그저 하나의 추상화일 뿐이다.</strong><br>
+<strong>은총알은 없다.</strong></p>
+<h2 id="맺음말" tabindex="-1"><a class="only-cursor" href="#맺음말">맺음말</a></h2>
+<p>아직도 답을 찾고 있다. 식질머신을 위한 최고의 데이터 추상화는 무엇인가. 정답은 뭘까....<br>
+한달을 소비하고 관계형 데이터베이스가 식질머신에는 어울리지 않다는 것만 깨달았다.</p>
+<p><small>다시 생각해보니... 그냥 스키마를 너무 잘못 짰던 거 같기도 하고..</small></p>
+<p><br>
+<br>
+<a href="https://m.blog.naver.com/CommentList.naver?blogId=rhdnfka94&amp;logNo=222116395584">과거 블로그 댓글</a></p>
+</article><footer class="container"><div class="site-footer">Copyright 2023 KUR. All Rights Reserved.</div></footer></body></html>

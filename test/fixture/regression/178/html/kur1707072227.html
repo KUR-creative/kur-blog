@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html><head><meta content="width=device-width, initial-scale=1" name="viewport"><meta charset="utf-8"><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3VM2LWXJF8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3VM2LWXJF8');
+</script>
+<link href="resource/site/k.png" rel="icon" type="image/x-icon"><link href="resource/site/css/layout.css" rel="stylesheet" type="text/css"><link href="resource/site/css/header.css" rel="stylesheet" type="text/css"><link href="resource/site/css/footer.css" rel="stylesheet" type="text/css"><link href="resource/site/css/article.css" rel="stylesheet" type="text/css"><link href="resource/site/css/anchor.css" rel="stylesheet" type="text/css"><link href="resource/site/css/highlight_fragment.css" rel="stylesheet" type="text/css"><title>포인터는 그냥 정수형 타입의 일종일 뿐이얏</title><link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/agate.min.css" integrity="sha512-wI7oXtzNHj/bqfLA3P6x3XYbcwzsnIKaPLfjjX8ZAXhc65+kSI6sh8gLOOByOKImokAjHUQR0xAJQ/xZTzwuOA==" referrerpolicy="no-referrer" rel="stylesheet"></head><body><header class="container"><hr><div class="site-title"><a class="only-cursor" href="/">KUR Creative</a></div><hr><nav class="navigation"><a class="only-cursor" href="archive">archive</a><a class="only-cursor" href="series">series</a><a class="only-cursor" href="tags">tags</a><a class="only-cursor" href="subscribe">subscribe</a><a href="https://www.google.com/search?q=site%3Ablog.kurcreative.com+공사중.."><img height="20px" src="resource/site/search.png" width="20px"></a></nav><hr></header><article class="container"><h1>포인터는 그냥 정수형 타입의 일종일 뿐이얏</h1><h2 id="타입의-정의와-포인터-타입" tabindex="-1"><a class="only-cursor" href="#타입의-정의와-포인터-타입">타입의 정의와 포인터 타입</a></h2>
+<p>프로그래밍 언어에서 <br>
+<strong>타입</strong> 은<br>
+타입이 가질 수 있는  <strong>값</strong> 의  <strong>집합</strong>  + 타입에 수행 가능한  <strong>연산</strong>  <br>
+으로 구성됨</p>
+<p>예를 들어 C에서<br>
+int 타입은 <br>
+–2,147,483,648 ~ 2,147,483,647 의 정수형의 집합을 가지고(32비트)<br>
++ - * / 등의 연산을 할 수 있음</p>
+<p>근데 사용자가 struct로 정의한 타입은<br>
+* 곱하기를 못 쓰잖음?</p>
+<p>포인터도 곱하기 못쓰고<br>
+더하기 빼기 연산도 좀 다르잖음?</p>
+<p>이렇게 프로그래밍 언어에서는  <strong>타입</strong>마다 쓸 수 있는  <strong>연산</strong>이  <strong>다름</strong>.</p>
+<p><br>
+그런 식으로 생각하면<br>
+포인터는 64비트의 정수형 집합을 가지고<br>
++ - ++ -- 등의 연산에 더해서<br>
+(위 연산들도 일반적인 정수 더하기와는 다르고)<br>
+역참조 * 연산(dereference)을 할 수 있다는 거임</p>
+<p>그냥 그게 끝임..</p>
+<p>int* ptr;<br>
+int** ptr;<br>
+int****** ptr;</p>
+<p>뭘 어떻게 선언하든  하는 짓은 다 똑같음<br>
+그냥 64비트 정수를 저장할 수 있고<br>
+그 정수에 대한 연산이 독특한 것 뿐임</p>
+<p>포인터가 뭐를 가리키네 그딴 거 다 집어치우고...</p>
+<p>포인터에는 걍 64비트 정수가 저장되고<br>
+*ptr 역참조를 하게되면 64비트 정수를  주소값으로 해석해서 변수처럼  쓰는 거임</p>
+<blockquote>
+<p><strong>한줄요약: 포인터는 독특한 연산(역참조)을 가진 정수형 타입이다</strong></p>
+</blockquote>
+<h2 id="역참조(dereference)-연산" tabindex="-1"><a class="only-cursor" href="#역참조(dereference)-연산">역참조(dereference) 연산</a></h2>
+<p>그럼 역참조 연산은 무엇인가?<br>
+일단 설명하자면 <br>
+포인터형 변수에 들어 있는 64비트 정수를 주소로 해석해서 거기 접근하는 거임<br>
+말로는 어렵고..<br>
+예를 들면서 설명해보겠음</p>
+<pre><code class="hljs"><span class="hljs-built_in">int</span> <span class="hljs-built_in">num</span> = <span class="hljs-number">0</span>;
+<span class="hljs-built_in">int</span>* ptr = &amp;<span class="hljs-built_in">num</span>; <span class="hljs-comment">//모든 변수는 주소값을 갖는다</span>
+<span class="hljs-keyword">void</span> side_effect(<span class="hljs-built_in">int</span>* pnum){
+    <span class="hljs-built_in">int</span> x = *pnum;
+    *pnum = <span class="hljs-number">99</span>;
+}
+</code></pre>
+<p>이렇게 선언하면 이후<br>
+<strong>*ptr</strong>  = 12;     하면 num의 값이 바뀌고<br>
+int a =  <strong>*ptr</strong> ;  하면 a에 num의 값이 들어갈 수 있음</p>
+<p>side_effect 함수 내부에서도 동일한 일이 일어남<br>
+int x =  <strong>*pnum</strong> ; 이렇게 하면 num의 값을 x에 넣는 거고<br>
+<strong>*pnum</strong>  = 99;    이렇게 하면 또 num의 값이 바뀜.</p>
+<p>여기서 역참조의 정체를 대강 파악 가능함<br>
+역참조를 쓰면  <strong>스코프에 상관없이 변수에 접근</strong> 할 수 있다는 거임</p>
+<p>이렇게 생각해보셈.  <strong>*ptr</strong>이랑  <strong>*pnum</strong> 대신에 int형 변수  <mark>num</mark> 을 갖다 놓는 거야<br>
+스코프 그딴 건 다 무시해 버리고.</p>
+<pre>
+void side_effect(int* pnum){
+    int x = <b>*pnum</b>;
+    <b>*pnum</b> = 99;
+}
+
+int main(void){
+    int num = 0;
+    int* ptr = &num; 
+
+    <b>*ptr</b> = 12;
+    int a = <b>*ptr</b>;
+    return 0;
+}
+</pre>
+<p>이렇게 되어 있으면<br>
+역참조를 한 부분은 이렇게 되는 거라고 생각해 보셈</p>
+<pre>
+void side_effect(int* pnum){
+    int x = <mark>num</mark>;
+    <mark>num</mark> = 99;
+}
+
+int main(void){
+    int <b>num</b> = 0;
+    int* ptr = &num; 
+
+    <mark>num</mark> = 12;
+    int a = <mark>num</mark>;
+
+    <b>side_effect(&num)</b>;
+    return 0;
+}
+</pre>
+<p>그럼 쉽져? 이게 역참조라고 생각하면 됨<br>
+여기서 중요한 건  <strong>지역변수</strong>를  <strong>함수</strong>에서  <strong>접근</strong>해서  <strong>변경</strong>할 수 있다는 거임</p>
+<p>포인터가 없으면 뭔 짓을 해도 지역변수를 함수에서 변경할 수 없음<br>
+절대 불가능함 ㅋ<br>
+물론 전역 변수를 쓸 순 있겠지만 <a href="kur1909300908.+.QnA - 왜 전역변수를 사용하면 안 되나요=q=">그건 존나 쳐맞을 짓임</a></p>
+<blockquote>
+<p><strong>뇌피셜 요약: 역참조 *ptr는 전에 넣어둔 주소의 변수를 대신 쓰는 것처럼 생각할 수도 있다</strong></p>
+</blockquote>
+<p>뇌피셜임 ㅎㅎ;</p>
+<h3 id="이중포인터-해석" tabindex="-1"><a class="only-cursor" href="#이중포인터-해석">이중포인터 해석</a></h3>
+<p>그럼 이중포인터의 예를 또 볼까용</p>
+<pre>
+void side_effect(int* pnum){
+    int x = <b>*pnum</b>;
+    <b>*pnum</b> = 99;
+}
+
+int main(void){
+    int x = 0
+    int* px = &x;
+    int** ptr = &px; 
+
+    <s><b>*ptr</b> = 12;</s>
+    <s>int a = <b>*ptr;</b></s>
+    return 0;
+}
+</pre>
+<p>위에서 취소선 그은 애들은 컴파일이 안 될겁니다.<br>
+왜 안될까?<br>
+아까처럼 생각해 볼까용?</p>
+<pre>
+int main(void){
+    int x = 0
+    int* px = &x;
+    int** ptr = &px; 
+
+    <mark>px</mark> = 12;
+    int a = <mark>px</mark>;
+    return 0;
+}
+</pre>
+<p>이렇게 보면 왜 안 되는지 쉽게 알 수 있다<br>
+지금 주소값을 ㅈ대로 int형 값 12로 넣으려고 하는데<br>
+만약 주소가 12인 곳을 역참조하면 어떻게 될까?  <em>프로그램이 뒤진다</em><br>
+그래서 컴파일러가 int형을 int* px의 변수에 대입하는 걸 금지한다.</p>
+<p>이제 두번하면 어떻게 되나..</p>
+<pre>
+int main(void){
+    int x = 0
+    int* px = &x;
+    int** ptr = &px; 
+
+    <b>**ptr</b> = 12;
+    int a = <b>**ptr</b>;
+    return 0;
+}
+</pre>
+<p>그럼 요건 이렇게 되겠지</p>
+<pre>
+int main(void){
+    int x = 0
+    int* px = &x;
+    int** ptr = &px; 
+
+    *<mark>px</mark> = 12;
+    int a = *<mark>px</mark>;
+    return 0;
+}
+
+int main(void){
+    int x = 0
+    int* px = &x;
+    int** ptr = &px; 
+
+    <mark>x</mark> = 12;
+    int a = <mark>x</mark>;
+    return 0;
+}
+</pre>
+<p>이건 말이 된다. <br>
+int 변수에 int 값을 넣는다<br>
+그리고 int a에 int형 변수의 값을 초기화한다<br>
+말 되네!</p>
+<p>사실 제 머가리 속에서는 이렇게까지는 안 하고<br>
+C에서는  <strong>좌측값</strong>은 그냥  <strong>주소</strong>라고 생각합니다<br>
+<strong>우측값</strong>은  <strong>값</strong>이구요</p>
+<h2 id="3줄-요약" tabindex="-1"><a class="only-cursor" href="#3줄-요약">3줄 요약</a></h2>
+<p>프로그래밍 언어에서 타입은 값의 집합 + 타입에 수행 가능한 연산 으로 정의된다.</p>
+<p>포인터는 역참조라는 독특한 연산을 가진 정수형 타입이다.</p>
+<p>(뇌피셜)역참조 *ptr 는 포인터에 넣어둔 주소의 변수를 대체하는 것으로 이해할 수 있다.</p>
+<hr>
+<p><a href="https://m.blog.naver.com/CommentList.naver?blogId=rhdnfka94&amp;logNo=221046491976">과거 블로그 댓글</a><br>
+<a href="https://gall.dcinside.com/mgallery/board/view/?id=github&amp;no=27836&amp;t=cv">깃허브 갤러리 댓글</a><br>
+<a href="https://gall.dcinside.com/board/view/?id=programming&amp;no=753049&amp;t=cv">프로그래밍 갤러리 댓글</a></p>
+</article><footer class="container"><div class="site-footer">Copyright 2023 KUR. All Rights Reserved.</div></footer></body></html>

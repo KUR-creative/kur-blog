@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html><head><meta content="width=device-width, initial-scale=1" name="viewport"><meta charset="utf-8"><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3VM2LWXJF8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3VM2LWXJF8');
+</script>
+<link href="resource/site/k.png" rel="icon" type="image/x-icon"><link href="resource/site/css/layout.css" rel="stylesheet" type="text/css"><link href="resource/site/css/header.css" rel="stylesheet" type="text/css"><link href="resource/site/css/footer.css" rel="stylesheet" type="text/css"><link href="resource/site/css/article.css" rel="stylesheet" type="text/css"><link href="resource/site/css/anchor.css" rel="stylesheet" type="text/css"><link href="resource/site/css/highlight_fragment.css" rel="stylesheet" type="text/css"><title>[CS:APP 13-1] Linking 1 - 어떻게 링킹 에러를 피할까</title><link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/agate.min.css" integrity="sha512-wI7oXtzNHj/bqfLA3P6x3XYbcwzsnIKaPLfjjX8ZAXhc65+kSI6sh8gLOOByOKImokAjHUQR0xAJQ/xZTzwuOA==" referrerpolicy="no-referrer" rel="stylesheet"></head><body><header class="container"><hr><div class="site-title"><a class="only-cursor" href="/">KUR Creative</a></div><hr><nav class="navigation"><a class="only-cursor" href="archive">archive</a><a class="only-cursor" href="series">series</a><a class="only-cursor" href="tags">tags</a><a class="only-cursor" href="subscribe">subscribe</a><a href="https://www.google.com/search?q=site%3Ablog.kurcreative.com+공사중.."><img height="20px" src="resource/site/search.png" width="20px"></a></nav><hr></header><article class="container"><a class="series-top-link" href="series#CSAPP독학">CSAPP독학</a><h1>[CS:APP 13-1] Linking 1 - 어떻게 링킹 에러를 피할까</h1><p><a href="https://youtu.be/ZbKImUe3mQs?list=PLyboo2CCDSWnhzzzzDQ3OBPrRiIjl-aIE">13강|embed</a><br>
+이번 화부터는 우리가 만들어대는 프로그램이<br>
+시스템 소프트웨어와 어떻게 협력하여 돌아가는지에 대해 배우기 시작한다.</p>
+<p>즉 운영체제와 관련되는 부분이다...<br>
+책에서는 part 2에 해당한다. (7장~) part 1은 컴퓨터 구조와 관련이 많다.</p>
+<h2 id="링커는-알아-뭐해?" tabindex="-1"><a class="only-cursor" href="#링커는-알아-뭐해?">링커는 알아 뭐해?</a></h2>
+<p><u>그런데 왜 링커를 배워야 할까?</u><br>
+이것은 C나 C++을 하다가<br>
+SDL이나 기타 다른 라이브러리를 붙여서 사용하려 할 때 (특히 윈도우에서)<br>
+아주 엿같은 경험을 하게되면 자연스럽게 링커에 대해 궁금해지게 된다.</p>
+<p>세상에서 가장 무서운 에러 중 하나가... 링킹 에러다</p>
+<p><img src="resource/link_error.jpg" alt="resource/link_error.jpg"><br>
+링킹 에러를 만나 본 사람들은 하나같이 그 엿같음에 혀를 내두르지만<br>
+그러지 않은 뉴비들을 위해 설명하자면...</p>
+<p>느낌은 컴파일 에러같이 프로그램 빌드를 거부하는데<br>
+소스코드에 표시가 안 됨 ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ</p>
+<p><img src="resource/link2.png" alt="resource/link2.png"><br>
+게다가 에러코드도 존나 이상해<br>
+시발 이게 도대체 무슨소리일까?<br>
+내가 뭘 잘못했는데 ㅡㅡ???</p>
+<p>진짜 문제는 <strong>내가 잘못한 게 아닐 수도 있다</strong>는 점이다<br>
+실제로 내가 SDL을 설치할 때, SDL의 코드를 일정부분 바꿔서 재컴파일하고 나서야 설치할 수 있었는데<br>
+그것도 다 링킹 에러 때문이었음....</p>
+<p>하지만 링킹 에러도 결국은 버그.<br>
+버그는 왜 생기는지 알면 잡을 수 있다!<br>
+최소한 피해갈 수는 있다...<br>
+<u>링킹 에러가 왜 생기는지 알아보기 위해 링킹에 대해서 알아 보고 어떻게 C코드를 짜야 하는지 알아봅시다!</u></p>
+<p>그리고, 왜 어떤 라이브러리는 DLL이 필요한데<br>
+어떤 라이브러리는 lib가 필요할까?<br>
+<u>lib와 dll의 차이. 즉 static linking과 dynamic linking의 차이와 특성에 대해 알아봅시다!</u></p>
+<p>C/C++로 콘솔 게임, 콘솔 어플리케이션을 벗어나서<br>
+진정한 프로그래밍에 입문했을 때, 정말로 실용적인 프로그램을 만들기 시작할 때,<br>
+즉 외부 라이브러리를 붙여야하는 순간부터<br>
+숙명적으로 프로그래머들은 링커를 사용하게 된다.<br>
+수-퍼 후로그래머가 되기 위해서는 링킹에 대해서 알아야 하는 것이다!</p>
+<h2 id="Linking이란" tabindex="-1"><a class="only-cursor" href="#Linking이란">Linking이란</a></h2>
+<p>그런데 Linking이 뭐지?<br>
+링킹은 여러 코드와 데이터들을 모아서 하나의 실행파일로 만드는 것이다.<br>
+리눅스에서는... relocatable object파일(.o파일) 여러개를 묶어서 하나의 실행파일로 만드는 행위다.</p>
+<p>다음과 같은 코드가 있다고 하자.</p>
+<p>main.c</p>
+<pre><code class="hljs language-c"><span class="hljs-type">int</span> <span class="hljs-title function_">sum</span><span class="hljs-params">(<span class="hljs-type">int</span> a[], <span class="hljs-type">int</span> n)</span>;  <span class="hljs-comment">// sum.c에서 가져올 sum 함수</span>
+<span class="hljs-type">int</span> <span class="hljs-built_in">array</span>[<span class="hljs-number">2</span>] = {<span class="hljs-number">1</span>, <span class="hljs-number">2</span>};   <span class="hljs-comment">// 전역 변수(배열)</span>
+<span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span>{
+    <span class="hljs-type">int</span> val = sum(<span class="hljs-built_in">array</span>, <span class="hljs-number">2</span>);  <span class="hljs-comment">//sum.c에서 가져온 함수 사용</span>
+    <span class="hljs-keyword">return</span> val;
+}
+</code></pre>
+<p>sum.c</p>
+<pre><code class="hljs language-c"><span class="hljs-type">int</span> <span class="hljs-title function_">sum</span><span class="hljs-params">(<span class="hljs-type">int</span> a[], <span class="hljs-type">int</span> n)</span>
+{
+    <span class="hljs-type">int</span> i, sum = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span>(i = <span class="hljs-number">0</span>; i &lt; n; i++){
+        sum += a[i];
+    }
+    <span class="hljs-keyword">return</span> sum;
+}
+</code></pre>
+<p>이걸로 어떻게 실행파일을 만들어낼까?</p>
+<p>뭐? Ctrl+F5면 그냥 만들어진다고?<br>
+비주얼 스튜디오 꺼라....</p>
+<p>리눅스에서는 다음과 같은 터미널 명령으로 prog라는 executable file(실행파일)을 만들어낸다.<br>
+<code>gcc -Og -o prog main.c sum.c</code></p>
+<p><code>gcc</code>는 gcc라는 컴파일러를 쓰겠다는 거고<br>
+<code>-o prog</code>는 실행파일의 이름을 prog로 하겠다는 거고<br>
+<code>-Og</code>는 최적화를 하지 않겠다(는 건데 이건 알필요 없음)</p>
+<p>그러면 리눅스에서는(비주얼 스튜디오도 사용자에게 숨길 뿐이지만) compiler driver라는 시스템이<br>
+실행파일을 만드는데 필요한 각종 프로그램들<br>
+preprocessor(전처리기), 컴파일러, 어셈블러, 링커등을 불러서 북치고 장구치고 해준다</p>
+<p>그게 어떻게 되는 건지 궁금하다면 리눅스에서는 다음과 같은 명령어로 컴파일 해보면 알 수 있다.<br>
+<code>gcc -v -Og -o prog main.c sum.c</code><br>
+<code>-v</code>는 verbose 옵션으로, 어떠한 과정으로 실행파일이 만들어지는지 사용자에게 알려준다.</p>
+<p>Visual Studio에서는 어떻게 보냐고? 그런 건 없어...(나는 모르겠네요 혹시 아시면 댓글좀...)</p>
+<p>근데 실제로 해봤는데 솔직히 잘 모르겠고.. ㅎ 다음 그림이나 봅시다</p>
+<p><img src="resource/link3.png" alt="resource/link3.png"><br>
+(괄호 안에 든 건 리눅스에서의 프로그램 이름임)<br>
+즉 relocatable object file들을 적절히 조각 내어 붙여서 실행파일로 만드는게 링킹이다.<br>
+참고로 <strong>relocatable object file</strong>은 <strong>바이너리지만 실행이 불가능</strong>하다. 그 이유는 나중에 설명하겠읍니다만...<br>
+왜 실행을 못할까? 한번 생각은 해보자.</p>
+<h2 id="이러시는-이유가-있을-거-아니에요" tabindex="-1"><a class="only-cursor" href="#이러시는-이유가-있을-거-아니에요">이러시는 이유가 있을 거 아니에요</a></h2>
+<p>그나저나 링킹은 왜 하는걸까?</p>
+<ol>
+<li>모듈화
+<ul>
+<li>하나의 거대한(만 라인..) 파일보다는 작은 소스파일 여러개가 관리하기 쉽다</li>
+<li>맨날 쓰이는 함수들은 라이브러리로 만들어서 두고두고 우려먹을 수 있다(Math 라이브러리 등..)</li>
+</ul>
+</li>
+<li>효율
+<ul>
+<li>시간적 효율: 위 그림에서 알 수 있지만, main은 그대로이고 sum이 바뀌었을 때, main.o는 그대로 두고 sum.c만 다시 빌드해서 sum.o를 만들어 붙이면 새로운 프로그램을 만들 수 있다.  만일 main.c와 sum.c가 하나의 파일이라면 모두 재컴파일해야 할 것이다.<br>
+위 소스는 작아서 체감이 안 가지만 크롬(웹브라우저)은 아마 천만라인이 넘는다고 들었다. 그런데 ui약간 변경한다고 천만라인의 코드를 죄다 재컴파일할 수는 읎지..</li>
+<li>공간적 효율: 자주쓰이는 라이브러리 함수들은 함수 하나당 하나의 파일로 쪼개져 있는 경우가 많다. 라이브러리에서 필요한 함수가 들어 있는 xxx.o 파일을 링킹해서 실행파일을 만들면 실행파일 크기를 줄일 수 있다.</li>
+</ul>
+</li>
+</ol>
+<p>그러합니다. 솔직히 다 아는 내용일 듯</p>
+<p>하지만 링커가 뭘 하는지는 다들 잘 모르지? (난 몰랐어...)</p>
+<h2 id="Linker가-하는-일" tabindex="-1"><a class="only-cursor" href="#Linker가-하는-일">Linker가 하는 일</a></h2>
+<p>링커가 하는 일은 크게 두가지가 있다.</p>
+<ol>
+<li><strong>symbol resolution</strong></li>
+<li><strong>relocation</strong></li>
+</ol>
+<p>일단 symbol resolution에 대해 알아보자.</p>
+<p>잠깐... resolution? resolve?<br>
+<img src="resource/link2.png" alt="resource/link2.png"></p>
+<p>그렇다. 엿같은 링킹 에러를 유발하는 발암물질 덩어리다...!<br>
+어떠한 방식으로 이것이 일어나는지 안다면 우리가 만드는 <strong>C 코드의 링킹에러를 없앨 수 있겠다!</strong></p>
+<h3 id="Symbol" tabindex="-1"><a class="only-cursor" href="#Symbol">Symbol</a></h3>
+<p><strong>symbol</strong> resolution을 알아보기 위해<br>
+먼저 <strong>symbol</strong>에 대해서 알아보자.</p>
+<p>symbol은 프로그램이 생성하는 것들인데... 다음 3가지 부류로 나눌 수 있다</p>
+<table>
+<thead>
+<tr>
+<th>type</th>
+<th>explain</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>global symbol</td>
+<td>특정 모듈m에 정의되어 있고 다른 모듈에 의해 참조될 수 있는 심볼. (ex) static이 붙지 않은 C 함수, static이 아닌 전역변수.</td>
+</tr>
+<tr>
+<td>external symbol</td>
+<td>모듈 m에의해 참조되는 global symbol이지만 다른 모듈에 정의되어 있음</td>
+</tr>
+<tr>
+<td>local symbol</td>
+<td>모듈 m에서 정의되어 있고 오로지 모듈 m 내부에서만 참조할 수 있는 심볼. 모듈 외부에서는 참조가 불가능하다. ex) static C 함수, static 전역변수 <br> 주의- C의 <mark>지역변수</mark>와 <mark>local symbol</mark>은 <mark>다른 개념</mark>이다! <br> (static이 아닌 지역변수는 symbol이 아니다)</td>
+</tr>
+</tbody>
+</table>
+<p><img src="resource/link5.png" alt="resource/link5.png"></p>
+<p>주의할 점은 지역변수는 static의 여부에 따라 symbol이 되기도 하고 그렇지 않기도 하다는 것이다.<br>
+<strong>static이 선언된 지역변수</strong>는 <strong>local symbol</strong>이 되어 링커의 관리 대상이 되고<br>
+symbol table에 들어간다(자세한 건 나중에 설명)</p>
+<pre><code class="hljs language-c"><span class="hljs-type">int</span> <span class="hljs-title function_">f</span><span class="hljs-params">()</span>{    
+    <span class="hljs-type">static</span> <span class="hljs-type">int</span> x = <span class="hljs-number">0</span>;  <span class="hljs-comment">// x.1</span>
+    <span class="hljs-keyword">return</span> x;
+}
+ 
+<span class="hljs-type">int</span> <span class="hljs-title function_">g</span><span class="hljs-params">()</span>{
+    <span class="hljs-type">static</span> <span class="hljs-type">int</span> x = <span class="hljs-number">1</span>;  <span class="hljs-comment">// x.2</span>
+    <span class="hljs-keyword">return</span> x;
+}
+</code></pre>
+<p>static이 선언되지 않은 지역변수는 애초에 symbol이 아니라서<br>
+symbol만 아는 바보 링커는 그런게 있는지도 모른다...</p>
+<pre><code class="hljs language-c"><span class="hljs-type">int</span> <span class="hljs-title function_">f</span><span class="hljs-params">()</span>{    
+    <span class="hljs-type">int</span> x = <span class="hljs-number">0</span>; 
+    <span class="hljs-keyword">return</span> x;
+}
+ 
+<span class="hljs-type">int</span> <span class="hljs-title function_">g</span><span class="hljs-params">()</span>{
+    <span class="hljs-type">int</span> x = <span class="hljs-number">1</span>; 
+    <span class="hljs-keyword">return</span> x;
+}
+</code></pre>
+<p>지역변수는 실행시 스택에 할당되고, 전역변수는 실행파일의 .data 영역에 존재하기 때문인데..<br>
+이것은 이후에 설명하겠다. 여튼</p>
+<p>static이 아닌 지역변수는 symbol이 아니다! static 지역변수는 local symbol이다!</p>
+<h3 id="Resolution" tabindex="-1"><a class="only-cursor" href="#Resolution">Resolution</a></h3>
+<p>symbol resolution은<br>
+이 symbol들의 <strong>reference</strong>참조들(예- 함수 호출, 지역변수 사용)을 각각<br>
+단 하나의 <strong>symbol definition</strong>정의​(예- 함수 정의, 지역변수 정의)와 연관시키는 행위이다.</p>
+<p>그런데 symbol의 이름이 겹친다면 링커는 심볼 참조와 정의를 어떻게 연관시켜야 할까?<br>
+링커는 symbol의 이름이 겹치는 문제를 해결하기 위해 symbol들을 다시 두 부류로 구분한다.</p>
+<ul>
+<li><strong>strong symbol</strong>: <strong>함수</strong>(procedure)들과 <strong>초기화된 전역 변수</strong></li>
+<li><strong>weak symbol​</strong>: <strong><mark>초기화되지 않은</mark> 전역변수</strong></li>
+</ul>
+<p>그리고 다음의 규칙대로 symbol의 reference와 definition을 연관시킨다.</p>
+<ol>
+<li><strong>중복</strong>되는 <strong>strong symbol</strong>은 허용되지 않는다: <mark>LINK ERROR!</mark></li>
+<li><strong>strong</strong> symbol은 <strong>​하나</strong>만 존재하고, <strong>동일한 이름의 weak symbol들</strong>이 있다면,<br>
+링커는 <strong>strong symbol을 선택</strong>한다: 이 이름의 symbol에 대한 reference들은 strong symbol로 연관된다.</li>
+<li>만약 이름이 <strong>중복</strong>되는 <strong>​weak symbol</strong>​만 여러개 있다면... 링커는 <strong><mark>아무거나</mark></strong> 골라서 연관시킨다.</li>
+</ol>
+<p>특히 2, 3번 weak symbol과 엮이는 부분이 사람을 환장하게 만드는 링킹 관련 버그의 근원이다</p>
+<h2 id="다양한-Linking-에러-발생-과정" tabindex="-1"><a class="only-cursor" href="#다양한-Linking-에러-발생-과정">다양한 Linking 에러 발생 과정</a></h2>
+<p>다음 one.c와 two.c를 컴파일하고 링킹한다고 생각해보자.</p>
+<h3 id="Link-Error:-1." tabindex="-1"><a class="only-cursor" href="#Link-Error:-1.">Link Error: <code>1.</code></a></h3>
+<p>(one.c)</p>
+<pre><code class="hljs language-c"><span class="hljs-type">int</span> x;
+p1() {} <span class="hljs-comment">//strong!</span>
+</code></pre>
+<p>(two.c)</p>
+<pre><code class="hljs language-c">p1() {} <span class="hljs-comment">//strong!</span>
+</code></pre>
+<p>이 경우 2개의 strong symbol의 이름이 겹치므로 Link time error가 뜬다. <code>(1.)</code><br>
+이런 경우 간단히 코드를 고치면 된다.</p>
+<h3 id="(Link-Error-보고-없이)-문제가-발생할-수-있음-1:-3." tabindex="-1"><a class="only-cursor" href="#(Link-Error-보고-없이)-문제가-발생할-수-있음-1:-3.">(Link Error 보고 없이) 문제가 발생할 수 있음 1: <code>3.</code></a></h3>
+<p>(one.c)</p>
+<pre><code class="hljs language-c"><span class="hljs-type">int</span> x;  <span class="hljs-comment">//weak</span>
+p1() { x = <span class="hljs-number">0</span>; } 
+</code></pre>
+<p>(two.c)</p>
+<pre><code class="hljs language-c"><span class="hljs-type">int</span> x;  <span class="hljs-comment">//weak</span>
+p2() { x = <span class="hljs-number">9</span>; } 
+</code></pre>
+<p>이 경우 p1이나 p2에서 전역변수 x를 쓰게 된다면,<br>
+one이나 two의 변수 중 하나를 선택해서 쓰게 된다. <code>(.3)</code><br>
+<mark>링크에러는 발생하지 않는다.</mark></p>
+<p>p1에서 x를 썼다고 one.c의 x를 쓰고<br>
+p2에서 x를 썼다고 two.c의 x를 쓰는게 ​<em><strong>아니다!</strong></em><br>
+​판단은 링커가 한다....<br>
+<img src="resource/link6.png" alt="resource/link6.png"><br>
+그래도 여기까지는 괜찮다(?). 문제는 다음이다.</p>
+<h3 id="(Link-Error-보고-없이)-문제가-발생할-수-있음-2:-3." tabindex="-1"><a class="only-cursor" href="#(Link-Error-보고-없이)-문제가-발생할-수-있음-2:-3.">(Link Error 보고 없이) 문제가 발생할 수 있음 2: <code>3.</code></a></h3>
+<p>(one.c)</p>
+<pre><code class="hljs"><span class="hljs-type">int</span> x;     <span class="hljs-comment">//weak</span>
+<span class="hljs-type">int</span> y;     <span class="hljs-comment">//weak</span>
+p1() {} 
+</code></pre>
+<p>(two.c)</p>
+<pre><code class="hljs"><span class="hljs-keyword">double</span> <span class="hljs-keyword">x</span><span class="hljs-comment">;  //weak</span>
+p<span class="hljs-number">2</span>() {<span class="hljs-keyword">x</span> <span class="hljs-operator">=</span> <span class="hljs-number">800.0</span>} 
+</code></pre>
+<p>컴파일러는 오직 하나의 소스파일만을 알기 때문에<br>
+one.c에서 x의 크기는 <strong>4</strong>이고<br>
+two.c에서 x의 크기는 <strong>8</strong>이다.</p>
+<p>만약에 p2에서 x에 데이터를 썼는데,<br>
+링커가 <strong>p2</strong>의 <u>reference</u> x를 one.c의 <u>symbol</u> x와 연관시켰다면 <code>(.3)</code><br>
+<strong>8바이트를 수정</strong>하기 때문에, p1의 x뿐만이 아닌 <mark>y까지 값이 변하게</mark> 된다.</p>
+<p>이런 일이 일어나는 이유는<br>
+컴파일러가 two.c로 만든 오브젝트 파일two.o에서는<br>
+x가 있는 곳의 메모리를 8바이트 수정하기 때문이다.<br>
+이 또한 3번째 resolution 규칙인 임의의 연결 문제 때문이다.<br>
+그러나 <mark>링크에러는 발생하지 않는다.</mark></p>
+<p>그래도 이것또한 운이 억세게 좋다면 발생하지 않을 수도 있다...<br>
+그러나 다음은 반드시 버그가 발생한다.</p>
+<h3 id="(Link-Error-보고-없이)-문제가-반드시-발생:-2." tabindex="-1"><a class="only-cursor" href="#(Link-Error-보고-없이)-문제가-반드시-발생:-2.">(Link Error 보고 없이) 문제가 <em>반드시</em> 발생: <code>2.</code></a></h3>
+<p>(one.c)</p>
+<pre><code class="hljs"><span class="hljs-keyword">int</span> x = <span class="hljs-number">7</span>;  <span class="hljs-comment">//strong!</span>
+<span class="hljs-keyword">int</span> y = <span class="hljs-number">8</span>;  <span class="hljs-comment">//strong!</span>
+p1() {} 
+</code></pre>
+<p>(two.c)</p>
+<pre><code class="hljs"><span class="hljs-keyword">double</span> <span class="hljs-keyword">x</span><span class="hljs-comment">;  //weak</span>
+p<span class="hljs-number">2</span>() {<span class="hljs-keyword">x</span> <span class="hljs-operator">=</span> <span class="hljs-number">800.0</span>} 
+</code></pre>
+<p>one.c의 <strong>x</strong>와 <strong>y</strong>는 초기화된 전역변수이므로 <strong>strong symbol</strong>이다.<br>
+그런데 two.c의 x는 weak symbol이다.<br>
+그러므로 링커는 <strong>p2</strong>에서 사용된 <strong>x</strong>의 참조를 <mark>반드시 one.c의 x symbol과 연관</mark>시킨다.   (2.)</p>
+<p>그러나 컴파일러는 그 사실을 모르므로 two.o에서 x를 변경하면 <strong>8</strong>바이트의 메모리를 수정하게 되고<br>
+p2에서 x 변수를 변경하면 <strong>반드시</strong> one.c에 정의된 x(<strong>4</strong>byte)와 ​<strong>y</strong>까지(<strong>4</strong>byte) <strong>변경</strong>​된다.<br>
+그러나 역시 <mark>링크에러 그런 건 없어...</mark></p>
+<p><br>
+그렇다면, 가장 끔찍한 시나리오는 무엇일까?<br>
+바로 2개의 동일한 이름의 struct가 서로 다른 소스에 ​<strong>weak symbol</strong>​로 정의되어 있고,<br>
+링크해야할 오브젝트 파일들이 <strong>​서로 다른 메모리 정렬 규칙</strong>​을 따르는 <strong>다른 컴파일러</strong>​들에 의해서 각각 생성되었을 경우이다.</p>
+<p>그렇게 되면 존나 어떻게 될지 상상도 불가능하다...<br>
+물론 링크에러 그런 거 안 띄워줌 ^_^</p>
+<h3 id="Linking-관련-버그-피하기" tabindex="-1"><a class="only-cursor" href="#Linking-관련-버그-피하기">Linking 관련 버그 피하기</a></h3>
+<p>그럼 지금까지의 링커에 의한 씨발창 상황들을 해결하려면 어떻게 해야할까?</p>
+<p><img src="resource/link7.png" alt="resource/link7.png"><br>
+결론: <strong>전역변수를 <mark>쓰지마!</mark></strong><br>
+좀 쓰지 말라면 쓰지 말자. 괜히 C 첨 배우는 애들한테 강조하는 거 아니다...</p>
+<p>아니 근데 꼭 써야 된다고?</p>
+<ul>
+<li>그러면 할 수 있는 한 <strong>​static</strong>​을 써서 <strong>local symbol</strong>을 만든다 - 이것만으로도 많은 문제가 해결된다..</li>
+<li><strong>전역 변수는 반드시 초기화</strong>하자 - 그러면 겹칠 때 링크 에러라도 띄워줄 거 아니냐...</li>
+<li>​외부의 전역 변수/함수를 쓰고싶으면 <strong>extern</strong>​지시자를 쓰자 - 심볼 참조임을 분명히 해주자.</li>
+</ul>
+<h2 id="요약" tabindex="-1"><a class="only-cursor" href="#요약">요약</a></h2>
+<p>이제 우리는 링커가 하는 일 중 첫번쨰: <strong>Symbol Resolution</strong>이 뭘 하는 것인지 알게 되었다.<br>
+그것은 어떤 <strong>심볼에 대한 참조들을 <em>단 하나의</em> 심볼 정의와 연관</strong>시키는 일이다.</p>
+<p>그리고 그 방식을 알아보고 링크와 관련된 심각한 버그들이 어떻게 발생하는지 확인했고,<br>
+이런 버그를 방지하는 방법에 대해 알아보았다.</p>
+<p><br>
+<br>
+다음은 Relocation과 정적 링킹, 동적 링킹에 대한 이야기다.<br>
+한 숨 돌리고 시작하지요</p>
+<hr>
+<p><a href="https://gall.dcinside.com/board/view/?id=programming&amp;no=677561&amp;t=cv">프로그래밍 갤러리 댓글</a></p>
+</article><footer class="container"><div class="site-footer">Copyright 2023 KUR. All Rights Reserved.</div></footer></body></html>

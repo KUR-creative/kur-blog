@@ -26,4 +26,5 @@
   (def git-count 156)
   (println (:out (diff 156)))
   (println (:out (diff 159))) ; Subscribe, Guests temp page were added
+  (println (:out (diff 178))) ; Change public-posts data structure
   )

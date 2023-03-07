@@ -1,0 +1,12 @@
+;; `git rev-parse --short HEAD` = 48b68bf
+;; `git rev-list HEAD --count`  = 178
+;; config for regression test
+{:md-dir "test/fixture/regression/178/md" ; copyed from /www/blog-base
+ :html-dir "test/fixture/blog-root/tmp-html" ; copyed from /www/blog
+ :fs-wait-ms 1000}
+
+; md-dir          An directory to MONITOR post markdown
+; html-dir        An directory to UPDATE post html
+; fs-wait-ms      MONITOR waits fs-wait-ms milliseconds
+;                 after consecutive file events in md-dir and then
+;                 requests UPDATER to write/update/delete posts
