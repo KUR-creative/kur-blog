@@ -55,8 +55,10 @@
 (def header-css (site-resource "css/header.css"))
 (def article-css (site-resource "css/article.css"))
 (def anchor-css (site-resource "css/anchor.css"))
+(def highlight-fragment-css (site-resource "css/highlight_fragment.css"))
 (def common-css-paths
-  [layout-css header-css article-css anchor-css])
+  [layout-css header-css article-css
+   anchor-css highlight-fragment-css])
 
 (def agate-code-style-link
   "Search `agate` in https://cdnjs.com/libraries/highlight.js"
