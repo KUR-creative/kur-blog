@@ -32,7 +32,7 @@
 (defn related-post-link [post]
   (if post
     (link-to {:class "hover-link"} (:id post) (:id post))
-    [:span {:class "no-post"} "no more posts"])); id always 3(kur) + 10(YYMMddHHmm)
+    [:span.no-post "no more posts"])); id always 3(kur) + 10(YYMMddHHmm)
 
 (defn related-post-link
   ([post]
@@ -42,7 +42,7 @@
   ([post some-text nil-text]
    (if post
      (link-to {:class "hover-link"} (:id post) some-text)
-     [:span {:class "no-post"} nil-text])))
+     [:span.no-post nil-text])))
 
 (defn html [post posts]
   (let [norm-title (-> post post/title-or-id policy/normalize-title)
@@ -69,14 +69,17 @@
                          (str "series#" series-name) series-name))
               [:h1 norm-title]
               html-str
-              ; tags pane (위에 hr ?)
+              ;[:hr]
+              #_[:div {:class "tags-pane"}
+                 (map #(link-to (str "tags#" %) (str "#" %))
+                      (tags/tags post))]
               (when series
-                [:div {:class "post-link-pane"}
+                [:div.post-link-pane
                  (related-post-link prev-chapter "이전글")
                  (link-to {:class "hover-link"}
                           (str "series#" series-name) series-name)
                  (related-post-link next-chapter "다음글")])
-              [:div {:class "post-link-pane"}
+              [:div.post-link-pane
                (related-post-link prev)
                (link-to {:class "hover-link"}
                         (str "archive#" (:id post)) "Archive")

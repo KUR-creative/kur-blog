@@ -37,7 +37,7 @@
   (only-cursor-link-to (str "#" (heading-id heading)) heading))
 
 (def navigation
-  [:nav {:class "navigation"}
+  [:nav.navigation
    (link-to {:class "only-cursor"} "archive" "archive")
    (link-to {:class "only-cursor"} "series" "series")
    (link-to {:class "only-cursor"} "tags" "tags")
@@ -47,19 +47,17 @@
    ;; TODO: link to google site search url
 
 (def header
-  [:header {:class "container"}
+  [:header.container
    [:hr]
-   [:div
-    {:class "site-title"}
+   [:div.site-title
     (link-to {:class "only-cursor"} "/" "KUR Creative")]
    [:hr]
    navigation
    [:hr]])
 
 (def footer
-  [:footer {:class "container"}
-   [:div {:class "site-footer"}
-    "Copyright 2023 KUR. All Rights Reserved."]])
+  [:footer.container
+   [:div.site-footer "Copyright 2023 KUR. All Rights Reserved."]])
 
 (defn article-page
   [{:keys [css-paths title more-tags]} {:keys [h1 content]}]
@@ -70,7 +68,7 @@
               :more-tags more-tags)
         [:body
          header
-         [:article {:class "container"}
+         [:article.container
           (when (seq h1) [:h1 h1])
           (when content content)]
          footer]))
