@@ -1,7 +1,7 @@
 (ns kur.blog.look.post
   (:require [hiccup.element :refer [link-to]]
             [hiccup.page :refer [html5]]
-            [kur.blog.look.template :refer [head header]]
+            [kur.blog.look.template :refer [article-page]]
             [kur.blog.page.post :as post]
             [kur.blog.page.post.md2x :refer [obsidian-html]]
             [kur.blog.page.tags :as tags]
@@ -20,18 +20,16 @@
         tags (-> post :frontmatter :tags)
         series-name (:name (some #(tags/series-info %) tags)); TODO: now just only one series. but..
         ]
-    (html5 (head :css-paths policy/common-css-paths
-                 :title norm-title
-                 :more-tags (when (has-code? html-str)
-                              [policy/agate-code-style-link]))
-           [:body
-            header
-            [:article {:class "container"}
-             (when series-name
-               (link-to {:class "series-top-link"}
-                        (str "series#" series-name) series-name))
-             [:h1 norm-title]
-             html-str]])))
+    (html5 (article-page
+            {:title norm-title
+             :more-tags (when (has-code? html-str)
+                          [policy/agate-code-style-link])}
+            {:content
+             (list (when series-name
+                     (link-to {:class "series-top-link"}
+                              (str "series#" series-name) series-name))
+                   [:h1 norm-title]
+                   html-str)}))))
 
 ;;
 (comment

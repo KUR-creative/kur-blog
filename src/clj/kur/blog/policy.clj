@@ -53,11 +53,12 @@
 ;;
 (def layout-css (site-resource "css/layout.css"))
 (def header-css (site-resource "css/header.css"))
+(def footer-css (site-resource "css/footer.css"))
 (def article-css (site-resource "css/article.css"))
 (def anchor-css (site-resource "css/anchor.css"))
 (def highlight-fragment-css (site-resource "css/highlight_fragment.css"))
 (def common-css-paths
-  [layout-css header-css article-css
+  [layout-css header-css footer-css article-css
    anchor-css highlight-fragment-css])
 
 (def agate-code-style-link

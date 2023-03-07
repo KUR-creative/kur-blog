@@ -56,14 +56,21 @@
    navigation
    [:hr]])
 
+(def footer
+  [:footer {:class "container"}
+   [:div {:class "site-footer"}
+    "Copyright 2023 KUR. All Rights Reserved."]])
+
 (defn article-page
-  [{:keys [css-paths title]} {:keys [h1 content]}]
+  [{:keys [css-paths title more-tags]} {:keys [h1 content]}]
   (list (head :css-paths (if css-paths
                            css-paths
                            policy/common-css-paths)
-              :title title)
+              :title title
+              :more-tags more-tags)
         [:body
          header
          [:article {:class "container"}
           (when (seq h1) [:h1 h1])
-          (when content content)]]))
+          (when content content)]
+         footer]))
