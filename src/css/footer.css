@@ -6,7 +6,19 @@
     padding-bottom: 1rem;
 }
 
+.tags-pane {
+    border-top: 0.1rem solid grey;
+    margin-top: 1.5rem;
+}
+
+.tag {
+    font-size: 0.75em;
+    margin-left: 0.15em;
+    margin-right: 0.55em;
+}
+
 .post-link-pane {
+    margin-top: 0.3rem;
     font-family: monospace;
     display: flex;
     justify-content: space-between;
@@ -15,3 +27,4 @@
 .no-post {
     color: #808080;
 }
+

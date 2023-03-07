@@ -70,9 +70,9 @@
               [:h1 norm-title]
               html-str
               ;[:hr]
-              #_[:div {:class "tags-pane"}
-                 (map #(link-to (str "tags#" %) (str "#" %))
-                      (tags/tags post))]
+              [:div.tags-pane
+               (map #(link-to {:class "tag"} (str "tags#" %) (str "#" %))
+                    (remove tags/series-info (tags/tags post)))]
               (when series
                 [:div.post-link-pane
                  (related-post-link prev-chapter "이전글")
