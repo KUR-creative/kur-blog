@@ -37,10 +37,13 @@
 (defn html [post posts]
   (let [norm-title (-> post post/title-or-id policy/normalize-title)
         html-str (obsidian-html (:text post))
-        tags (-> post :frontmatter :tags)
-        series-name (:name (some #(tags/series-info %) tags)); TODO: now just only one series. but..
-        [prev next] (prev-next post posts)]
-    (def sorted-post-set posts)
+        series-name (:name (tags/series post))
+        [prev next] (prev-next post posts)
+        #_[prev-chapter next-chapter]
+        #_(prev-next post
+                     (apply)
+                     (filter #(= series (-> % tags/series-info :name))))]
+    ;(def posts posts) (map #(dissoc % :text) posts)
     (html5 (article-page
             {:title norm-title
              :more-tags (when (has-code? html-str)

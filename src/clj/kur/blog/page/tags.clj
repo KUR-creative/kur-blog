@@ -3,11 +3,16 @@
             [clojure.string :as str]
             [medley.core :refer [assoc-some]]))
 
-(defn series-info [series]
-  (let [[series? name no] (re-find #"^s/(.+)/(.+)$" series)]
+(defn series-info [series-tag]
+  (let [[series? name no] (re-find #"^s/(.+)/(.+)$" series-tag)]
     (when series? {:name name :no no})))
 
 ;;
+(defn series
+  "NOTE: Currently, only one series per post is allowed"
+  [post]
+  (->> post :frontmatter :tags (some #(series-info %))))
+
 (defn tags [post]
   (-> post :frontmatter :tags))
 
