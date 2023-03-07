@@ -1,4 +1,4 @@
-(ns kur.blog.look.tags
+(ns kur.blog.look.tags-and-series
   (:require [hiccup.page :refer [html5]]
             [kur.blog.look.post :as look-post]
             [kur.blog.look.template :refer [article-page heading-link]]
@@ -32,22 +32,27 @@
               (tag-and-links-block series posts)))))
 
 ; TODO: Add js to sort tags
-(defn html [posts]
+(defn htmls [posts]
   (let [posts (remove policy/admin-post? posts)
         tag:posts (tags/tag:posts posts)
         no-tags-posts (remove tags/has-tags? posts)]
     ;(def tag:posts tag:posts)
-    (html5 (article-page
-            {:title "KUR Creative Blog - series & tags"}
-            {:content
-             (list
-              [:h1 {:id "Series" :style "margin-bottom: 0.1em;"}
-               (heading-link "Series")]
-              (series-summary (tags/series:posts tag:posts))
-              [:h1 {:id "Tags" :style "margin-bottom: 0.1em;"}
-               (heading-link "Tags")]
-              (tags-summary (filter-keys #(not (tags/series-info %))
-                                         tag:posts)
-                            no-tags-posts))}))))
+    {:series
+     (html5 (article-page
+             {:title "KUR Creative Blog - Series"}
+             {:content
+              (list [:h1 {:id "Series" :style "margin-bottom: 0.1em;"}
+                     (heading-link "Series")]
+                    (series-summary (tags/series:posts tag:posts)))}))
+     :tags
+     (html5 (article-page
+             {:title "KUR Creative Blog - Tags"}
+             {:content
+              (list
+               [:h1 {:id "Tags" :style "margin-bottom: 0.1em;"}
+                (heading-link "Tags")]
+               (tags-summary (filter-keys #(not (tags/series-info %))
+                                          tag:posts)
+                             no-tags-posts))}))}))
 
 #_(tags/series:posts tag:posts)

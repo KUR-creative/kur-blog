@@ -39,6 +39,7 @@
 (def navigation
   [:nav {:class "navigation"}
    (link-to {:class "only-cursor"} "archive" "archive")
+   (link-to {:class "only-cursor"} "series" "series")
    (link-to {:class "only-cursor"} "tags" "tags")
    (link-to {:class "only-cursor"} "subscribe" "subscribe")
    (link-to {:class "only-cursor"} "guests" "guests")

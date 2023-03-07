@@ -6,7 +6,7 @@
             [kur.blog.look.home :as look-home]
             [kur.blog.look.post :as look-post]
             [kur.blog.look.subscribe :as look-subscribe]
-            [kur.blog.look.tags :as look-tags]
+            [kur.blog.look.tags-and-series :as look-tns]
             [kur.blog.page.post :as post]
             [kur.blog.page.post.diff :as post-diff]
             [kur.blog.page.post.name :as name]
@@ -52,7 +52,8 @@
   (let [public-posts (sort-by :id #(compare %2 %1)
                               (concat unchanged-posts
                                       loaded-posts-to-write))
-        html-path #(str (fs/path html-dir %))]
+        html-path #(str (fs/path html-dir %))
+        {:keys [series tags]} (look-tns/htmls public-posts)]
     (concat
      (map (fn [post]
             [spit (html-path (post/html-file-name post))
@@ -63,7 +64,8 @@
       [spit (html-path "home.html") (look-home/html public-posts)]
       [spit (html-path "archive.html") (look-archive/html public-posts)]
       [spit (html-path "subscribe.html") (look-subscribe/html)]
-      [spit (html-path "tags.html") (look-tags/html public-posts)]
+      [spit (html-path "series.html") series]
+      [spit (html-path "tags.html") tags]
       [spit (html-path "guests.html") (look-guests/html)]]
      (map (fn [post]
             [fs/delete-if-exists (html-path (post/html-file-name post))])
