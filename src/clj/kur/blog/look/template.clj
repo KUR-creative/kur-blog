@@ -42,7 +42,8 @@
    (link-to {:class "only-cursor"} "series" "series")
    (link-to {:class "only-cursor"} "tags" "tags")
    (link-to {:class "only-cursor"} "subscribe" "subscribe")
-   [:img {:src policy/search-logo :height "20px" :width "20px"}]])
+   (link-to "https://www.google.com/search?q=site%3Ablog.kurcreative.com+공사중.."
+            [:img {:src policy/search-logo :height "20px" :width "20px"}])])
    ;; TODO: link to google site search url
 
 (def header
