@@ -54,9 +54,9 @@
         html-path #(str (fs/path html-dir %))
         {:keys [series tags]} (look-tns/htmls public-posts)]
     (concat
-     (map (fn [post]
-            [spit (html-path (post/html-file-name post))
-             (look-post/html (post/title-or-id post) (:text post))])
+     (map (fn [post] [spit
+                      (html-path (post/html-file-name post))
+                      (look-post/html post)])
           (remove policy/admin-post? loaded-posts-to-write))
      [[spit (html-path "404.html") (look-error/page-404 public-posts)]
       [spit (html-path "50x.html") (look-error/page-50x public-posts)]

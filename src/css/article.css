@@ -18,6 +18,21 @@ mark {
     background-color: inherit;
 }
 
+/* series link before h1 */
+.series-top-link {
+    display: block;
+    margin-top: 2.5rem;
+    margin-left: 0.3rem;
+
+    text-decoration: inherit;
+    color: #01A049;
+    font-weight: bold;
+}
+
+.series-top-link + h1 {
+    margin-top: 0em;
+}
+
 /* footnote */
 .footnote-ref > a,
 .footnote-backref {

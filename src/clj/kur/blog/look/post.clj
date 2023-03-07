@@ -4,6 +4,7 @@
             [kur.blog.look.template :refer [head header]]
             [kur.blog.page.post :as post]
             [kur.blog.page.post.md2x :refer [obsidian-html]]
+            [kur.blog.page.tags :as tags]
             [kur.blog.policy :as policy]))
 
 (defn post-link-li [post]
@@ -13,9 +14,12 @@
 (defn has-code? [html-str]
   (re-find #"<code.+hljs.+>" html-str))
 
-(defn html [title md-text]
-  (let [norm-title (policy/normalize-title title)
-        html-str (obsidian-html md-text)]
+(defn html [post]
+  (let [norm-title (-> post post/title-or-id policy/normalize-title)
+        html-str (obsidian-html (:text post))
+        tags (-> post :frontmatter :tags)
+        series-name (:name (some #(tags/series-info %) tags)); TODO: now just only one series. but..
+        ]
     (html5 (head :css-paths policy/common-css-paths
                  :title norm-title
                  :more-tags (when (has-code? html-str)
@@ -23,6 +27,9 @@
            [:body
             header
             [:article {:class "container"}
+             (when series-name
+               (link-to {:class "series-top-link"}
+                        (str "series#" series-name) series-name))
              [:h1 norm-title]
              html-str]])))
 
