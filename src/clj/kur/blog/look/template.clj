@@ -42,7 +42,6 @@
    (link-to {:class "only-cursor"} "series" "series")
    (link-to {:class "only-cursor"} "tags" "tags")
    (link-to {:class "only-cursor"} "subscribe" "subscribe")
-   (link-to {:class "only-cursor"} "guests" "guests")
    [:img {:src policy/search-logo :height "20px" :width "20px"}]])
    ;; TODO: link to google site search url
 

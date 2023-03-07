@@ -2,7 +2,6 @@
   (:require [babashka.fs :as fs]
             [kur.blog.look.archive :as look-archive]
             [kur.blog.look.error :as look-error]
-            [kur.blog.look.guests :as look-guests]
             [kur.blog.look.home :as look-home]
             [kur.blog.look.post :as look-post]
             [kur.blog.look.subscribe :as look-subscribe]
@@ -63,10 +62,9 @@
       [spit (html-path "50x.html") (look-error/page-50x public-posts)]
       [spit (html-path "home.html") (look-home/html public-posts)]
       [spit (html-path "archive.html") (look-archive/html public-posts)]
-      [spit (html-path "subscribe.html") (look-subscribe/html)]
       [spit (html-path "series.html") series]
       [spit (html-path "tags.html") tags]
-      [spit (html-path "guests.html") (look-guests/html)]]
+      [spit (html-path "subscribe.html") (look-subscribe/html)]]
      (map (fn [post]
             [fs/delete-if-exists (html-path (post/html-file-name post))])
           post-to-delete))))
