@@ -1,6 +1,7 @@
 (ns kur.md2x.main
   (:require [clojure.string :as str]
-            [kur.md2x.wikilink.plugin :refer [enable-wikilink!]]))
+            [kur.md2x.wikilink.plugin :refer [enable-wikilink!]]
+            [kur.blog.page.post.name :as name]))
 
 (def mdit-a (js/require "markdown-it-anchor"))
 
@@ -93,4 +94,10 @@ belong to the previous footnote." "<p>Here is a footnote<sup class=\"footnote-re
   (md->html "# Te St 테스 트! ? !  ")
 
   (md->html "```c\n int a[10] = 200;")
-  (md->html "```clojure\n (map inc [1 2 3 4 :a])"))
+  (md->html "```clojure\n (map inc [1 2 3 4 :a])")
+
+  ;; test cljc
+  (require '[kur.blog.page.post.name :as name])
+  (name/id-info "kur1234567890")
+  (name/fname->parts "kur1234567890.+.AAA sdws.md"))
+

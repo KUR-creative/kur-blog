@@ -1,7 +1,9 @@
 (ns kur.blog.page.post.name.spec
   (:require [clojure.spec.alpha :as s]
-            [clojure.string :as str]
-            [kur.util.string :refer [digit?]]))
+            [clojure.string :as str]))
+
+(defn digit? [c]
+  (and (>= 0 (compare \0 c)) (>= 0 (compare c \9))))
 
 ;;; Post id parts
 (s/def ::author

@@ -5,7 +5,8 @@
   "test"]
 
  :dependencies
- [[cider/cider-nrepl "0.28.5"]]
+ [[cider/cider-nrepl "0.28.5"]
+  [medley/medley "1.4.0"]]
 
  :builds
  {:md2x
