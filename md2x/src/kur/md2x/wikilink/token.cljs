@@ -1,5 +1,6 @@
 (ns kur.md2x.wikilink.token
-  (:require [kur.md2x.config :refer [config]]))
+  (:require [kur.md2x.config :refer [config]]
+            [kur.blog.policy :as policy]))
 
 (defn resource-path [path] ;NOTE: policy
   (str (:resource-dir config) "/" path))
@@ -21,12 +22,14 @@
   #js[(Token state "text" "" 0
              #js{:content (:s digested-info)})])
 
-(defn link [state token {:keys [path text extension]}]
+(defn link [state token {:keys [path text heading extension]}]
   (let [level (.-level token)
+        ;href (cond-> path (resource-extension? extension) resource-path)
         href (if (resource-extension? extension)
                (resource-path path)
-               path)]
-    ;(prn extension)
+               (if (seq heading)
+                 (str path "#" (policy/slugify heading))
+                 path))]
     [(Token state "link_open" "a" 1
             #js{:attrs #js[#js["href" href]]
                 :level level :markup "wikilink" :info "auto"})

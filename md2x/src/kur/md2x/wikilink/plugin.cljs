@@ -23,6 +23,8 @@
 ;; parsing
 (defn parsed-tokens
   [state token {:keys [wikilink? embed?] :as digested-info}]
+  (when (:heading digested-info)
+    (def digested-info digested-info))
   (cond
     (not wikilink?) (token/text state token digested-info)
     (not embed?) (token/link state token digested-info)

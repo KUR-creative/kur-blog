@@ -67,18 +67,19 @@
 (defn digest-wikilink-info
   "Return digested wikilink information map"
   [{:keys [s wikilink? embed?] :as info}]
-  (let [[path text] (s/split (subs s (if embed? 3 2) (- (count s) 2)) ; 3=![[ 2=[[ or ]]
-                             #"\|" 2)
-        [path text] [(s/trim path) (when text (s/trim text))] ;NOTE: obsidian feature
+  (let [[path+heading text]
+        (s/split (subs s (if embed? 3 2) (- (count s) 2)) #"\|" 2) ; 3=![[ 2=[[ or ]]
+
+        [path+heading text]
+        [(s/trim path+heading) (when text (s/trim text))] ;NOTE: obsidian feature
+
+        [path heading] (s/split path+heading #"#" 2)
         [_ & rest-path] (s/split path #"\.")
         extension (when rest-path (last rest-path))]
-    #_(prn (cond-> info
-             wikilink? (assoc :path path)
-             text (assoc :text text)
-             extension (assoc :extension extension)))
     (cond-> info
       wikilink? (assoc :path path)
-      text (assoc :text text) ; text=nil: no | in link. ex) [[no-pipe]]
+      heading (assoc :heading heading)
+      text (assoc :text text) ; text=nil: no "|" in link. ex) [[no-pipe]]
       extension (assoc :extension extension))))
 
 (comment

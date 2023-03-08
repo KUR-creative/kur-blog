@@ -1,7 +1,7 @@
 (ns kur.md2x.main
   (:require [clojure.string :as str]
-            [kur.md2x.wikilink.plugin :refer [enable-wikilink!]]
-            [kur.blog.page.post.name :as name]))
+            [kur.blog.policy :as policy]
+            [kur.md2x.wikilink.plugin :refer [enable-wikilink!]]))
 
 (def mdit-a (js/require "markdown-it-anchor"))
 
@@ -38,6 +38,11 @@
        "[[abc.png]]"        "<p><a href=\"resource/abc.png\">abc.png</a></p>\n"
        "[[abc.png|aaasss]]" "<p><a href=\"resource/abc.png\">aaasss</a></p>\n"
        "[[글댓비full.png]]"  "<p><a href=\"resource/글댓비full.png\">글댓비full.png</a></p>\n"
+       ;; with heading
+       "[[aaa#bbb ccc ddd]]" "<p><a href=\"aaa#bbb-ccc-ddd\">aaa</a></p>\n"
+       "[[aaa#bbb pipe|ddd]]" "<p><a href=\"aaa#bbb-pipe\">ddd</a></p>\n"
+       "[[kur2302031338.+.블로그 프로젝트 - 블로그를 하다. 그리고 네이버 블로그를 버리다.#에디터가 구데기|이전 글]]"
+       "<p><a href=\"kur2302031338.+.블로그 프로젝트 - 블로그를 하다. 그리고 네이버 블로그를 버리다.#에디터가-구데기\">이전 글</a></p>\n"
        ;; Embedded wikilink with correct/incorrect/no extension
        "![[abc.png|aaasss]]"        "<p><img src=\"resource/abc.png\" alt=\"aaasss\"></p>\n"
        "![[abc|aaas|ss]]"           "<p>![[abc|aaas|ss]]</p>\n"

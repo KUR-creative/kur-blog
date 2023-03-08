@@ -17,11 +17,10 @@
             (remove nil?)
             (str/join ".")) "." post-extension))
 
-(defn fname->parts
-  "post-fname is (cfs/file-name path). post-fname includes .extension."
-  [post-fname]
-  (let [base-name (cfs/strip-ext post-fname)
-        [id meta title] (str/split base-name #"\." 3)]
+(defn basename->parts
+  "base-name is file name without extension"
+  [base-name]
+  (let [[id meta title] (str/split base-name #"\." 3)]
     (cond-> {:meta-str nil :title nil}
       (s/valid? ::spec/id id) (assoc :id id)
       (s/valid? ::spec/meta-str meta) (assoc-some :meta-str meta
@@ -29,6 +28,12 @@
       (s/valid? ::spec/title meta) (assoc :title (if title
                                                    (str meta "." title)
                                                    meta)))))
+
+(defn fname->parts
+  "post-fname is (cfs/file-name path). post-fname includes .extension."
+  [post-fname]
+  (basename->parts (cfs/strip-ext post-fname)))
+
 ;; path or parts(id, meta, title) validation
 (defn file-path? [x] (and (string? x) (not= x "")))
 (defn valid-parts
