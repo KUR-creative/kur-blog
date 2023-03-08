@@ -1,21 +1,17 @@
 (ns kur.md2x.main
-  (:require [clojure.string :as str]
-            [kur.blog.policy :as policy]
+  (:require [kur.blog.policy :as policy]
             [kur.md2x.wikilink.plugin :refer [enable-wikilink!]]))
 
 (def mdit-a (js/require "markdown-it-anchor"))
 
 (def mdit
   (doto ((js/require "markdown-it")
-         #js{:linkify true
-             :html true
-             :breaks true})
+         #js{:linkify true, :html true, :breaks true})
     (.use (js/require "markdown-it-mark"))
     (.use (js/require "markdown-it-collapsible"))
-    (.use mdit-a
-          #js{:slugify policy/slugify
-              :permalink ((.. mdit-a -permalink -headerLink)
-                          #js{:class "only-cursor"})})
+    (.use mdit-a #js{:slugify policy/slugify
+                     :permalink ((.. mdit-a -permalink -headerLink)
+                                 #js{:class "only-cursor"})})
     (.use (js/require "markdown-it-footnote"))
     (.use (js/require "markdown-it-highlightjs"))
     (.use enable-wikilink!)))
@@ -55,6 +51,8 @@
        "<p><img src=\"resource/abc.jpg\" alt=\"resource/abc.jpg\"></p>\n"
        "![[abc.jpeg]]"
        "<p><img src=\"resource/abc.jpeg\" alt=\"resource/abc.jpeg\"></p>\n"
+       "![[니가그렇다면_그런거겠지.gif]]"
+       "<p><img src=\"resource/니가그렇다면_그런거겠지.gif\" alt=\"resource/니가그렇다면_그런거겠지.gif\"></p>\n"
        ;; Embedding video
        "![[abc.mp4]]"
        "<p><video src=\"resource/abc.mp4\" autoplay=\"\" muted=\"\" loop=\"\">abc.mp4</video></p>\n"

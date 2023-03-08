@@ -53,12 +53,22 @@
                 :children #js[(Token state "text" "" 0
                                      #js{:content some-text})]
                 :markup "wikilink"})]))
-(defmethod embed "png" [state token digested-info]
-  (img state token digested-info))
-(defmethod embed "jpg" [state token digested-info]
-  (img state token digested-info))
-(defmethod embed "jpeg" [state token digested-info]
-  (img state token digested-info))
+
+(defmethod embed "png"  [state token info] (img state token info))
+(defmethod embed "jpg"  [state token info] (img state token info))
+(defmethod embed "jpeg" [state token info] (img state token info))
+(defmethod embed "gif"  [state token info] (img state token info))
+(defmethod embed "avif" [state token info] (img state token info))
+(defmethod embed "png"  [state token info] (img state token info))
+(defmethod embed "svg"  [state token info] (img state token info))
+(defmethod embed "svgz" [state token info] (img state token info))
+(defmethod embed "tif"  [state token info] (img state token info))
+(defmethod embed "tiff" [state token info] (img state token info))
+(defmethod embed "wbmp" [state token info] (img state token info))
+(defmethod embed "webp" [state token info] (img state token info))
+(defmethod embed "ico"  [state token info] (img state token info))
+(defmethod embed "jng"  [state token info] (img state token info))
+(defmethod embed "bmp"  [state token info] (img state token info))
 
 (defn video [state token {:keys [path text]}]
   (let [level (.-level token)
