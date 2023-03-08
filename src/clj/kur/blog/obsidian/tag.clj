@@ -13,6 +13,11 @@
   (s/with-gen (s/and string? only-allowed-chars? #(nil? (parse-long %)))
     #(string-from-regexes tag-character-regex)))
 
+(defn valid? [tag-str]
+  (s/valid? ::tag tag-str))
+
 (comment
   (g/sample (s/gen ::tag))
-  (s/valid? ::tag "012"))
+  (s/valid? ::tag "012")
+  (s/valid? ::tag "a 012")
+  (s/valid? ::tag "s/테스트용series후후/a1000"))

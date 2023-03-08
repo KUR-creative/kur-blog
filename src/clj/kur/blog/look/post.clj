@@ -5,7 +5,8 @@
             [kur.blog.page.post :as post]
             [kur.blog.page.post.md2x :refer [obsidian-html]]
             [kur.blog.page.tags :as tags]
-            [kur.blog.policy :as policy]))
+            [kur.blog.policy :as policy]
+            [kur.blog.obsidian.tag :as obsidian-tag]))
 
 (defn post-link-li [post & {:keys [fragment-id]}]
   [:li
@@ -71,8 +72,11 @@
               html-str
               ;[:hr]
               [:div.tags-pane
-               (map #(link-to {:class "tag"} (str "tags#" %) (str "#" %))
-                    (remove tags/series-info (tags/tags post)))]
+               (->> (tags/tags post)
+                    (filter obsidian-tag/valid?)
+                    (remove tags/series-info)
+                    (map #(link-to {:class "tag"}
+                                   (str "tags#" %) (str "#" %))))]
               (when series
                 [:div.post-link-pane
                  (related-post-link prev-chapter "이전글")
