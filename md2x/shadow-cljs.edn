@@ -1,6 +1,8 @@
 ;; shadow-cljs configuration
 {:source-paths
- ["src" "test"]
+ ["src"
+  "../src/cljc/" ; NOTE: So md2x must be a child of proj root dir
+  "test"]
 
  :dependencies
  [[cider/cider-nrepl "0.28.5"]]

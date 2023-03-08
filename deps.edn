@@ -1,4 +1,4 @@
-{:paths ["src/clj" "src/js"
+{:paths ["src/clj" "src/js" "src/cljc"
          "test/unit" "test/integration" "test/regression"]
  :deps
  {;; Fundamental
