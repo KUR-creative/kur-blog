@@ -13,7 +13,7 @@
     (.use (js/require "markdown-it-mark"))
     (.use (js/require "markdown-it-collapsible"))
     (.use mdit-a
-          #js{:slugify #(-> % str/trim (str/replace #"\s+" "-"))
+          #js{:slugify policy/slugify
               :permalink ((.. mdit-a -permalink -headerLink)
                           #js{:class "only-cursor"})})
     (.use (js/require "markdown-it-footnote"))

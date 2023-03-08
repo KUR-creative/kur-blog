@@ -26,6 +26,9 @@
             (str/replace title file-str title-str))
           title file-s:title-s))
 
+(defn slugify [heading]
+  (-> heading str/trim (str/replace #"\s+" "-")))
+
 ;;
 (def authors #{"kur"})
 (def admin "admin")
