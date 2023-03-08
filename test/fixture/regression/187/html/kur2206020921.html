@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html><head><meta content="width=device-width, initial-scale=1" name="viewport"><meta charset="utf-8"><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3VM2LWXJF8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3VM2LWXJF8');
+</script>
+<link href="resource/site/k.png" rel="icon" type="image/x-icon"><link href="resource/site/css/layout.css" rel="stylesheet" type="text/css"><link href="resource/site/css/header.css" rel="stylesheet" type="text/css"><link href="resource/site/css/footer.css" rel="stylesheet" type="text/css"><link href="resource/site/css/article.css" rel="stylesheet" type="text/css"><link href="resource/site/css/anchor.css" rel="stylesheet" type="text/css"><link href="resource/site/css/highlight_fragment.css" rel="stylesheet" type="text/css"><title>학습 주도 개발로 나만의 음악 앱 만들기</title></head><body><header class="container"><hr><div class="site-title"><a class="only-cursor" href="/">KUR Creative</a></div><hr><nav class="navigation"><a class="only-cursor" href="archive">archive</a><a class="only-cursor" href="series">series</a><a class="only-cursor" href="tags">tags</a><a class="only-cursor" href="subscribe">subscribe</a><a href="https://www.google.com/search?q=site%3Ablog.kurcreative.com+공사중.."><img height="20px" src="resource/site/search.png" width="20px"></a></nav><hr></header><article class="container"><a class="series-top-link" href="series#나만의music앱">나만의music앱</a><h1>학습 주도 개발로 나만의 음악 앱 만들기</h1><p>석사 졸업 후 충분한 휴식을 취했다.</p>
+<p>그리고 내 방식에 대한 회고를 수없이 하여 다시는 같은 실수를 하지 않겠다고 다짐했다.<br>
+그러면서 [제텔카스텐]과 [린스타트업]을 필두로, 앞으로 프로그래밍에 어떤 전략으로 접근할 것인지 깊이 생각하였다. 결국 새로운 전략을 찾아내게 된다.</p>
+<p><img src="resource/programmer-job-status.jpg" alt="resource/programmer-job-status.jpg"><br>
+졸업 후 6개월, 번아웃에서도 벗어났고 이젠 노는 것도 질려서 내가 세운 전략을 시험해보고 싶었다.</p>
+<h2 id="학습-주도-개발-Learning-Driven-Development,-LDD" tabindex="-1"><a class="only-cursor" href="#학습-주도-개발-Learning-Driven-Development,-LDD">학습 주도 개발 Learning Driven Development, LDD</a></h2>
+<p>왜 [석사 때 그렇게 크게 실패]했을까? 그것은 <strong>학습하지 않아서</strong>였다. 내가 하는 일을 잘 몰랐기에 잘못된 전략을 세웠고, 전략이 잘못되었기에 아무리 노력해도 이미 정해진 실패에 도달할 수 밖에 없다. 다시는 그렇게 실패하고 싶지 않았기에<br>
+나는  &quot;학습 주도 개발&quot;을 생각해냈다.</p>
+<p>학습 주도 개발은 <em>1) 지식 저장소 2) 학습 활동 3) 피드백</em>으로 이루어진다.<br>
+이 세가지 요소로 LDD 과정을 정의하면 다음과 같다.</p>
+<ol>
+<li><strong>학습 활동</strong>과 <strong>피드백</strong>을 정의하고</li>
+<li>학습을 통해 알게 된 사실을 <strong>지식 저장소</strong>에 저장한다</li>
+<li><em>해답을 낼 수 있는 충분한 지식</em>이 모일 때까지 1,2를 반복한다</li>
+</ol>
+<p>이 방식으로 무슨 문제를 풀어볼까 생각하다가, 작지만 극히 번거로운 문제를 해결하기로 결심한다.</p>
+<h2 id="문제:-데스크탑과-스마트폰의-음악파일/재생목록-Sync" tabindex="-1"><a class="only-cursor" href="#문제:-데스크탑과-스마트폰의-음악파일/재생목록-Sync">문제: 데스크탑과 스마트폰의 음악파일/재생목록 Sync</a></h2>
+<p>다른 많은 사람들처럼 나도 일할 때, 운동하거나 쉴 때 마치 노동요처럼 음악을 틀어댄다.<br>
+그리고 무슨 애니를 보거나 게임을 하는데 주제곡이 좋다거나 어쩌다 클래식을 들었는데 괜찮다거나 아무튼 음악을 들었는데 맘에 들었을 때, 나는 어떻게든 MP3를 찾아서 소장하곤 한다(보통 <a href="https://github.com/yt-dlp/yt-dlp">yt-dlp</a>를 쓰지만 유튜브에서 못 찾겠으면 그냥 돈 주고 산다).</p>
+<p>그래서 내 소장 목록에는 수시로 음악이 늘어나고 있는데, 여기서 정말 번거롭고 짜증나는 문제가 발생한다.<br>
+일 할 때는 데스크톱에서, 그 외 씻거나 운동하거나 이동할 때는 스마트폰으로 음악을 트는데, <strong>동일한 음악을 여러 기기에 다운로드</strong> 받는 것은 여간 번거로운 일이 아니다. 그리고 <strong>모든 기기에서 재생 목록을 일치</strong>시키는 것도 참 귀찮고 짜증나는 일이다.</p>
+<p>이런 동기화 문제를 해결하려고 요즘 사람들은 음악 스트리밍 서비스를 사용하는 거 같더라. 스트리밍 서비스가 모든 기기에서 음악을 동기화해주고 재생 목록도 동기화해주는 것이다.</p>
+<p>하지만 나는 ㅡ틀ㅡ이라서 내가 직접 MP3 파일을 소장하고 로컬 앱으로 듣는 걸 좋아한다. 급식 먹던 시절부터 모아온 MP3만 약 20기가 쯤 되기도 한다. 이 모든 곡이 스트리밍 서비스에 있다는 것을 장담할 수 없고, 그리고 그냥 로컬에서 틀면 되는 음악을 인터넷으로 스트리밍한다는 것 자체가 맘에 안 들기도 했다. 폰 요금제도 무제한이 아니고.. 그래서 스트리밍 서비스는 쓸 생각이 없었다.</p>
+<p>한창 일 할 때는 그냥 파일 두 번 받고, 재생 목록은 수동으로 동기화하면서 버텼다.<br>
+그러나 심심하고 시간도 많은 지금, 드디어 이 문제를 해결하고자 한다</p>
+<h2 id="LDD의-적용" tabindex="-1"><a class="only-cursor" href="#LDD의-적용">LDD의 적용</a></h2>
+<p>LDD는 추상적인 3가지 요소를 제시한다. 구체적인 요소와 과정은 알아서 정해야 한다.<br>
+나는 다음과 같이 LDD를 구체화하였다</p>
+<ul>
+<li>지식 저장소: [Zettelkasten]</li>
+<li>학습 활동: 인터넷에서 열심히 검색하기, 실제로 앱 써보기</li>
+<li>피드백: 내 주관적인 문제니까 주관적 경험과 느낌으로 충분</li>
+</ul>
+<h2 id="해결" tabindex="-1"><a class="only-cursor" href="#해결">해결</a></h2>
+<p>이번 문제를 풀기 위해 가능하면 코딩을 하지 않을 생각이었다. 데스크탑(리눅스)이나 안드로이드나 온갖 종류의 기능을 제공하는 무료 음악 앱이 시중에 넘쳐난다<sup class="footnote-ref"><a href="#fn1" id="fnref1">[1]</a></sup>. 이런 판에 내가 발 들인다고 뭔가 대단한 걸 할 수 있다는 생각도 안 들고, 나는 철저히 사용자일 뿐 음악 앱 개발에는 전혀 흥미가 없기도 했다. 그리고 결정적으로 안드로이드 앱을 만들 생각이 추호도 없었다.<br>
+그래서 열심히 인터넷을 뒤지기 시작했다. 이 당시에 이미 <a href="https://syncthing.net/">Syncthing</a>을 알고 있었고 Zettelkasten을 위해 <a href="https://obsidian.md/">Obsidian</a>과 조합하여 쓰고 있었다. 그래서 MP3 파일 동기화는 그냥 Syncthing을 쓰면 된다.<br>
+문제는 재생목록이었다.</p>
+<p>Syncthing을 알고 있는 나는 가장 먼저 재생 목록도 파일로 공유하면 되겠다고 생각했다. 찾아보니 미디어 재생 목록 파일 형식은 의외로 사실상 표준(de-facto standard)이 있었다: <a href="https://en.m.wikipedia.org/wiki/M3U">m3u</a><br>
+오.. 그러면 이거 쓰면 되는건가? 벌써 한 건 해결인가? 들떠 있었는데.. 어림도 없지!<br>
+m3u 파일로 재생목록을 가져오거나 내보내는 앱들은 많았다(import/export). 그러나  대부분의 앱들은 재생 목록을 꽁꽁 숨겨서 구현하고 있었다. 다들 수꼴라이트(SQLite) 같은 걸 쓰는지 공개된 파일로 재생 목록을 관리하는 앱은 거의 없었다.</p>
+<p>나는 이해가 안 됐다. 어차피 시스템에 음악 앱은 하나만 돌아갈테니까 파일로 해도 동시성 문제는 안 생길텐데? 파일을 사용자가 조져버릴까봐 그러는건가? 적당히 권한 설정하면 되는 것 아닌가? 아무튼 이 많은 앱들이 어째서 재생 목록을 공개된 파일로 처리하지 않는지 잘 모르겠다. 혹시 이 바닥에서 놀아 본 분이 있다면 왜 그런지 알려달라.</p>
+<p>아무튼 포기하지 않고 열심히 찾아다녔다. 결국 목적에 맞는 앱을 찾았는데, 안드로이드에서는 <a href="https://play.google.com/store/apps/details?id=com.musicplayer.blackplayerfree">Blackplayer</a>가 <code>Synchronized playlist</code> 피처에서 m3u 파일을 지원했고, 리눅스에선 <a href="https://cmus.github.io/">cmus</a>가 공개된 m3u 파일로 재생 목록을 관리했다. 특히 cmus의 재생목록을 봤을 때 마치 복권에 당첨된 듯이 짜릿했던 기억이 난다. 다만 어찌어찌 해답을 찾아내긴 했지만 솔직히 운빨이라는 생각이 계속 들긴 했다..</p>
+<h2 id="구현" tabindex="-1"><a class="only-cursor" href="#구현">구현</a></h2>
+<h3 id="음악-파일-Sync" tabindex="-1"><a class="only-cursor" href="#음악-파일-Sync">음악 파일 Sync</a></h3>
+<p>m3u 파일 형식은 아주 단순해서 솔직히 표준이라고 하기에도 뭐하다. 그냥 음악 파일 경로를 newline(<code>\n</code>)으로 구분해서 박아 넣으면 그게 m3u다. 게다가 저장되는 경로가 절대경로일지 상대경로일지는 앱 만드는 놈 맘대로다. 디팩토 스탠다드가 다 그렇지 뭐...</p>
+<p><img src="resource/cat-m3u.png" alt="resource/cat-m3u.png"><br>
+Blackplayer와 cmus는 다행히 절대경로 m3u를 지원한다. 그러면 리눅스와 안드로이드에서 1) 동일한 경로에 동일한 구조로 음악 파일이 저장되게 한 뒤 2) 파일 위치를 넣은 m3u를 만들고 3) Syncthing으로 음악 파일과 m3u를 공유하면 된다<br>
+이 때 m3u 파일에 저장하는 <strong>음악 파일의 절대경로가 리눅스와 안드로이드에서 동일</strong>해야만 한다. 이 때문에 윈도우에서는 구현이 불가능하다.</p>
+<p><img src="resource/music-directory.png" alt="resource/music-directory.png"><br>
+이렇게 안드로이드에서 root 폴더에 <code>Music</code> 폴더를 생성하면, 실제 파일 경로는 <code>/storage/emulated/0/Music</code>이 된다.</p>
+<p><img src="resource/linux-music-files-path.png" alt="resource/linux-music-files-path.png"><br>
+리눅스에서 동일한 위치에 폴더를 생성하고(<code>sudo mkdir -p /storage/emulated/0/Music</code>), 동일한 구조로 음악 파일들을 저장하면 된다. 물론 당연히 <code>chown</code>으로 폴더의 사용자와 그룹을 변경해야 Syncthing이 정상작동한다만, 자세한 내용은 생략한다.</p>
+<h3 id="재생-목록-m3u-파일-Sync" tabindex="-1"><a class="only-cursor" href="#재생-목록-m3u-파일-Sync">재생 목록 m3u 파일 Sync</a></h3>
+<p><img src="resource/linx-music-playlist.png" alt="resource/linx-music-playlist.png"><br>
+<code>cmus</code>는 <code>~/.config/cmus/playlists</code>에 기본 재생목록들을 저장한다. cmus에서 m3u 파일을 생성한 뒤 Syncthing으로 동기화시킨다.</p>
+<p><img src="resource/BlackPlayer-Synchronized-Playlist.png" alt="resource/BlackPlayer-Synchronized-Playlist.png"><br>
+안드로이드의 Blackplayer에서 동기화된 m3u 파일을 재생목록으로 추가하고, <code>Synchronized Playlist</code>를 enable하면 된다.</p>
+<h2 id="평가" tabindex="-1"><a class="only-cursor" href="#평가">평가</a></h2>
+<p>실제로 내가 원하는 음악앱의 피처들은 다음과 같다(실제 메모에서 발췌)</p>
+<ol>
+<li>free: 무료</li>
+<li>local: 로컬 파일 사용</li>
+<li>(file-)sync: 데탑과 폰에서 동일한 음악 리스트를 (파일) sync로 제공</li>
+<li>auto-retire: 비인기 음악 리타이어 기능</li>
+<li>easy-list-move: 리스트간 쉬운 이동</li>
+<li>easy-queue; 쉬운 예약 리스트 생성</li>
+<li>listen-order-list: 사용자가 들었던 순서 기억, 리스트 생성 가능</li>
+<li>list-history: 리스트 역사 추적. 각 버전에 이름 붙이기 가능</li>
+</ol>
+<p>이번 구현(MVP1)은 1, 2, 3, 5는 완벽히 지원한다. 7은 cmus에서 생성한 리스트 변경 사항은 저장이 쉬운데, Blackplayer에서는 잘 안 된다. 4, 6, 8은 그냥 희망 사항이다..</p>
+<p>MVP1의 단점은 다음과 같다</p>
+<ul>
+<li>한번 들어간 음악 파일은 이동이 힘듦. 파일이 이동할 경우 m3u도 변경되어야 함. (이상적으로는 git 같은 버전 관리가 필요함)</li>
+<li>Syncthing, cmus, blackplayer, Linux 모두에 익숙해야 함</li>
+<li>m3u의 문제(보통 절대 경로 사용)로 반드시 (SD 카드가 아닌) 안드로이드 내부 저장소만 써야 하며, 동일한 경로를 서버(데스크탑)에도 만들어줘야 함. 안 쓰는 안드로이드폰이나 리눅스 데스크탑이 아니면 서버는 구축 자체가 어려울 것으로 예상됨.</li>
+</ul>
+<p>그래도 한번 만들어두고 까먹으면 된다. 코드가 없으니 버그도 없다 ㅋ</p>
+<h2 id="느낀-점" tabindex="-1"><a class="only-cursor" href="#느낀-점">느낀 점</a></h2>
+<p>남이 만든 것을 전혀 안 쓰고 짜는 짓은 대학에서 <a href="https://github.com/KUR-creative/ads-final">과제</a>로 많이 해 봤었는데, 이번엔 반대로 코드를 전혀 짜지 않고 남들이 만든 것들을 조합하는 것만으로 문제를 해결해 보았다.</p>
+<p>하지만 코드를 짜지 않아도, 문제 해결 과정에서 나는 의외의 쾌감을 느꼈다. 다른 사람들이 만들어 놓은 도구들이 맞물려 결국 나의 문제를 해결하는 것을 보는게 즐거웠다. 내 문제를 해결해주는 솔루션(cmus의 playlist)을 찾았을 때, 나는 뛸 듯이 기뻤다. 마치 복권에 당첨된 듯 나의 행운에 감사했다.</p>
+<p>문제 해결을 위한 자료를 조사할 때, 재미있고 시간 가는 줄을 몰랐다. 약하긴 해도 몰입을 체험한 것이 틀림 없다.</p>
+<h2 id="결론" tabindex="-1"><a class="only-cursor" href="#결론">결론</a></h2>
+<p>뭐? <em>앱을 안 만들었다고?</em><br>
+하지만 버그도 없고 성능도 완벽하고 온갖 피처가 죄다 있는 음악 앱이 생겼는 걸?</p>
+<p>문제만 해결 할 수 있다면 코드 따윈 사실 안 짜는 게 낫다.<br>
+인생은 짧고 만들 것은 많다. 마구마구 날먹해서 아낀 잉센으로 꼭 필요한 것만 만들자.</p>
+<hr class="footnotes-sep">
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn1" class="footnote-item"><p><a href="https://socialcompare.com/en/comparison/linux-open-source-audio-players">Linux Open Source Audio Players</a> <a href="#fnref1" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+</section>
+<div class="tags-pane"><a class="tag" href="tags#proj프로젝트">#proj프로젝트</a></div><div class="post-link-pane"><span class="no-post">이전글</span><a class="hover-link" href="series#나만의music앱">나만의music앱</a><span class="no-post">다음글</span></div><div class="post-link-pane"><a class="hover-link" href="kur2106201241">kur2106201241</a><a class="hover-link" href="archive#kur2206020921">Archive</a><a class="hover-link" href="kur2206110000">kur2206110000</a></div></article><footer class="container"><div class="site-footer">Copyright 2023 KUR. All Rights Reserved.</div></footer></body></html>

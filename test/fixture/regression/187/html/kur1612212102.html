@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html><head><meta content="width=device-width, initial-scale=1" name="viewport"><meta charset="utf-8"><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3VM2LWXJF8"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-3VM2LWXJF8');
+</script>
+<link href="resource/site/k.png" rel="icon" type="image/x-icon"><link href="resource/site/css/layout.css" rel="stylesheet" type="text/css"><link href="resource/site/css/header.css" rel="stylesheet" type="text/css"><link href="resource/site/css/footer.css" rel="stylesheet" type="text/css"><link href="resource/site/css/article.css" rel="stylesheet" type="text/css"><link href="resource/site/css/anchor.css" rel="stylesheet" type="text/css"><link href="resource/site/css/highlight_fragment.css" rel="stylesheet" type="text/css"><title>[CS:APP 11] The Memory Hierarchy</title></head><body><header class="container"><hr><div class="site-title"><a class="only-cursor" href="/">KUR Creative</a></div><hr><nav class="navigation"><a class="only-cursor" href="archive">archive</a><a class="only-cursor" href="series">series</a><a class="only-cursor" href="tags">tags</a><a class="only-cursor" href="subscribe">subscribe</a><a href="https://www.google.com/search?q=site%3Ablog.kurcreative.com+공사중.."><img height="20px" src="resource/site/search.png" width="20px"></a></nav><hr></header><article class="container"><a class="series-top-link" href="series#CSAPP독학">CSAPP독학</a><h1>[CS:APP 11] The Memory Hierarchy</h1><p><a href="https://youtu.be/zDJxqQ3J8r0?list=PLyboo2CCDSWnhzzzzDQ3OBPrRiIjl-aIE">11강|embed</a></p>
+<p>11화 The Memory Hierarchy</p>
+<p>이번에는 하라보지 교수님이 아니라 아조시 교수님이 수업하신다<br>
+개인적으로는 이분 영어가 더 잘 들려서 좋다...</p>
+<p>Memory Hierarchy를 설명하기 위해 갖가지 storage device들의 스펙들에 대해 설명한다<br>
+오늘은 이론적이고 전체적인 부분에 대해 개관한다.</p>
+<h2 id="저장장치들-storage-devices" tabindex="-1"><a class="only-cursor" href="#저장장치들-storage-devices">저장장치들 storage devices</a></h2>
+<p>내용은 많지만 핵심은</p>
+<p><strong>값이 쌀수록 용량이 크고 대신 느리다</strong><br>
+<strong>비쌀수록 용량은 작고 빠르다</strong></p>
+<p>그러하다.</p>
+<h3 id="SSD" tabindex="-1"><a class="only-cursor" href="#SSD">SSD</a></h3>
+<p><img src="resource/mem_hierarchy_2.png" alt="resource/mem_hierarchy_2.png"><br>
+SSD는 위와 같은 구조를 이루며, HDD처럼 쓰기 위해서 logical disk block이란 가상의 개념(원래 HDD가 쓰던 개념)을 따른단다<br>
+뭔가.. 가상 메모리 같은 건가 보다(그림의 block은 그거는 아니고 진짜 하드웨어 블록임)<br>
+추상화랑 일맥상통하는 부분이 있지만 그런 이야기는 나중에 하자..</p>
+<p>그리고 SSD는 그림의 블록 하나를 다 지워야만 page에 데이터를 쓸 수 있다. 왜? 는 설명 안 해줌 뭐 장치가 그렇다는데 그런거겠지..<br>
+그래서 쓰는 게 읽는 거보다 느리고(읽는 건 제한 없음) 10000번을 쓰면 못 쓴댄다.</p>
+<h3 id="공짜-점심은-끝났다" tabindex="-1"><a class="only-cursor" href="#공짜-점심은-끝났다">공짜 점심은 끝났다</a></h3>
+<p><img src="resource/mem_hierarchy_1.png" alt="resource/mem_hierarchy_1.png"><br>
+1985에서 2003년까지는 2년마다 2배씩 꾸준히 성능이 증가한다. 그런데 2003년에는 그 한계를 맞는다.<br>
+더이상 <u>clock frequency를 증가시킬 수 없게 된 것</u>이다. 공짜 점심은 끝났다...</p>
+<p>이 때부터 CPU 제조사들은 코어를 늘릴 생각을 하게 된다<br>
+그래서.. 병렬 프로그래밍이 중요해진 것이고<br>
+CPU cycle time과 Effective CPU cycle time이 차이 나는 이유가 바로 병렬 프로그래밍 때문인 것이다.</p>
+<p>그런데 그 병렬 프로그래밍을 가장 하기 쉬운 패러다임이 바로 함슬람이다.</p>
+<p>람다후 함크바르!</p>
+<p>Clojure가 미래의 언어라는 과격한 주장이 나오는 이유도 이걸 참 잘 해서라는 거 같다<br>
+그리고 JVM의 지원도 끝내주고..</p>
+<p>그건 그렇구요</p>
+<p>그다음은 지역성에 대해 이야기한다.</p>
+<h2 id="locality" tabindex="-1"><a class="only-cursor" href="#locality">locality</a></h2>
+<p>지역성의 법칙:<br>
+프로그램은 최근에 사용한 인스트럭션이나 데이터들의 주소와<br>
+<strong>가깝거나 동일한 곳</strong>의 데이터를 <strong>많이 사용하는 경향</strong>이 있다.</p>
+<p><strong>가까운 곳</strong>의 데이터를 쓰면 <strong>spatial locality</strong><br>
+<strong>동일한 곳</strong>의 데이터를 (짧은 기간 동안 여러번) 쓰면 <strong>temporal locality</strong></p>
+<p>이걸 지켜야 빠르다. 왜? 캐시를 쓰니까</p>
+<p>멍청한 예제도 하나 소개해 준다</p>
+<p><img src="resource/mem_hierarchy_3.png" alt="resource/mem_hierarchy_3.png"><br>
+이런 짓은 아무도 안 하지만 어쨌든 이러면 안 되요</p>
+<p>근데 전에 이런 거 일일이 생각하면 머머리된다는 개드립을 친 적이 있는데...<br>
+배워보니 locality 정도는 생각해야 되겠다. 너무 중요하다. 머머리가 되는 걸 강요받고 있다!</p>
+<h2 id="The-Memory-Hierarchy" tabindex="-1"><a class="only-cursor" href="#The-Memory-Hierarchy">The Memory Hierarchy</a></h2>
+<p>솔직히 빠른 놈이 용량도 크고 값까지 싸다면 그놈으로 메모리를 도배하면 되겠으나<br>
+응 아니야~<br>
+그러한 현실의 제약을 해결하기 위해 cache는 hierarchy 구조로 구현된다.</p>
+<p><img src="resource/mem_hierarchy_4.png" alt="resource/mem_hierarchy_4.png"><br>
+아래쪽의 큰 용량을 가지며 느리지만 값싼 저장장치에서<br>
+위쪽의 비싸고 용량은 작지만 빠른 저장장치로<br>
+지금 쓰려는 데이터들을 옮긴다.<br>
+(지역성의 법칙에 의해 지금 쓰려는 데이터는 어차피 하부에 저장된 데이터의 일부이므로 가능)</p>
+<p>이것이 cache이다.<br>
+그리고 k레벨의 저장장치는 k+1레벨 저장장치의 cache 역할을 한다.</p>
+<p><img src="resource/mem_hierarchy_5.png" alt="resource/mem_hierarchy_5.png"><br>
+cache <strong>hit</strong>는 CPU가 <strong>지금 쓰려는 데이터</strong>가 <strong>cache</strong>(즉 상위 저장장치)에 <strong>존재 하는 경우</strong>를 의미한다<br>
+캐시 히트는 좋은 것이다!</p>
+<p><img src="resource/mem_hierarchy_6.png" alt="resource/mem_hierarchy_6.png"><br>
+cache <strong>miss</strong>는 CPU가 <strong>지금 쓰려는 데이터</strong>가 <strong>cache</strong>(즉 상위 저장장치)에 <strong>존재하지 않는 경우</strong>를 의미한다<br>
+당연히 더 하위의 저장장치에까지 데이터를 요청해야 되고 시간이 오래 걸린다.<br>
+이 현상은 해로운 현상이다!</p>
+<p>그러하다.</p>
+<h2 id="실제-응용" tabindex="-1"><a class="only-cursor" href="#실제-응용">실제 응용</a></h2>
+<p>근데 우리 프로그래머들에게 결국 중요한 것은 무엇인가?</p>
+<p><img src="resource/mem_hierarchy_7.png" alt="resource/mem_hierarchy_7.png"><br>
+그렇다. 후로훼셔널 후로그래머라면<br>
+코드를 딲! 보는 순간 지역성이 있는지 없는지 파악할 수 있어야 한다<br>
+아무리 메모리를 서열로 잘 구성해놔도 프로그램이 안 쓰면 말짱 황이다</p>
+<p>이 맛에 제가 CS:APP 빱니다... 프로그래머한테 진정으로 중요한 걸 말해준다 이거지요...</p>
+<p><br>
+끗</p>
+<hr>
+<p><a href="https://m.blog.naver.com/CommentList.naver?blogId=rhdnfka94&amp;logNo=220891697540">과거 블로그 댓글</a><br>
+<a href="https://gall.dcinside.com/board/view/?id=programming&amp;no=669079&amp;t=cv">프로그래밍 갤러리 댓글</a></p>
+<div class="tags-pane"><a class="tag" href="tags#from/old-blog">#from/old-blog</a></div><div class="post-link-pane"><a class="hover-link" href="kur1612201958">이전글</a><a class="hover-link" href="series#CSAPP독학">CSAPP독학</a><a class="hover-link" href="kur1612241313">다음글</a></div><div class="post-link-pane"><a class="hover-link" href="kur1612201958">kur1612201958</a><a class="hover-link" href="archive#kur1612212102">Archive</a><a class="hover-link" href="kur1612241313">kur1612241313</a></div></article><footer class="container"><div class="site-footer">Copyright 2023 KUR. All Rights Reserved.</div></footer></body></html>
