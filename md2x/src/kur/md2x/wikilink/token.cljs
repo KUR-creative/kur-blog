@@ -1,8 +1,13 @@
 (ns kur.md2x.wikilink.token
   (:require [kur.md2x.config :refer [config]]))
 
-(defn resource-path [path]
+(defn resource-path [path] ;NOTE: policy
   (str (:resource-dir config) "/" path))
+
+(defn resource-extension? [ext] ;NOTE: policy
+  ;; TODO: need config. can check file existence from md-dir of config
+  (and (string? ext)
+       (re-find #"^[0-9a-z]+$" ext)))
 
 (defn Token
   ([state type tag nesting]
@@ -16,10 +21,14 @@
   #js[(Token state "text" "" 0
              #js{:content (:s digested-info)})])
 
-(defn link [state token {:keys [path text]}]
-  (let [level (.-level token)]
+(defn link [state token {:keys [path text extension]}]
+  (let [level (.-level token)
+        href (if (resource-extension? extension)
+               (resource-path path)
+               path)]
+    ;(prn extension)
     [(Token state "link_open" "a" 1
-            #js{:attrs #js[#js["href" path]]
+            #js{:attrs #js[#js["href" href]]
                 :level level :markup "wikilink" :info "auto"})
      (Token state "text" "" 0
             #js{:content (if text text path)

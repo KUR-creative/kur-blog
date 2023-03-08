@@ -30,9 +30,14 @@
        "[[]]"         "<p>[[]]</p>\n"
        "png]]"        "<p>png]]</p>\n"
        ;; Normal wikilink
-       "[[png]]"              "<p><a href=\"png\">png</a></p>\n"
-       "[[abc.png]]"          "<p><a href=\"abc.png\">abc.png</a></p>\n"
-       "[[abc.png|aaasss]]"   "<p><a href=\"abc.png\">aaasss</a></p>\n"
+       "[[png]]"            "<p><a href=\"png\">png</a></p>\n"
+       "[[글댓비full]]"      "<p><a href=\"글댓비full\">글댓비full</a></p>\n"
+       "[[kur2206020921.+.학습 주도 개발로 나만의 음악 앱 만들기]]"
+       "<p><a href=\"kur2206020921.+.학습 주도 개발로 나만의 음악 앱 만들기\">kur2206020921.+.학습 주도 개발로 나만의 음악 앱 만들기</a></p>\n"
+       ;; if not md(has extension), convert path under resource dir
+       "[[abc.png]]"        "<p><a href=\"resource/abc.png\">abc.png</a></p>\n"
+       "[[abc.png|aaasss]]" "<p><a href=\"resource/abc.png\">aaasss</a></p>\n"
+       "[[글댓비full.png]]"  "<p><a href=\"resource/글댓비full.png\">글댓비full.png</a></p>\n"
        ;; Embedded wikilink with correct/incorrect/no extension
        "![[abc.png|aaasss]]"        "<p><img src=\"resource/abc.png\" alt=\"aaasss\"></p>\n"
        "![[abc|aaas|ss]]"           "<p>![[abc|aaas|ss]]</p>\n"
@@ -50,12 +55,12 @@
        "<p><video src=\"resource/abc.mp4\" autoplay=\"\" muted=\"\" loop=\"\">abc.mp4</video></p>\n"
        ;; Trimming white space
        "aa [[abc.png  ]] bb"
-       "<p>aa <a href=\"abc.png\">abc.png</a> bb</p>\n"
+       "<p>aa <a href=\"resource/abc.png\">abc.png</a> bb</p>\n"
        "[[aa ]]![[abc.png]] bb"
        "<p><a href=\"aa\">aa</a><img src=\"resource/abc.png\" alt=\"resource/abc.png\"> bb</p>\n"
        ;; Nested list
        "- [[abc.png]] [t](a)\n  - x [[bb.asd]] y"
-       "<ul>\n<li><a href=\"abc.png\">abc.png</a> <a href=\"a\">t</a>\n<ul>\n<li>x <a href=\"bb.asd\">bb.asd</a> y</li>\n</ul>\n</li>\n</ul>\n"
+       "<ul>\n<li><a href=\"resource/abc.png\">abc.png</a> <a href=\"a\">t</a>\n<ul>\n<li>x <a href=\"resource/bb.asd\">bb.asd</a> y</li>\n</ul>\n</li>\n</ul>\n"
        ;; mark
        "==test==" "<p><mark>test</mark></p>\n"
        ;; linkify
