@@ -9,7 +9,7 @@ ExecStart=/usr/bin/java -jar updater.jar config/default.edn
 Restart=on-failure
 RestartSec=30
 StandardOutput=journal
-StandardError=inherit
+StandardError=journal
 
 [Install]
 WantedBy=mutli-user.target
