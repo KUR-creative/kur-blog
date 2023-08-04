@@ -34,6 +34,14 @@ Differences between dev vs release:
 `teardown-dev-local.sh` \
 Stop and Disable publisher/updater services
 
+`./script/copy-blog-contents.sh <obrain-md-path> <obrain-resource-path>` \
+The updater needs non-empty `/www/blog-base/md`, and 
+The `./release/deploy.sh` needs `/www/blog/resource/site`. 
+This script copies `<obrain-md-path> -> /www/blog-base/md`, `<obrain-resource-path> -> /www/blog/resource/site`
+
+`./script/init-ubuntu22.sh` \
+Initiailize dev environment after `git clone https://github.com/KUR-creative/kur-blog.git`.
+
 ## Development
 ### Code structure and namespace explanation
 Check `$ tree src`.
