@@ -1,4 +1,4 @@
-tag: 1.3.0
-summary: Implement miscellaneous FE features
-hash: ff43741bb02da16a64d1cb01791bb05a5479a0df
-short_hash: ff43741
+tag: 1.3.1
+summary: To debug (log stderr to journal)
+hash: f9041df96052e975cbc6a76bf5e6a5b6a140a0b0
+short_hash: f9041df
